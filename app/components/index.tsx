@@ -91,6 +91,11 @@ const Main: FC<IMainProps> = () => {
     setChatStarted()
     // parse variables in introduction
     setChatList(generateNewChatListWithOpenStatement('', inputs))
+    // 同步更新新会话名称
+    setNewConversationInfo({
+      name: newName,
+      introduction: conversationIntroduction,
+    })
   }
   const hasSetInputs = (() => {
     if (!isNewConversation)
