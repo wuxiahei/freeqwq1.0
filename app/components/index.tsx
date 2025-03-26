@@ -122,6 +122,14 @@ const Main: FC<IMainProps> = () => {
     else {
       notSyncToStateInputs = newConversationInputs
       setCurrInputs(notSyncToStateInputs)
+      // 保存新会话名称
+      const newItem = conversationList.find(item => item.id === '-1')
+      if (newItem) {
+        setExistConversationInfo({
+          name: newItem.name,
+          introduction: newItem.introduction || '',
+        })
+      }
     }
 
     // update chat list of current conversation
@@ -194,14 +202,22 @@ const Main: FC<IMainProps> = () => {
       second: '2-digit'
     });
 
+    const newName = `新对话 ${timeString}`;
+
     setConversationList(produce(conversationList, (draft) => {
       draft.unshift({
         id: '-1',
-        name: `新对话 ${timeString}`,  // 使用当前时间作为名称
+        name: newName,  // 使用当前时间作为名称
         inputs: newConversationInputs,
         introduction: conversationIntroduction,
       })
     }))
+
+    // 保存新名称到会话信息
+    setNewConversationInfo({
+      name: newName,
+      introduction: conversationIntroduction,
+    });
   }
 
   // sometime introduction is not applied to state
