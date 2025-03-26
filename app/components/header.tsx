@@ -6,12 +6,23 @@ import {
   ArrowDownTrayIcon
 } from '@heroicons/react/24/solid'
 import AppIcon from '@/app/components/base/app-icon'
-import { Button } from '@/components/ui/button' // Adjust import path as needed
-import { useTranslation } from 'next-i18next' // Assuming you're using next-i18next for translations
+
+// If you're using shadcn/ui Button, ensure it's installed
+// If not, you can use a basic button or create a custom one
+const Button = ({ children, className, onClick }: {
+  children: React.ReactNode,
+  className?: string,
+  onClick?: () => void
+}) => (
+  <button
+    className={`px-4 py-2 bg-blue-500 text-white rounded ${className}`}
+    onClick={onClick}
+  >
+    {children}
+  </button>
+)
 
 const Header: FC = () => {
-  const { t } = useTranslation()
-
   const handleExportConversation = () => {
     // Implement export conversation logic
     console.log('Exporting conversation')
@@ -29,8 +40,8 @@ const Header: FC = () => {
           className="ml-2"
           onClick={handleExportConversation}
         >
-          <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
-          <span>{t('app.chat.export')}</span>
+          <ArrowDownTrayIcon className="w-4 h-4 mr-2 inline" />
+          <span>Export</span>
         </Button>
       </div>
     </header>
