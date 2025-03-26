@@ -1,10 +1,10 @@
+/* 回答图标样式 */
 .answerIcon {
   position: relative;
   background: url(./icons/robot.svg);
-  border-radius: 12px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* 打字动画图标样式 */
 .typeingIcon {
   position: absolute;
   top: 0px;
@@ -17,33 +17,16 @@
   background: #FFFFFF;
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   border-radius: 16px;
-  animation: pulse 1.5s infinite;
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
-  }
-
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-  }
-
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
-}
-
-
+/* 问题图标样式 */
 .questionIcon {
   background: url(./icons/default-avatar.jpg);
   background-size: contain;
   border-radius: 50%;
 }
 
+/* 回答和问题气泡的装饰图标 */
 .answer::before,
 .question::before {
   content: '';
@@ -53,24 +36,29 @@
   height: 12px;
 }
 
+/* 回答气泡装饰图标 */
 .answer::before {
   left: 0;
   background: url(./icons/answer.svg) no-repeat;
 }
 
+/* 回答区域操作按钮默认隐藏 */
 .answerWrap .itemOperation {
   display: none;
 }
 
+/* 鼠标悬停时显示操作按钮 */
 .answerWrap:hover .itemOperation {
   display: flex;
 }
 
+/* 问题气泡装饰图标 */
 .question::before {
   right: 0;
   background: url(./icons/question.svg) no-repeat;
 }
 
+/* 文本输入区域样式 */
 .textArea {
   padding-top: 13px;
   padding-bottom: 13px;
@@ -78,52 +66,30 @@
   border-radius: 12px;
   line-height: 20px;
   background-color: #fff;
-  transition: all 0.3s ease;
 }
 
+/* 文本输入区域悬停样式 */
 .textArea:hover {
-  background-color: #f5f5f5;
+  background-color: #fff;
 }
 
-.textArea:focus {
-  outline: none;
-  box-shadow: 0px 3px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.count {
-  /* display: none; */
-  padding: 0 2px;
-}
-
+/* 发送按钮样式 */
 .sendBtn {
   background: url(./icons/send.svg) center center no-repeat;
-  transition: all 0.2s ease;
 }
 
+/* 发送按钮悬停样式 */
 .sendBtn:hover {
   background-image: url(./icons/send-active.svg);
   background-color: #EBF5FF;
-  transform: scale(1.1);
 }
 
-.newBtn {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  background: url(./icons/new.svg) center center no-repeat;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.newBtn:hover {
-  background-color: #f5f5f5;
-  transform: scale(1.1);
-}
-
+/* 文本输入框聚焦时显示字符计数 */
 .textArea:focus+div .count {
   display: block;
 }
 
+/* 文本输入框聚焦时改变发送按钮样式 */
 .textArea:focus+div .sendBtn {
   background-image: url(./icons/send-active.svg);
 }
