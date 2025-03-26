@@ -12,5 +12,5 @@ import AppIcon from '@/app/components/base/app-icon'
   onClick={handleExportConversation}
   icon={<ExportIcon className="w-4 h-4" />}
 >
-  {t('app.chat.export')}
+  <span>{t('app.chat.export')}</span>
 </Button>
