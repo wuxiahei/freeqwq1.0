@@ -447,7 +447,7 @@ const Main: FC<IMainProps> = () => {
           return
 
         if (getConversationIdChangeBecauseOfNew()) {
-          const [data: allConversations] = await fetchConversations()
+          const { data: allConversations } = await fetchConversations()
           // 获取当前对话名称
           const currentName = allConversations[0].name
           const newItem: any = await generationConversationName(allConversations[0].id)
