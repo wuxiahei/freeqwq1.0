@@ -196,18 +196,23 @@ const Main: FC<IMainProps> = () => {
 
     // 生成当前时间格式的名称
     const now = new Date();
+    const dateString = now.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
     const timeString = now.toLocaleTimeString('zh-CN', {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit'
     });
 
-    const newName = `新对话 ${timeString}`;
+    const newName = `新对话 ${dateString} ${timeString}`;
 
     setConversationList(produce(conversationList, (draft) => {
       draft.unshift({
         id: '-1',
-        name: newName,  // 使用当前时间作为名称
+        name: newName,  // 使用当前日期时间作为名称
         inputs: newConversationInputs,
         introduction: conversationIntroduction,
       })
