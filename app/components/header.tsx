@@ -5,17 +5,19 @@ import {
   PencilSquareIcon,
 } from '@heroicons/react/24/solid'
 import AppIcon from '@/app/components/base/app-icon'
-export type IHeaderProps = {
+interface HeaderProps {
   title: string
-  isMobile?: boolean
-  onShowSideBar?: () => void
-  onCreateNewChat?: () => void
+  isMobile: boolean
+  onShowSideBar: () => void
+  onCreateNewChat: () => void
+  onExportConversation: () => void
 }
-const Header: FC<IHeaderProps> = ({
+const Header: FC<HeaderProps> = ({
   title,
   isMobile,
   onShowSideBar,
   onCreateNewChat,
+  onExportConversation,
 }) => {
   return (
     <div className="shrink-0 flex items-center justify-between h-12 px-3 bg-gray-100">
@@ -39,7 +41,15 @@ const Header: FC<IHeaderProps> = ({
             onClick={() => onCreateNewChat?.()}
           >
             <PencilSquareIcon className="h-4 w-4 text-gray-500" />
-          </div>)
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onExportConversation}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            >
+              导出对话
+            </button>
+          </div>
         : <div></div>}
     </div>
   )

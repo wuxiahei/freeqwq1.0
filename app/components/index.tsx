@@ -447,7 +447,7 @@ const Main: FC<IMainProps> = () => {
           return
 
         if (getConversationIdChangeBecauseOfNew()) {
-          const { data: allConversations }: any = await fetchConversations()
+          const [data: allConversations] = await fetchConversations()
           // 获取当前对话名称
           const currentName = allConversations[0].name
           const newItem: any = await generationConversationName(allConversations[0].id)
@@ -702,3 +702,41 @@ const Main: FC<IMainProps> = () => {
 }
 
 export default React.memo(Main)
+
+
+const handleExportConversation = () => {
+  const conversation = conversationList.find(item => item.id === currConversationId)
+  if (!conversation)
+    return
+
+  const chatHistory = {
+    conversation: {
+      id: conversation.id,
+      name: conversation.name,
+      introduction: conversation.introduction,
+      createdAt: new Date().toISOString(),
+    },
+    messages: chatList,
+  }
+
+  const dataStr = JSON.stringify(chatHistory, null, 2)
+  const dataBlob = new Blob([dataStr], { type: 'application/json' })
+  const url = URL.createObjectURL(dataBlob)
+  
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${conversation.name || 'conversation'}.json`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+// 在Header组件中添加导出按钮
+<Header
+  title={APP_INFO.title}
+  isMobile={isMobile}
+  onShowSideBar={showSidebar}
+  onCreateNewChat={() => handleConversationIdChange('-1')}
+  onExportConversation={handleExportConversation}
+/>
