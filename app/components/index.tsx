@@ -448,10 +448,13 @@ const Main: FC<IMainProps> = () => {
 
         if (getConversationIdChangeBecauseOfNew()) {
           const { data: allConversations }: any = await fetchConversations()
+          // 获取当前对话名称
+          const currentName = allConversations[0].name
           const newItem: any = await generationConversationName(allConversations[0].id)
 
           const newAllConversations = produce(allConversations, (draft: any) => {
-            draft[0].name = newItem.name
+            // 保留当前名称，而不是使用生成的名称
+            draft[0].name = currentName
           })
           setConversationList(newAllConversations as any)
         }
