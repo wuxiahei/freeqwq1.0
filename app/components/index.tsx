@@ -704,11 +704,14 @@ const Main: FC<IMainProps> = () => {
 export default React.memo(Main)
 
 
+// 导出对话功能
 const handleExportConversation = () => {
+  // 查找当前对话
   const conversation = conversationList.find(item => item.id === currConversationId)
   if (!conversation)
     return
 
+  // 构建对话历史数据结构
   const chatHistory = {
     conversation: {
       id: conversation.id,
@@ -719,10 +722,14 @@ const handleExportConversation = () => {
     messages: chatList,
   }
 
+  // 将对话历史转换为JSON字符串
   const dataStr = JSON.stringify(chatHistory, null, 2)
+  // 创建Blob对象
   const dataBlob = new Blob([dataStr], { type: 'application/json' })
+  // 生成下载链接
   const url = URL.createObjectURL(dataBlob)
 
+  // 创建下载链接并触发下载
   const link = document.createElement('a')
   link.href = url
   link.download = `${conversation.name || 'conversation'}.json`
@@ -731,12 +738,3 @@ const handleExportConversation = () => {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
-
-// 在Header组件中添加导出按钮
-<Header
-  title={APP_INFO.title}
-  isMobile={isMobile}
-  onShowSideBar={showSidebar}
-  onCreateNewChat={() => handleConversationIdChange('-1')}
-  onExportConversation={handleExportConversation}
-/>
