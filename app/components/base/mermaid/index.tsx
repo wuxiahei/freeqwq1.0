@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import mermaid from 'mermaid'
+import * as cytoscape from 'cytoscape'
 import { usePrevious } from 'ahooks'
 import { useTranslation } from 'react-i18next'
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline'
@@ -112,22 +113,22 @@ const Flowchart = React.forwardRef((props: {
       </div>
       {
         svgCode
-            && <div className="mermaid cursor-pointer h-auto w-full object-fit: cover" onClick={() => setImagePreviewUrl(svgCode)}>
-              {svgCode && <img src={svgCode} alt="mermaid_chart" />}
-            </div>
+        && <div className="mermaid cursor-pointer h-auto w-full object-fit: cover" onClick={() => setImagePreviewUrl(svgCode)}>
+          {svgCode && <img src={svgCode} alt="mermaid_chart" />}
+        </div>
       }
       {isLoading
-            && <div className='py-4 px-[26px]'>
-              <LoadingAnim type='text'/>
-            </div>
+        && <div className='py-4 px-[26px]'>
+          <LoadingAnim type='text' />
+        </div>
       }
       {
         errMsg
-            && <div className='py-4 px-[26px]'>
-              <ExclamationTriangleIcon className='w-6 h-6 text-red-500'/>
-              &nbsp;
-              {errMsg}
-            </div>
+        && <div className='py-4 px-[26px]'>
+          <ExclamationTriangleIcon className='w-6 h-6 text-red-500' />
+          &nbsp;
+          {errMsg}
+        </div>
       }
       {
         imagePreviewUrl && (<ImagePreview title='mermaid_chart' url={imagePreviewUrl} onCancel={() => setImagePreviewUrl('')} />)
