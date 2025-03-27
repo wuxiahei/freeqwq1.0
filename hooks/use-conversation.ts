@@ -22,9 +22,9 @@ function useConversation() {
     }
 
     if (id === '-1') {
-      const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14)
+      const timestamp = new Date().getTime().toString();
       setNewConversationInfo({
-        name: newConversationName || `对话_${timestamp}`,
+        name: newConversationName || `${t('app.chat.newChatDefaultName')}_${timestamp}`,
         introduction: ''
       })
     }
