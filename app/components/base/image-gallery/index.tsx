@@ -1,8 +1,8 @@
 'use client'
 import type { FC } from 'react'
 import React, { useState } from 'react'
-import cn from 'classnames'
 import s from './style.module.css'
+import cn from '@/utils/classnames'
 import ImagePreview from '@/app/components/base/image-uploader/image-preview'
 
 type Props = {
@@ -38,6 +38,7 @@ const ImageGallery: FC<Props> = ({
     <div className={cn(s[`img-${imgNum}`], 'flex flex-wrap')}>
       {/* TODO: support preview */}
       {srcs.map((src, index) => (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           key={index}
           className={s.item}
@@ -45,14 +46,14 @@ const ImageGallery: FC<Props> = ({
           src={src}
           alt=''
           onClick={() => setImagePreviewUrl(src)}
+          onError={e => e.currentTarget.remove()}
         />
       ))}
       {
         imagePreviewUrl && (
           <ImagePreview
             url={imagePreviewUrl}
-            onCancel={() => setImagePreviewUrl('')}
-          />
+            onCancel={() => setImagePreviewUrl('')} title={''} />
         )
       }
     </div>
