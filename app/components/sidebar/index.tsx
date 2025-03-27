@@ -26,10 +26,22 @@ export type ISidebarProps = {
 const Sidebar: FC<ISidebarProps> = ({
   copyRight,
   currentId,
-  onCurrentIdChange, // 处理对话切换的回调函数
-  list, // 对话列表数据
+  onCurrentIdChange,
+  list,
 }) => {
   const { t } = useTranslation()
+
+  const handleConversationChange = (id: string) => {
+    try {
+      // Ensure the callback exists and is a function
+      if (typeof onCurrentIdChange === 'function') {
+        onCurrentIdChange(id)
+      }
+    } catch (error) {
+      console.error('Error in conversation change:', error)
+    }
+  }
+
   return (
     <div className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen">
       {/* 新建对话按钮 */}
@@ -49,7 +61,7 @@ const Sidebar: FC<ISidebarProps> = ({
           const isCurrent = item.id === currentId
           return (
             <div
-              onClick={() => onCurrentIdChange(item.id)} // 调用对话管理模块的切换对话功能
+              onClick={() => handleConversationChange(item.id)} // Use the safe handler
               key={item.id}
               className={classNames(
                 isCurrent
