@@ -30,48 +30,28 @@ const Sidebar: FC<ISidebarProps> = ({
   list,
 }) => {
   const { t } = useTranslation()
-
-  const handleConversationChange = (id: string) => {
-    try {
-      if (typeof onCurrentIdChange === 'function') {
-        try {
-          // Create a custom event instead of MutationEvent
-          const event = new CustomEvent('conversationChange', {
-            detail: { id }
-          })
-          document.dispatchEvent(event)
-          onCurrentIdChange(id)
-        } catch (eventError) {
-          console.error('Event creation failed:', eventError)
-          // Fallback to direct callback if event fails
-          onCurrentIdChange(id)
-        }
-      }
-    } catch (error) {
-      console.error('Error in conversation change:', error)
-    }
-  }
-
   return (
-    <div className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen">
-      {/* 新建对话按钮 */}
+    <div
+      className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen"
+    >
       {list.length < MAX_CONVERSATION_LENTH && (
         <div className="flex flex-shrink-0 p-4 !pb-0">
           <Button
-            onClick={() => { onCurrentIdChange('-1') }} // 调用对话管理模块的新建对话功能
+            onClick={() => { onCurrentIdChange('-1') }}
             className="group block w-full flex-shrink-0 !justify-start !h-9 text-primary-600 items-center text-sm">
             <PencilSquareIcon className="mr-2 h-4 w-4" /> {t('app.chat.newChat')}
           </Button>
         </div>
       )}
 
-      {/* 对话列表 */}
       <nav className="mt-4 flex-1 space-y-1 bg-white p-4 !pt-0">
         {list.map((item) => {
           const isCurrent = item.id === currentId
+          const ItemIcon
+            = isCurrent ? ChatBubbleOvalLeftEllipsisSolidIcon : ChatBubbleOvalLeftEllipsisIcon
           return (
             <div
-              onClick={() => handleConversationChange(item.id)} // Use the safe handler
+              onClick={() => onCurrentIdChange(item.id)}
               key={item.id}
               className={classNames(
                 isCurrent
