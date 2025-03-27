@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChatBubbleOvalLeftEllipsisIcon as ChatBubbleOvalLeftEllipsisSolidIcon } from '@heroicons/react/24/solid'
 import Button from '@/app/components/base/button'
-import { useConversation } from '@/hooks/useConversation'
+import { useConversation } from '@/hooks/use-conversation'
 // import Card from './card'
 import type { ConversationItem } from '@/types/app'
 
@@ -96,4 +96,3 @@ const Sidebar: FC<ISidebarProps> = ({
 }
 
 export default React.memo(Sidebar)
-import { useConversation } from '@/hooks/useConversation'
