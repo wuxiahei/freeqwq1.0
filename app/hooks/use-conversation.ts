@@ -15,8 +15,11 @@ export default function useConversation() {
                     item.id === id ? { ...item, name: newName } : item
                 )
             )
+            // 确保UI立即更新
+            forceUpdate()
         } catch (error) {
             console.error('Failed to rename conversation:', error)
+            throw error // 抛出错误以便调用方处理
         }
     }
 
