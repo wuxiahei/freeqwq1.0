@@ -91,11 +91,6 @@ const Main: FC<IMainProps> = () => {
     setChatStarted()
     // parse variables in introduction
     setChatList(generateNewChatListWithOpenStatement('', inputs))
-    // 同步更新新会话名称
-    setNewConversationInfo({
-      name: newName,
-      introduction: conversationIntroduction,
-    })
   }
   const hasSetInputs = (() => {
     if (!isNewConversation)
@@ -127,14 +122,6 @@ const Main: FC<IMainProps> = () => {
     else {
       notSyncToStateInputs = newConversationInputs
       setCurrInputs(notSyncToStateInputs)
-      // 保存新会话名称
-      const newItem = conversationList.find(item => item.id === '-1')
-      if (newItem) {
-        setExistConversationInfo({
-          name: newItem.name,
-          introduction: newItem.introduction || '',
-        })
-      }
     }
 
     // update chat list of current conversation
@@ -199,35 +186,14 @@ const Main: FC<IMainProps> = () => {
     if (conversationList.some(item => item.id === '-1'))
       return
 
-    // 生成当前时间格式的名称
-    const now = new Date();
-    const dateString = now.toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    const timeString = now.toLocaleTimeString('zh-CN', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
-    const newName = `新对话 ${dateString} ${timeString}`;
-
     setConversationList(produce(conversationList, (draft) => {
       draft.unshift({
         id: '-1',
-        name: newName,  // 使用当前日期时间作为名称
+        name: t('app.chat.newChatDefaultName'),
         inputs: newConversationInputs,
         introduction: conversationIntroduction,
       })
     }))
-
-    // 保存新名称到会话信息
-    setNewConversationInfo({
-      name: newName,
-      introduction: conversationIntroduction,
-    });
   }
 
   // sometime introduction is not applied to state
@@ -457,14 +423,11 @@ const Main: FC<IMainProps> = () => {
           return
 
         if (getConversationIdChangeBecauseOfNew()) {
-          const data: allConversations = await fetchConversations()
-          // 获取当前对话名称
-          const currentName = allConversations[0].name
+          const { data: allConversations }: any = await fetchConversations()
           const newItem: any = await generationConversationName(allConversations[0].id)
 
           const newAllConversations = produce(allConversations, (draft: any) => {
-            // 保留当前名称，而不是使用生成的名称
-            draft[0].name = currentName
+            draft[0].name = newItem.name
           })
           setConversationList(newAllConversations as any)
         }
@@ -712,39 +675,3 @@ const Main: FC<IMainProps> = () => {
 }
 
 export default React.memo(Main)
-
-
-// 导出对话功能
-const handleExportConversation = () => {
-  // 查找当前对话
-  const conversation = conversationList.find(item => item.id === currConversationId)
-  if (!conversation)
-    return
-
-  // 构建对话历史数据结构
-  const chatHistory = {
-    conversation: {
-      id: conversation.id,
-      name: conversation.name,
-      introduction: conversation.introduction,
-      createdAt: new Date().toISOString(),
-    },
-    messages: chatList,
-  }
-
-  // 将对话历史转换为JSON字符串
-  const dataStr = JSON.stringify(chatHistory, null, 2)
-  // 创建Blob对象
-  const dataBlob = new Blob([dataStr], { type: 'application/json' })
-  // 生成下载链接
-  const url = URL.createObjectURL(dataBlob)
-
-  // 创建下载链接并触发下载
-  const link = document.createElement('a')
-  link.href = url
-  link.download = `${conversation.name || 'conversation'}.json`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
-}

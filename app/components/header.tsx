@@ -2,52 +2,47 @@ import type { FC } from 'react'
 import React from 'react'
 import {
   Bars3Icon,
-  PencilSquareIcon
+  PencilSquareIcon,
 } from '@heroicons/react/24/solid'
 import AppIcon from '@/app/components/base/app-icon'
-
-// If you're using shadcn/ui Button, ensure it's installed
-// If not, you can use a basic button or create a custom one
-const Button = ({ children, className, onClick }: {
-  children: React.ReactNode,
-  className?: string,
-  onClick?: () => void
-}) => (
-  <button
-    className={`px-4 py-2 bg-blue-500 text-white rounded ${className}`}
-    onClick={onClick}
-  >
-    {children}
-  </button>
-)
-
-const Header: FC = () => {
-  const handleExportConversation = () => {
-    const timestamp = new Date().toLocaleString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    }).replace(/\//g, '-')
-
-    // 调用导出接口逻辑
-    console.log('Exporting conversation as', timestamp)
-  }
-
+export type IHeaderProps = {
+  title: string
+  isMobile?: boolean
+  onShowSideBar?: () => void
+  onCreateNewChat?: () => void
+}
+const Header: FC<IHeaderProps> = ({
+  title,
+  isMobile,
+  onShowSideBar,
+  onCreateNewChat,
+}) => {
   return (
-    <header className="flex items-center justify-between p-4">
-      <div className="flex items-center">
-        <AppIcon />
-        {/* Add other header items as needed */}
+    <div className="shrink-0 flex items-center justify-between h-12 px-3 bg-gray-100">
+      {isMobile
+        ? (
+          <div
+            className='flex items-center justify-center h-8 w-8 cursor-pointer'
+            onClick={() => onShowSideBar?.()}
+          >
+            <Bars3Icon className="h-4 w-4 text-gray-500" />
+          </div>
+        )
+        : <div></div>}
+      <div className='flex items-center space-x-2'>
+        <AppIcon size="small" />
+        <div className=" text-sm text-gray-800 font-bold">{title}</div>
       </div>
-
-      <div className="flex items-center">
-        {/* 已移除导出按钮 */}
-      </div>
-    </header>
+      {isMobile
+        ? (
+          <div className='flex items-center justify-center h-8 w-8 cursor-pointer'
+            onClick={() => onCreateNewChat?.()}
+          >
+            <PencilSquareIcon className="h-4 w-4 text-gray-500" />
+          </div>)
+        : <div></div>}
+    </div>
   )
 }
 
-export default Header
+export default React.memo(Header)

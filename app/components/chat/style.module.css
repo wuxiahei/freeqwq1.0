@@ -1,10 +1,8 @@
-/* 回答图标样式 */
 .answerIcon {
   position: relative;
   background: url(./icons/robot.svg);
 }
 
-/* 打字动画图标样式 */
 .typeingIcon {
   position: absolute;
   top: 0px;
@@ -19,14 +17,13 @@
   border-radius: 16px;
 }
 
-/* 问题图标样式 */
+
 .questionIcon {
   background: url(./icons/default-avatar.jpg);
   background-size: contain;
   border-radius: 50%;
 }
 
-/* 回答和问题气泡的装饰图标 */
 .answer::before,
 .question::before {
   content: '';
@@ -36,29 +33,24 @@
   height: 12px;
 }
 
-/* 回答气泡装饰图标 */
 .answer::before {
   left: 0;
   background: url(./icons/answer.svg) no-repeat;
 }
 
-/* 回答区域操作按钮默认隐藏 */
 .answerWrap .itemOperation {
   display: none;
 }
 
-/* 鼠标悬停时显示操作按钮 */
 .answerWrap:hover .itemOperation {
   display: flex;
 }
 
-/* 问题气泡装饰图标 */
 .question::before {
   right: 0;
   background: url(./icons/question.svg) no-repeat;
 }
 
-/* 文本输入区域样式 */
 .textArea {
   padding-top: 13px;
   padding-bottom: 13px;
@@ -68,28 +60,32 @@
   background-color: #fff;
 }
 
-/* 文本输入区域悬停样式 */
 .textArea:hover {
   background-color: #fff;
 }
 
-/* 发送按钮样式 */
+/* .textArea:focus {
+  box-shadow: 0px 3px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.05);
+} */
+
+.count {
+  /* display: none; */
+  padding: 0 2px;
+}
+
 .sendBtn {
   background: url(./icons/send.svg) center center no-repeat;
 }
 
-/* 发送按钮悬停样式 */
 .sendBtn:hover {
   background-image: url(./icons/send-active.svg);
   background-color: #EBF5FF;
 }
 
-/* 文本输入框聚焦时显示字符计数 */
 .textArea:focus+div .count {
   display: block;
 }
 
-/* 文本输入框聚焦时改变发送按钮样式 */
 .textArea:focus+div .sendBtn {
   background-image: url(./icons/send-active.svg);
 }

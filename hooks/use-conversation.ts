@@ -9,15 +9,7 @@ type ConversationInfoType = Omit<ConversationItem, 'inputs' | 'id'>
 function useConversation() {
   const [conversationList, setConversationList] = useState<ConversationItem[]>([])
   const [currConversationId, doSetCurrConversationId, getCurrConversationId] = useGetState<string>('-1')
-
-  // 添加自定义参数处理逻辑
-  const handleCustomParams = (inputs: Record<string, any>) => {
-    return {
-      ...inputs,
-      customParams: inputs?.customParams || {}
-    }
-  }
-
+  // when set conversation id, we do not have set appId
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
     if (isSetToLocalStroge && id !== '-1') {
@@ -44,10 +36,6 @@ function useConversation() {
       Object.keys(draft).forEach((key) => {
         draft[key] = ''
       })
-      // 保留自定义参数
-      if (draft.customParams) {
-        draft.customParams = handleCustomParams(draft).customParams
-      }
     }))
   }
   const [existConversationInputs, setExistConversationInputs] = useState<Record<string, any> | null>(null)
@@ -79,22 +67,3 @@ function useConversation() {
 }
 
 export default useConversation
-
-const formatTimestamp = (date: Date) => {
-  return date.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  }).replace(/\//g, '-')
-}
-
-const handleNewConversation = async () => {
-  const newConversation = {
-    name: formatTimestamp(new Date()),
-    // ... existing parameters
-  };
-}
-// ... existing code...
