@@ -31,7 +31,7 @@ const Sidebar: FC<ISidebarProps> = ({
   list,
 }) => {
   const { t } = useTranslation()
-  const { exportToPDF } = useConversation()
+  const { exportConversationToPDF } = useConversation()
   return (
     <div
       className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen"
@@ -73,15 +73,29 @@ const Sidebar: FC<ISidebarProps> = ({
               />
               {item.name}
               {isCurrent && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    exportToPDF(item.id)
-                  }}
-                  className="ml-auto text-gray-400 hover:text-gray-500"
-                >
-                  PDF
-                </button>
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      exportConversationToPDF(item.id)
+                    }}
+                    className="ml-auto text-gray-400 hover:text-gray-500"
+                  >
+                    PDF
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      const newName = prompt('请输入新的对话名称', item.name)
+                      if (newName) {
+                        renameConversation(item.id, newName)
+                      }
+                    }}
+                    className="ml-2 text-gray-400 hover:text-gray-500"
+                  >
+                    重命名
+                  </button>
+                </>
               )}
             </div>
           )
