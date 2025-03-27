@@ -44,11 +44,6 @@ const Sidebar: FC<ISidebarProps> = ({
       exportConversationToPDF(currentId)
   }
 
-  const handleNewConversation = () => {
-    setCurrConversationId('-1')
-    onCurrentIdChange('-1')
-  }
-
   return (
     <div
       className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen"
