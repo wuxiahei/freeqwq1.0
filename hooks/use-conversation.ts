@@ -79,3 +79,21 @@ function useConversation() {
 }
 
 export default useConversation
+
+const formatTimestamp = (date: Date) => {
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }).replace(/\//g, '-')
+}
+
+const handleNewConversation = async () => {
+  const newConversation = {
+    name: formatTimestamp(new Date()),
+    // ... existing parameters
+  }
+// ... existing code...

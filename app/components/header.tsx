@@ -2,8 +2,7 @@ import type { FC } from 'react'
 import React from 'react'
 import {
   Bars3Icon,
-  PencilSquareIcon,
-  ArrowDownTrayIcon
+  PencilSquareIcon
 } from '@heroicons/react/24/solid'
 import AppIcon from '@/app/components/base/app-icon'
 
@@ -24,8 +23,17 @@ const Button = ({ children, className, onClick }: {
 
 const Header: FC = () => {
   const handleExportConversation = () => {
-    // Implement export conversation logic
-    console.log('Exporting conversation')
+    const timestamp = new Date().toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    }).replace(/\//g, '-')
+
+    // 调用导出接口逻辑
+    console.log('Exporting conversation as', timestamp)
   }
 
   return (
@@ -36,13 +44,7 @@ const Header: FC = () => {
       </div>
 
       <div className="flex items-center">
-        <Button
-          className="ml-2"
-          onClick={handleExportConversation}
-        >
-          <ArrowDownTrayIcon className="w-4 h-4 mr-2 inline" />
-          <span>Export</span>
-        </Button>
+        {/* 已移除导出按钮 */}
       </div>
     </header>
   )
