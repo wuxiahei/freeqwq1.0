@@ -63,7 +63,7 @@
     "use-context-selector": "^1.4.1",
     "uuid": "^9.0.0",
     "class-variance-authority": "^0.7.0",
-    "@remixicon/react": "^3.0.0",
+    "@remixicon/react": "^4.6.0",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
