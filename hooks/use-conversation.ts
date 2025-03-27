@@ -95,5 +95,6 @@ const handleNewConversation = async () => {
   const newConversation = {
     name: formatTimestamp(new Date()),
     // ... existing parameters
-  }
+  };
+}
 // ... existing code...
