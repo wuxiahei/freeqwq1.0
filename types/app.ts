@@ -95,10 +95,11 @@ export type ResponseHolder = {}
 
 // 会话项类型定义
 export type ConversationItem = {
-  id: string  // 唯一标识
-  name: string  // 名称
-  inputs: Record<string, any> | null  // 输入参数
-  introduction: string  // 介绍文本
+  id: string
+  name: string
+  inputs: Record<string, any> | null
+  introduction: string
+  customParams?: Record<string, any> // 新增自定义参数字段
 }
 
 // 应用信息类型定义

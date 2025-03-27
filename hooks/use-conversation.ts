@@ -9,7 +9,15 @@ type ConversationInfoType = Omit<ConversationItem, 'inputs' | 'id'>
 function useConversation() {
   const [conversationList, setConversationList] = useState<ConversationItem[]>([])
   const [currConversationId, doSetCurrConversationId, getCurrConversationId] = useGetState<string>('-1')
-  // when set conversation id, we do not have set appId
+
+  // 添加自定义参数处理逻辑
+  const handleCustomParams = (inputs: Record<string, any>) => {
+    return {
+      ...inputs,
+      customParams: inputs?.customParams || {}
+    }
+  }
+
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
     if (isSetToLocalStroge && id !== '-1') {
@@ -36,6 +44,10 @@ function useConversation() {
       Object.keys(draft).forEach((key) => {
         draft[key] = ''
       })
+      // 保留自定义参数
+      if (draft.customParams) {
+        draft.customParams = handleCustomParams(draft).customParams
+      }
     }))
   }
   const [existConversationInputs, setExistConversationInputs] = useState<Record<string, any> | null>(null)
