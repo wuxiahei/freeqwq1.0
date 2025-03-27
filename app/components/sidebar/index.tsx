@@ -60,13 +60,6 @@ const Sidebar: FC<ISidebarProps> = ({
             className="group block w-full flex-shrink-0 !justify-start !h-9 text-primary-600 items-center text-sm">
             <PencilSquareIcon className="mr-2 h-4 w-4" /> {t('app.chat.newChat')}
           </Button>
-          {currentId && currentId !== '-1' && (
-            <Button
-              onClick={handleExportPDF}
-              className="group block w-full flex-shrink-0 !justify-start !h-9 text-primary-600 items-center text-sm">
-              {t('app.chat.exportPDF')}
-            </Button>
-          )}
         </div>
       )}
 
