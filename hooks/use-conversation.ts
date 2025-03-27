@@ -2,6 +2,8 @@ import { useState } from 'react'
 import produce from 'immer'
 import { useGetState } from 'ahooks'
 import type { ConversationItem } from '@/types/app'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 const storageConversationIdKey = 'conversationIdInfo'
 
@@ -18,6 +20,28 @@ function useConversation() {
       conversationIdInfo[appId] = id
       globalThis.localStorage?.setItem(storageConversationIdKey, JSON.stringify(conversationIdInfo))
     }
+
+    if (id === '-1') {
+      const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14)
+      setNewConversationInfo({
+        name: newConversationName || `对话_${timestamp}`,
+        introduction: ''
+      })
+    }
+  }
+
+  const exportConversationToPDF = async (conversationId: string) => {
+    const element = document.getElementById(`conversation-${conversationId}`)
+    if (!element) return
+
+    const canvas = await html2canvas(element)
+    const pdf = new jsPDF('p', 'mm', 'a4')
+    const imgData = canvas.toDataURL('image/png')
+    const imgWidth = pdf.internal.pageSize.getWidth()
+    const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+    pdf.save(`conversation-${conversationId}.pdf`)
   }
 
   const getConversationIdFromStorage = (appId: string) => {
@@ -63,6 +87,7 @@ function useConversation() {
     currConversationInfo,
     setNewConversationInfo,
     setExistConversationInfo,
+    exportConversationToPDF,
   }
 }
 
