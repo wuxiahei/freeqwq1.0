@@ -33,9 +33,19 @@ const Sidebar: FC<ISidebarProps> = ({
 
   const handleConversationChange = (id: string) => {
     try {
-      // Ensure the callback exists and is a function
       if (typeof onCurrentIdChange === 'function') {
-        onCurrentIdChange(id)
+        try {
+          // Create a custom event instead of MutationEvent
+          const event = new CustomEvent('conversationChange', {
+            detail: { id }
+          })
+          document.dispatchEvent(event)
+          onCurrentIdChange(id)
+        } catch (eventError) {
+          console.error('Event creation failed:', eventError)
+          // Fallback to direct callback if event fails
+          onCurrentIdChange(id)
+        }
       }
     } catch (error) {
       console.error('Error in conversation change:', error)
