@@ -7,7 +7,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChatBubbleOvalLeftEllipsisIcon as ChatBubbleOvalLeftEllipsisSolidIcon } from '@heroicons/react/24/solid'
 import Button from '@/app/components/base/button'
-import { useConversation } from '@/hooks/use-conversation'
+import useConversation from '@/hooks/use-conversation'
 // import Card from './card'
 import type { ConversationItem } from '@/types/app'
 
@@ -31,27 +31,15 @@ const Sidebar: FC<ISidebarProps> = ({
   list,
 }) => {
   const { t } = useTranslation()
-  const { setCurrConversationId, exportConversationToPDF } = useConversation()
-
-  const handleNewConversation = () => {
-    const timestamp = new Date().getTime()
-    setCurrConversationId(`new-${timestamp}`)
-    onCurrentIdChange(`new-${timestamp}`)
-  }
-
-  const handleExportPDF = () => {
-    if (currentId && currentId !== '-1')
-      exportConversationToPDF(currentId)
-  }
-
+  const { exportToPDF } = useConversation()
   return (
     <div
       className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen"
     >
       {list.length < MAX_CONVERSATION_LENTH && (
-        <div className="flex flex-shrink-0 p-4 !pb-0 gap-2">
+        <div className="flex flex-shrink-0 p-4 !pb-0">
           <Button
-            onClick={handleNewConversation}
+            onClick={() => { onCurrentIdChange('-1') }}
             className="group block w-full flex-shrink-0 !justify-start !h-9 text-primary-600 items-center text-sm">
             <PencilSquareIcon className="mr-2 h-4 w-4" /> {t('app.chat.newChat')}
           </Button>
@@ -84,10 +72,24 @@ const Sidebar: FC<ISidebarProps> = ({
                 aria-hidden="true"
               />
               {item.name}
+              {isCurrent && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    exportToPDF(item.id)
+                  }}
+                  className="ml-auto text-gray-400 hover:text-gray-500"
+                >
+                  PDF
+                </button>
+              )}
             </div>
           )
         })}
       </nav>
+      {/* <a className="flex flex-shrink-0 p-4" href="https://langgenius.ai/" target="_blank">
+        <Card><div className="flex flex-row items-center"><ChatBubbleOvalLeftEllipsisSolidIcon className="text-primary-600 h-6 w-6 mr-2" /><span>LangGenius</span></div></Card>
+      </a> */}
       <div className="flex flex-shrink-0 pr-4 pb-4 pl-4">
         <div className="text-gray-400 font-normal text-xs">© {copyRight} {(new Date()).getFullYear()}</div>
       </div>
