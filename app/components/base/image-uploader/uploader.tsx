@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { imageUpload } from './utils'
 import type { ImageFile } from '@/types/app'
 import { TransferMethod } from '@/types/app'
-import Toast from '@/app/components/base/toast'
+
 
 type UploaderProps = {
   children: (hovering: boolean) => JSX.Element
@@ -22,7 +22,7 @@ const Uploader: FC<UploaderProps> = ({
   disabled,
 }) => {
   const [hovering, setHovering] = useState(false)
-  const { notify } = Toast
+  
   const { t } = useTranslation()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +32,6 @@ const Uploader: FC<UploaderProps> = ({
       return
 
     if (limit && file.size > limit * 1024 * 1024) {
-      notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerLimit', { size: limit }) })
       return
     }
 
@@ -69,7 +68,11 @@ const Uploader: FC<UploaderProps> = ({
     reader.addEventListener(
       'error',
       () => {
-        notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerReadError') })
+        
+    }
+  ]
+}
+```
       },
       false,
     )

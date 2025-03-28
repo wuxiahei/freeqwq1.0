@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import produce, { setAutoFreeze } from "immer";
 import { useBoolean, useGetState } from "ahooks";
 import useConversation from "@/hooks/use-conversation";
-import Toast from "@/app/components/base/toast";
+
 import Sidebar from "@/app/components/sidebar";
 import ConfigSence from "@/app/components/config-scence";
 import {
@@ -313,7 +313,7 @@ const Main: FC<IMainProps> = () => {
           error: string;
         };
         if (error) {
-          Toast.notify({ type: "error", message: error });
+          console.error(error);
           throw new Error(error);
           return;
         }
@@ -388,7 +388,7 @@ const Main: FC<IMainProps> = () => {
   ] = useBoolean(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
-  const { notify } = Toast;
+  
   const logError = (message: string) => {
     notify({ type: "error", message });
   };

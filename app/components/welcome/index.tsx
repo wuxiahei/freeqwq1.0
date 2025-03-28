@@ -11,7 +11,7 @@ import {
   PromptTemplate,
 } from "./massive-component";
 import type { AppInfo, PromptConfig } from "@/types/app";
-import Toast from "@/app/components/base/toast";
+
 import Select from "@/app/components/base/select";
 import { DEFAULT_VALUE_MAX_LEN } from "@/config";
 import { Bars3Icon } from "@heroicons/react/24/solid";
@@ -82,7 +82,7 @@ const Welcome: FC<IWelcomeProps> = ({
     }
   }, [savedInputs]);
 
-  const { notify } = Toast;
+  
   const logError = (message: string) => {
     notify({ type: "error", message, duration: 3000 });
   };

@@ -1,5 +1,5 @@
 import { API_KEY, API_PREFIX } from '@/config'
-import Toast from '@/app/components/base/toast'
+
 import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
 import type { VisionFile } from '@/types/app'
 
@@ -283,19 +283,19 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
               const bodyJson = res.json()
               switch (res.status) {
                 case 401: {
-                  Toast.notify({ type: 'error', message: 'Invalid token' })
+                  
                   return
                 }
                 default:
                 // eslint-disable-next-line no-new
                   new Promise(() => {
                     bodyJson.then((data: any) => {
-                      Toast.notify({ type: 'error', message: data.message })
+                      
                     })
                   })
               }
             } catch (e) {
-              Toast.notify({ type: 'error', message: `${e}` })
+              
             }
 
             return Promise.reject(resClone)
@@ -313,7 +313,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
           resolve(needAllResponseContent ? resClone : data)
         })
         .catch((err) => {
-          Toast.notify({ type: 'error', message: err })
+          
           reject(err)
         })
     }),
@@ -393,7 +393,7 @@ export const ssePost = (
       // eslint-disable-next-line no-new
         new Promise(() => {
           res.json().then((data: any) => {
-            Toast.notify({ type: 'error', message: data.message || 'Server Error' })
+            
           })
         })
         onError?.('Server Error')
@@ -401,7 +401,7 @@ export const ssePost = (
       }
       return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => {
         if (moreInfo.errorMessage) {
-          Toast.notify({ type: 'error', message: moreInfo.errorMessage })
+          
           return
         }
         onData?.(str, isFirstMessage, moreInfo)
@@ -409,7 +409,7 @@ export const ssePost = (
         onCompleted?.()
       }, onThought, onMessageEnd, onMessageReplace, onFile, onWorkflowStarted, onWorkflowFinished, onNodeStarted, onNodeFinished)
     }).catch((e) => {
-      Toast.notify({ type: 'error', message: e })
+      
       onError?.(e)
     })
 }
