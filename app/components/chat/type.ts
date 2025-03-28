@@ -133,4 +133,4 @@ export type AnnotationReply = {
   annotation_author_name: string
 }
 
-export type OnSend = (message: string, files?: VisionFile[] | undefined) => void
+export type OnSuggestSend = (message: string, files?: VisionFile[]) => void

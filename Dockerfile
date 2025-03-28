@@ -1,33 +1,47 @@
-# Use an official Node runtime as the base image
-FROM node:20-alpine
+FROM node:18-alpine  AS base
 
-# Set the working directory in the container
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+#COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+# ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN yarn install \
+  && yarn run output
+
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-# 启用 Corepack
-RUN corepack enable
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+# ENV NEXT_TELEMETRY_DISABLED 1
 
-# 设置 corepack的环境变量
-ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
 
-# Set the npm registry to the mirror
-RUN pnpm config set registry https://registry.npmmirror.com
+COPY --from=builder /app/public ./public
 
-# Copy the package.json and package-lock.json
-COPY package.json .
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
-# Install dependencies for the entire monorepo
-RUN pnpm install
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy the rest of the files
-COPY  . .
+USER nextjs
 
+EXPOSE 3000
 
-# Build the application
-RUN pnpm run build
+ENV PORT 3000
 
-# Expose the port the app runs on
-EXPOSE 3020
-
-# Command to run the application
-CMD ["pnpm", "start"]
+# server.js is created by next build from the standalone output
+# https://nextjs.org/docs/pages/api-reference/next-config-js/output
+CMD HOSTNAME="0.0.0.0" node server.js

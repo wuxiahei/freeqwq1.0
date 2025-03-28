@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
@@ -10,36 +10,35 @@ import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
 import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
-import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
-import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
-import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
+import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback, fetchSuggestedQuestions, deleteConversation } from '@/service'
+import type { ConversationItem, Feedbacktype, IChatItem, PromptConfig, VisionFile, VisionSettings, SuggestedQuestionsAfterAnswerConfig } from '@/types/app'
+import { Resolution, TransferMethod } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from '@/app/components/app-unavailable'
-import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
+import useConversationMaxToken from "@/hooks/use-conversation-maxtoken"
 
-export type IMainProps = {
-  params: any
-}
-
-const Main: FC<IMainProps> = () => {
+const Main: FC = ({params}: any) => {
   const { t } = useTranslation()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
+  const {APP_INFO, isShowPrompt, promptTemplate, APP_ID, API_KEY, showMobile} = params 
   const hasSetAppConfig = APP_ID && API_KEY
 
   /*
   * app info
   */
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false)
-  const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false)
+  const [isUnknwonReason, setIsUnknwonReason] = useState<boolean>(false)
   const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null)
   const [inited, setInited] = useState<boolean>(false)
+  const [isMaxToken, setMaxTokenCurrID, addMaxTokenConversation] = useConversationMaxToken()
+
   // in mobile, show sidebar by click button
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
   const [visionConfig, setVisionConfig] = useState<VisionSettings | undefined>({
@@ -49,9 +48,20 @@ const Main: FC<IMainProps> = () => {
     transfer_methods: [TransferMethod.local_file],
   })
 
+  /*
+  * suggesttion
+  */
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([])
+  const [footerHeight, setFooterHeight] = useState('66')
+
+  const handleFooterHeightChange = (val: number) => {
+    setFooterHeight(val)
+  }
+
+
   useEffect(() => {
     if (APP_INFO?.title)
-      document.title = `${APP_INFO.title} - Powered by Dify`
+      document.title = `${APP_INFO.title}`
   }, [APP_INFO?.title])
 
   // onData change thought (the produce obj). https://github.com/immerjs/immer/issues/576
@@ -61,6 +71,7 @@ const Main: FC<IMainProps> = () => {
       setAutoFreeze(true)
     }
   }, [])
+
 
   /*
   * conversation info
@@ -84,13 +95,14 @@ const Main: FC<IMainProps> = () => {
 
   const [conversationIdChangeBecauseOfNew, setConversationIdChangeBecauseOfNew, getConversationIdChangeBecauseOfNew] = useGetState(false)
   const [isChatStarted, { setTrue: setChatStarted, setFalse: setChatNotStarted }] = useBoolean(false)
+  const [isShowSuggestion, setIsShowSuggestion] = useState(false)
   const handleStartChat = (inputs: Record<string, any>) => {
     createNewChat()
     setConversationIdChangeBecauseOfNew(true)
     setCurrInputs(inputs)
     setChatStarted()
     // parse variables in introduction
-    setChatList(generateNewChatListWithOpenStatement('', inputs))
+    setChatList(generateNewChatListWithOpenstatement('', inputs))
   }
   const hasSetInputs = (() => {
     if (!isNewConversation)
@@ -110,7 +122,7 @@ const Main: FC<IMainProps> = () => {
     let notSyncToStateIntroduction = ''
     let notSyncToStateInputs: Record<string, any> | undefined | null = {}
     if (!isNewConversation) {
-      const item = conversationList.find(item => item.id === currConversationId)
+      const item = conversationList.find(item => item.id === getCurrConversationId())
       notSyncToStateInputs = item?.inputs || {}
       setCurrInputs(notSyncToStateInputs as any)
       notSyncToStateIntroduction = item?.introduction || ''
@@ -125,10 +137,10 @@ const Main: FC<IMainProps> = () => {
     }
 
     // update chat list of current conversation
-    if (!isNewConversation && !conversationIdChangeBecauseOfNew && !isResponding) {
+    if (!isNewConversation && !conversationIdChangeBecauseOfNew && !isResponsing) {
       fetchChatList(currConversationId).then((res: any) => {
         const { data } = res
-        const newChatList: ChatItem[] = generateNewChatListWithOpenStatement(notSyncToStateIntroduction, notSyncToStateInputs)
+        const newChatList: IChatItem[] = generateNewChatListWithOpenstatement(notSyncToStateIntroduction, notSyncToStateInputs)
 
         data.forEach((item: any) => {
           newChatList.push({
@@ -152,9 +164,15 @@ const Main: FC<IMainProps> = () => {
     }
 
     if (isNewConversation && isChatStarted)
-      setChatList(generateNewChatListWithOpenStatement())
+      setChatList(generateNewChatListWithOpenstatement())
   }
   useEffect(handleConversationSwitch, [currConversationId, inited])
+
+  useEffect(() => {
+    if (currConversationId) {
+      setMaxTokenCurrID(currConversationId);
+    }
+  }, [currConversationId])
 
   const handleConversationIdChange = (id: string) => {
     if (id === '-1') {
@@ -166,21 +184,57 @@ const Main: FC<IMainProps> = () => {
     }
     // trigger handleConversationSwitch
     setCurrConversationId(id, APP_ID)
+    setMaxTokenCurrID(id)
+    setIsShowSuggestion(false)
     hideSidebar()
   }
+
+ /*
+  * delete conversation.
+  */
+
+  const handleDeleteConversationItem = async (id: string) => {
+    try {
+      const res = await deleteConversation(id)
+      const result = await fetchConversations()
+
+      if (getCurrConversationId() === id) {
+        setConversationList(produce(result.data, (draft) => {
+          draft.unshift({
+            id: '-1',
+            name: t('app.chat.newChatDefaultName'),
+            inputs: newConversationInputs,
+            introduction: conversationIntroduction,
+          })
+        }))
+        setCurrConversationId('-1', APP_ID, false)
+      }
+      else {
+        setConversationList(result.data)
+      }
+
+      notify({ type: 'success', message: t('app.chat.deleteSuccess'), duration: 3000 })
+    }
+    catch (e: any) {
+      notify({ type: 'error', message: `${t('app.errorMessage.deleteFailed')}${'message' in e ? `: ${e.message}` : ''}`, duration: 3000 })
+    }
+  }
+
 
   /*
   * chat info. chat is under conversation.
   */
-  const [chatList, setChatList, getChatList] = useGetState<ChatItem[]>([])
+  const [chatList, setChatList, getChatList] = useGetState<IChatItem[]>([])
   const chatListDomRef = useRef<HTMLDivElement>(null)
+  const [isResponding, { setTrue: setRespondingTrue, setFalse: setRespondingFalse }] = useBoolean(false)
+
   useEffect(() => {
     // scroll to bottom
     if (chatListDomRef.current)
-      chatListDomRef.current.scrollTop = chatListDomRef.current.scrollHeight
-  }, [chatList, currConversationId])
+      chatListDomRef.current.scrollTop = chatListDomRef.current.scrollHeight + footerHeight
+  }, [chatList, currConversationId, footerHeight])
   // user can not edit inputs if user had send message
-  const canEditInputs = !chatList.some(item => item.isAnswer === false) && isNewConversation
+  const canEditInpus = !chatList.some(item => item.isAnswer === false) && isNewConversation
   const createNewChat = () => {
     // if new chat is already exist, do not create new chat
     if (conversationList.some(item => item.id === '-1'))
@@ -197,21 +251,22 @@ const Main: FC<IMainProps> = () => {
   }
 
   // sometime introduction is not applied to state
-  const generateNewChatListWithOpenStatement = (introduction?: string, inputs?: Record<string, any> | null) => {
-    let calculatedIntroduction = introduction || conversationIntroduction || ''
-    const calculatedPromptVariables = inputs || currInputs || null
-    if (calculatedIntroduction && calculatedPromptVariables)
-      calculatedIntroduction = replaceVarWithValues(calculatedIntroduction, promptConfig?.prompt_variables || [], calculatedPromptVariables)
+  const generateNewChatListWithOpenstatement = (introduction?: string, inputs?: Record<string, any> | null) => {
+    let caculatedIntroduction = introduction || conversationIntroduction || ''
+    const caculatedPromptVariables = inputs || currInputs || null
+    if (caculatedIntroduction && caculatedPromptVariables)
+      caculatedIntroduction = replaceVarWithValues(caculatedIntroduction, promptConfig?.prompt_variables || [], caculatedPromptVariables)
 
-    const openStatement = {
+    const openstatement = {
       id: `${Date.now()}`,
-      content: calculatedIntroduction,
+      content: caculatedIntroduction,
       isAnswer: true,
       feedbackDisabled: true,
       isOpeningStatement: isShowPrompt,
+      suggestedQuestions: openingSuggestedQuestions,
     }
-    if (calculatedIntroduction)
-      return [openStatement]
+    if (caculatedIntroduction)
+      return [openstatement]
 
     return []
   }
@@ -227,17 +282,12 @@ const Main: FC<IMainProps> = () => {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
 
         // handle current conversation id
-        const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
-        if (error) {
-          Toast.notify({ type: 'error', message: error })
-          throw new Error(error)
-          return
-        }
+        const { data: conversations } = conversationData as { data: ConversationItem[] }
         const _conversationId = getConversationIdFromStorage(APP_ID)
         const isNotNewConversation = conversations.some(item => item.id === _conversationId)
 
         // fetch new conversation info
-        const { user_input_form, opening_statement: introduction, file_upload, system_parameters }: any = appParams
+        const { user_input_form, opening_statement: introduction, file_upload, system_parameters, suggested_questions, suggested_questions_after_answer}: any = appParams
         setLocaleOnClient(APP_INFO.default_language, true)
         setNewConversationInfo({
           name: t('app.chat.newChatDefaultName'),
@@ -258,20 +308,22 @@ const Main: FC<IMainProps> = () => {
           setCurrConversationId(_conversationId, APP_ID, false)
 
         setInited(true)
+        setOpeningSuggestedQuestions(suggested_questions || [])
+        setSuggestedQuestionsAfterAnswerConfig(suggested_questions_after_answer)
       }
       catch (e: any) {
         if (e.status === 404) {
           setAppUnavailable(true)
         }
         else {
-          setIsUnknownReason(true)
+          setIsUnknwonReason(true)
           setAppUnavailable(true)
         }
       }
     })()
   }, [])
 
-  const [isResponding, { setTrue: setRespondingTrue, setFalse: setRespondingFalse }] = useBoolean(false)
+  const [isResponsing, { setTrue: setResponsingTrue, setFalse: setResponsingFalse }] = useBoolean(false)
   const [abortController, setAbortController] = useState<AbortController | null>(null)
   const { notify } = Toast
   const logError = (message: string) => {
@@ -288,8 +340,8 @@ const Main: FC<IMainProps> = () => {
     const inputLens = Object.values(currInputs).length
     const promptVariablesLens = promptConfig.prompt_variables.length
 
-    const emptyInput = inputLens < promptVariablesLens || Object.values(currInputs).find(v => !v)
-    if (emptyInput) {
+    const emytyInput = inputLens < promptVariablesLens || Object.values(currInputs).find(v => !v)
+    if (emytyInput) {
       logError(t('app.errorMessage.valueOfVarRequired'))
       return false
     }
@@ -300,8 +352,11 @@ const Main: FC<IMainProps> = () => {
   const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
   const [messageTaskId, setMessageTaskId] = useState('')
   const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
+  const [isResponsingConIsCurrCon, setIsResponsingConCurrCon, getIsResponsingConIsCurrCon] = useGetState(true)
   const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
   const [userQuery, setUserQuery] = useState('')
+  const doShowSuggestion = isShowSuggestion && !isResponding
+  const [suggestedQuestionsAfterAnswerConfig, setSuggestedQuestionsAfterAnswerConfig] = useState<SuggestedQuestionsAfterAnswerConfig | null>(null)
 
   const updateCurrentQA = ({
     responseItem,
@@ -309,10 +364,10 @@ const Main: FC<IMainProps> = () => {
     placeholderAnswerId,
     questionItem,
   }: {
-    responseItem: ChatItem
+    responseItem: IChatItem
     questionId: string
     placeholderAnswerId: string
-    questionItem: ChatItem
+    questionItem: IChatItem
   }) => {
     // closesure new list is outdated.
     const newListWithAnswer = produce(
@@ -327,14 +382,17 @@ const Main: FC<IMainProps> = () => {
   }
 
   const handleSend = async (message: string, files?: VisionFile[]) => {
-    if (isResponding) {
+    
+    if (isResponsing) {
       notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
       return
     }
+    
+    const target = conversationList.find(item => item.id === getCurrConversationId())
     const data: Record<string, any> = {
-      inputs: currInputs,
+      inputs: (target?.inputs?.product) ? target.inputs : currInputs,
       query: message,
-      conversation_id: isNewConversation ? null : currConversationId,
+      conversation_id: getConversationIdChangeBecauseOfNew() ? null : getCurrConversationId(),
     }
 
     if (visionConfig?.enabled && files && files?.length > 0) {
@@ -349,7 +407,7 @@ const Main: FC<IMainProps> = () => {
       })
     }
 
-    // question
+    // qustion
     const questionId = `question-${Date.now()}`
     const questionItem = {
       id: questionId,
@@ -371,7 +429,7 @@ const Main: FC<IMainProps> = () => {
     let isAgentMode = false
 
     // answer
-    const responseItem: ChatItem = {
+    const responseItem: IChatItem = {
       id: `${Date.now()}`,
       content: '',
       agent_thoughts: [],
@@ -382,8 +440,9 @@ const Main: FC<IMainProps> = () => {
 
     const prevTempNewConversationId = getCurrConversationId() || '-1'
     let tempNewConversationId = ''
+    setIsShowSuggestion(false)
 
-    setRespondingTrue()
+    setResponsingTrue()
     sendChatMessage(data, {
       getAbortController: (abortController) => {
         setAbortController(abortController)
@@ -408,7 +467,7 @@ const Main: FC<IMainProps> = () => {
         setMessageTaskId(taskId)
         // has switched to other conversation
         if (prevTempNewConversationId !== getCurrConversationId()) {
-          setIsRespondingConCurrCon(false)
+          setIsResponsingConCurrCon(false)
           return
         }
         updateCurrentQA({
@@ -425,17 +484,26 @@ const Main: FC<IMainProps> = () => {
         if (getConversationIdChangeBecauseOfNew()) {
           const { data: allConversations }: any = await fetchConversations()
           const newItem: any = await generationConversationName(allConversations[0].id)
+          allConversations[0].id && setCurrConversationId(allConversations[0].id, APP_ID, true)
 
           const newAllConversations = produce(allConversations, (draft: any) => {
             draft[0].name = newItem.name
           })
           setConversationList(newAllConversations as any)
         }
+        if (getIsRespondingConIsCurrCon() && suggestedQuestionsAfterAnswerConfig?.enabled && !getHasStopResponded()) {
+          const { data } = await fetchSuggestedQuestions(responseItem.id)
+          if(data.length){
+            setSuggestedQuestions(data)
+            setIsShowSuggestion(true)
+          }
+        }
+
         setConversationIdChangeBecauseOfNew(false)
         resetNewConversationInputs()
         setChatNotStarted()
         setCurrConversationId(tempNewConversationId, APP_ID, true)
-        setRespondingFalse()
+        setResponsingFalse()
       },
       onFile(file) {
         const lastThought = responseItem.agent_thoughts?.[responseItem.agent_thoughts?.length - 1]
@@ -474,7 +542,7 @@ const Main: FC<IMainProps> = () => {
         }
         // has switched to other conversation
         if (prevTempNewConversationId !== getCurrConversationId()) {
-          setIsRespondingConCurrCon(false)
+          setIsResponsingConCurrCon(false)
           return false
         }
 
@@ -528,58 +596,16 @@ const Main: FC<IMainProps> = () => {
           },
         ))
       },
-      onError() {
-        setRespondingFalse()
+      onError(msg, code) {
+        if (code == '413' && currConversationId !== '-1') {
+          addMaxTokenConversation(currConversationId)
+        }
+        setResponsingFalse()
         // role back placeholder answer
         setChatList(produce(getChatList(), (draft) => {
           draft.splice(draft.findIndex(item => item.id === placeholderAnswerId), 1)
         }))
-      },
-      onWorkflowStarted: ({ workflow_run_id, task_id }) => {
-        // taskIdRef.current = task_id
-        responseItem.workflow_run_id = workflow_run_id
-        responseItem.workflowProcess = {
-          status: WorkflowRunningStatus.Running,
-          tracing: [],
-        }
-        setChatList(produce(getChatList(), (draft) => {
-          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-          draft[currentIndex] = {
-            ...draft[currentIndex],
-            ...responseItem,
-          }
-        }))
-      },
-      onWorkflowFinished: ({ data }) => {
-        responseItem.workflowProcess!.status = data.status as WorkflowRunningStatus
-        setChatList(produce(getChatList(), (draft) => {
-          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-          draft[currentIndex] = {
-            ...draft[currentIndex],
-            ...responseItem,
-          }
-        }))
-      },
-      onNodeStarted: ({ data }) => {
-        responseItem.workflowProcess!.tracing!.push(data as any)
-        setChatList(produce(getChatList(), (draft) => {
-          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-          draft[currentIndex] = {
-            ...draft[currentIndex],
-            ...responseItem,
-          }
-        }))
-      },
-      onNodeFinished: ({ data }) => {
-        const currentIndex = responseItem.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
-        responseItem.workflowProcess!.tracing[currentIndex] = data as any
-        setChatList(produce(getChatList(), (draft) => {
-          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-          draft[currentIndex] = {
-            ...draft[currentIndex],
-            ...responseItem,
-          }
-        }))
+        setIsShowSuggestion(false)
       },
     })
   }
@@ -606,23 +632,25 @@ const Main: FC<IMainProps> = () => {
       <Sidebar
         list={conversationList}
         onCurrentIdChange={handleConversationIdChange}
-        currentId={currConversationId}
+        onDeleteConversationItem={handleDeleteConversationItem}
+        currentId={getCurrConversationId()}
         copyRight={APP_INFO.copyright || APP_INFO.title}
       />
     )
   }
 
   if (appUnavailable)
-    return <AppUnavailable isUnknownReason={isUnknownReason} errMessage={!hasSetAppConfig ? 'Please set APP_ID and API_KEY in config/index.tsx' : ''} />
+    return <AppUnavailable isUnknwonReason={isUnknwonReason} errMessage={!hasSetAppConfig ? 'Please set APP_ID and API_KEY in config/index.tsx' : ''} />
 
   if (!APP_ID || !APP_INFO || !promptConfig)
     return <Loading type='app' />
 
   return (
-    <div className='bg-gray-100'>
+    <div className='bg-gray-100 main-wrapper'>
       <Header
         title={APP_INFO.title}
         isMobile={isMobile}
+        showMobile={showMobile}
         onShowSideBar={showSidebar}
         onCreateNewChat={() => handleConversationIdChange('-1')}
       />
@@ -640,7 +668,7 @@ const Main: FC<IMainProps> = () => {
           </div>
         )}
         {/* main */}
-        <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
+        <div className='flex-grow flex-col flex h-[calc(100vh_-_3rem)] overflow-y-auto chat-wrapper'>
           <ConfigSence
             conversationName={conversationName}
             hasSetInputs={hasSetInputs}
@@ -648,22 +676,26 @@ const Main: FC<IMainProps> = () => {
             siteInfo={APP_INFO}
             promptConfig={promptConfig}
             onStartChat={handleStartChat}
-            canEditInputs={canEditInputs}
+            canEidtInpus={canEditInpus}
             savedInputs={currInputs as Record<string, any>}
             onInputsChange={setCurrInputs}
           ></ConfigSence>
 
           {
             hasSetInputs && (
-              <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
+              <div style={{ paddingBottom: `${footerHeight}px` }} className='relative grow pc:w-[794px] max-w-full mobile:w-full mx-auto mb-3.5 overflow-hidden'>
                 <div className='h-full overflow-y-auto' ref={chatListDomRef}>
                   <Chat
                     chatList={chatList}
                     onSend={handleSend}
                     onFeedback={handleFeedback}
-                    isResponding={isResponding}
+                    isResponsing={isResponsing}
                     checkCanSend={checkCanSend}
                     visionConfig={visionConfig}
+                    isHideSendInput={isMaxToken}
+                    suggestionList={suggestedQuestions}
+                    isShowSuggestion={doShowSuggestion}
+                    onHeightChange={handleFooterHeightChange}
                   />
                 </div>
               </div>)

@@ -1,5 +1,10 @@
-node_modules
+.env
+.vscode
+.next
 .git
-.gitignore
-*.md
-dist
+.idea
+.yarn
+.husky
+.swc
+.pnp*
+node_modules

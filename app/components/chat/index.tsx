@@ -1,23 +1,24 @@
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useLayoutEffect, useState, useCallback} from 'react'
 import cn from 'classnames'
 import { useTranslation } from 'react-i18next'
 import Textarea from 'rc-textarea'
 import s from './style.module.css'
 import Answer from './answer'
 import Question from './question'
-import type { FeedbackFunc, OnSend } from './type'
-import type { ChatItem, VisionSettings } from '@/types/app'
+import type { FeedbackFunc, Feedbacktype } from './type'
+import type { VisionFile, VisionSettings } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 import Tooltip from '@/app/components/base/tooltip'
-
+import Toast from '@/app/components/base/toast'
 import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
 import ImageList from '@/app/components/base/image-uploader/image-list'
 import { useImageFiles } from '@/app/components/base/image-uploader/hooks'
+import TryToAsk from './try-to-ask'
 
 export type IChatProps = {
-  chatList: ChatItem[]
+  chatList: IChatItem[]
   /**
    * Whether to display the editing area and rating status
    */
@@ -28,11 +29,36 @@ export type IChatProps = {
   isHideSendInput?: boolean
   onFeedback?: FeedbackFunc
   checkCanSend?: () => boolean
-  onSend?: OnSend
+  onSend?: (message: string, files: VisionFile[]) => void
   useCurrentUserAvatar?: boolean
-  isResponding?: boolean
+  isResponsing?: boolean
   controlClearQuery?: number
   visionConfig?: VisionSettings
+  isShowSuggestion?: boolean
+  suggestionList?: string[]
+  onQueryChange?: (query: string) => void
+  onHeightChange?: (height: number) => void
+}
+
+export type IChatItem = {
+  id: string
+  content: string
+  /**
+   * Specific message type
+   */
+  isAnswer: boolean
+  /**
+   * The user feedback result of this message
+   */
+  feedback?: Feedbacktype
+  /**
+   * Whether to hide the feedback area
+   */
+  feedbackDisabled?: boolean
+  isIntroduction?: boolean
+  useCurrentUserAvatar?: boolean
+  isOpeningStatement?: boolean
+  message_files?: VisionFile[]
 }
 
 const Chat: FC<IChatProps> = ({
@@ -41,25 +67,51 @@ const Chat: FC<IChatProps> = ({
   isHideSendInput = false,
   onFeedback,
   checkCanSend,
-  onSend = () => {
-  },
+  onSend = () => { },
   useCurrentUserAvatar,
-  isResponding,
+  isResponsing,
   controlClearQuery,
   visionConfig,
+  isShowSuggestion,
+  suggestionList,
+  onQueryChange = () => { },
+  onHeightChange = () => { },
 }) => {
   const { t } = useTranslation()
-  
+  const { notify } = Toast
   const isUseInputMethod = useRef(false)
 
+  const footerRef = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    // change footer padding bottom
+    if (footerRef.current){
+      const domHeight = footerRef.current.scrollHeight + 20
+      onHeightChange(domHeight)
+    }
+  }, [suggestionList])
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (footerRef.current){
+        const domHeight = footerRef.current.scrollHeight + 20
+        onHeightChange(domHeight)
+      }
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
   const [query, setQuery] = React.useState('')
+
   const handleContentChange = (e: any) => {
     const value = e.target.value
     setQuery(value)
   }
 
   const logError = (message: string) => {
-    console.error(message)
+    notify({ type: 'error', message, duration: 3000 })
   }
 
   const valid = () => {
@@ -96,7 +148,7 @@ const Chat: FC<IChatProps> = ({
     if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
       if (files.length)
         onClear()
-      if (!isResponding)
+      if (!isResponsing)
         setQuery('')
     }
   }
@@ -118,11 +170,28 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
-  // 注释掉-更多问题和建议
-  // const chatFooterRef = useRef<HTMLDivElement>(null)
-  // const chatFooterInnerRef = useRef<HTMLDivElement>(null)
-  // const { suggestedQuestions, suggestedQuestionsAfterAnswer } = modelConfig
-  // const hasTryToAsk = suggestedQuestionsAfterAnswer?.enabled && !!suggestedQuestions?.length && onSend
+  const handleQueryChangeFromAnswer = useCallback((val: string) => {
+    setQuery(val)
+    handleSend()
+  }, [])
+  
+  const handleSuggestQuery = useCallback((val: string) => {
+    if(val){
+      setQuery(val)
+      onSend(val, files.filter(file => file.progress !== -1).map(fileItem => ({
+        type: 'image',
+        transfer_method: fileItem.type,
+        url: fileItem.url,
+        upload_file_id: fileItem.fileId,
+      })))
+      if (!files.find(item => item.type === TransferMethod.local_file && !item.fileId)) {
+        if (files.length)
+          onClear()
+        if (!isResponsing)
+          setQuery('')
+      }
+    }
+  }, [])
 
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
@@ -134,10 +203,10 @@ const Chat: FC<IChatProps> = ({
             return <Answer
               key={item.id}
               item={item}
-              onSend={onSend}
               feedbackDisabled={feedbackDisabled}
               onFeedback={onFeedback}
-              isResponding={isResponding && isLast}
+              isResponsing={isResponsing && isLast}
+              onQueryChange={handleQueryChangeFromAnswer}
             />
           }
           return (
@@ -151,53 +220,31 @@ const Chat: FC<IChatProps> = ({
           )
         })}
       </div>
-      {/* <div
-        className={`absolute bottom-0 p-2`}
-        ref={chatFooterRef}
-        style={{
-          background: 'linear-gradient(0deg, #F9FAFB 40%, rgba(255, 255, 255, 0.00) 100%)',
-        }}
-      >
-        <div
-          ref={chatFooterInnerRef}
-          className={`mx-auto w-full max-w-[720px]  px-4`}
-        >
-          {
-            !noStopResponding && isResponsing && (
-              <div className='flex justify-center mb-2'>
-                <Button onClick={onStopResponding}>
-                  <StopCircle className='mr-[5px] w-3.5 h-3.5 text-gray-500' />
-                  <span className='text-xs text-gray-500 font-normal'>{t('appDebug.operation.stopResponding')}</span>
-                </Button>
-              </div>
-            )
-          }
-          {
-            hasTryToAsk && (
-              <TryToAsk
-                suggestedQuestions={suggestedQuestions}
-                onSend={onSend}
-              />
-            )
-          }
-        </div>
-      </div> */}
       {
         !isHideSendInput && (
-          <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-            <div className="p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto">
+          <div ref={footerRef} className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0 chat-input')}>
+            {
+              isShowSuggestion && (
+                <TryToAsk
+                  suggestList={suggestionList}
+                  OnSuggestSend={handleSuggestQuery}
+                />
+              )
+            }
+
+            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
               {
                 visionConfig?.enabled && (
                   <>
-                    <div className="absolute bottom-2 left-2 flex items-center">
+                    <div className='absolute bottom-2 left-2 flex items-center'>
                       <ChatImageUploader
                         settings={visionConfig}
                         onUpload={onUpload}
                         disabled={files.length >= visionConfig.number_limits}
                       />
-                      <div className="mx-1 w-[1px] h-4 bg-black/5"/>
+                      <div className='mx-1 w-[1px] h-4 bg-black/5' />
                     </div>
-                    <div className="pl-[52px]">
+                    <div className='pl-[52px]'>
                       <ImageList
                         list={files}
                         onRemove={onRemove}
@@ -223,7 +270,7 @@ const Chat: FC<IChatProps> = ({
               <div className="absolute bottom-2 right-2 flex items-center h-8">
                 <div className={`${s.count} mr-4 h-5 leading-5 text-sm bg-gray-50 text-gray-500`}>{query.trim().length}</div>
                 <Tooltip
-                  selector="send-tip"
+                  selector='send-tip'
                   htmlContent={
                     <div>
                       <div>{t('common.operation.send')} Enter</div>

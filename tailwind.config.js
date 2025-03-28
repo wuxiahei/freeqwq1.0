@@ -1,7 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-
 module.exports = {
-  darkMode: ['class'],
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
@@ -36,6 +34,7 @@ module.exports = {
           50: '#F3FAF7',
           100: '#DEF7EC',
           800: '#03543F',
+
         },
         yellow: {
           100: '#FDF6B2',
@@ -52,18 +51,16 @@ module.exports = {
       },
       screens: {
         mobile: '100px',
-        tablet: '640px',
+        // => @media (min-width: 100px) { ... }
+        tablet: '640px', // 391
+        // => @media (min-width: 600px) { ... }
         pc: '769px',
-      },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        // => @media (min-width: 769px) { ... }
       },
     },
   },
   plugins: [
     require('@tailwindcss/typography'),
-    require('tailwindcss-animate'),
+    require('@tailwindcss/line-clamp'),
   ],
 }

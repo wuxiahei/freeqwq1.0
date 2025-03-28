@@ -2,7 +2,6 @@ import type { PromptVariable, UserInputFormItem } from '@/types/app'
 
 export function replaceVarWithValues(str: string, promptVariables: PromptVariable[], inputs: Record<string, any>) {
   return str.replace(/\{\{([^}]+)\}\}/g, (match, key) => {
-    console.log('🚀 ~ file:prompt.ts, line:5-----', key)
     const name = inputs[key]
     if (name)
       return name
@@ -25,12 +24,8 @@ export const userInputsFormToPromptVariables = (useInputs: UserInputFormItem[] |
       if (item['text-input'])
         return ['string', item['text-input']]
 
-      if (item.number)
-        return ['number', item.number]
-
       return ['select', item.select]
     })()
-
     if (type === 'string' || type === 'paragraph') {
       promptVariables.push({
         key: content.variable,
@@ -38,15 +33,6 @@ export const userInputsFormToPromptVariables = (useInputs: UserInputFormItem[] |
         required: content.required,
         type,
         max_length: content.max_length,
-        options: [],
-      })
-    }
-    else if (type === 'number') {
-      promptVariables.push({
-        key: content.variable,
-        name: content.label,
-        required: content.required,
-        type,
         options: [],
       })
     }

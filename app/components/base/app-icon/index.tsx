@@ -1,16 +1,15 @@
 import type { FC } from 'react'
-import Image from 'next/image'
 import classNames from 'classnames'
 import style from './style.module.css'
-import defaultIconUrl from './icon.png' // 假设默认图标仍保留
+import LogoImage from "./logo.svg";
+import Image from "next/image";
 
 export type AppIconProps = {
   size?: 'xs' | 'tiny' | 'small' | 'medium' | 'large'
   rounded?: boolean
-  icon?: string // 现在将用于定义图标路径
+  icon?: string
   background?: string
   className?: string
-  innerIcon?: JSX.Element
 }
 
 const AppIcon: FC<AppIconProps> = ({
@@ -18,11 +17,7 @@ const AppIcon: FC<AppIconProps> = ({
   rounded = false,
   background,
   className,
-  icon = defaultIconUrl, // 添加默认图标作为 fallback
-  innerIcon,
 }) => {
-  const effectiveIcon = icon || defaultIconUrl
-
   return (
     <span
       className={classNames(
@@ -31,12 +26,8 @@ const AppIcon: FC<AppIconProps> = ({
         rounded && style.rounded,
         className ?? '',
       )}
-      style={{ background }}
     >
-      <Image
-        src={effectiveIcon}
-        alt="logo"
-      />
+      <Image src={LogoImage} alt="logo" />
     </span>
   )
 }

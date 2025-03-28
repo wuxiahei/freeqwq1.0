@@ -1,5 +1,5 @@
-import { API_KEY, API_PREFIX } from '@/config'
-
+import { API_PREFIX } from '@/config'
+import Toast from '@/app/components/base/toast'
 import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
 import type { VisionFile } from '@/types/app'
 
@@ -22,77 +22,6 @@ const baseOptions = {
   redirect: 'follow',
 }
 
-export type WorkflowStartedResponse = {
-  task_id: string
-  workflow_run_id: string
-  event: string
-  data: {
-    id: string
-    workflow_id: string
-    sequence_number: number
-    created_at: number
-  }
-}
-
-export type WorkflowFinishedResponse = {
-  task_id: string
-  workflow_run_id: string
-  event: string
-  data: {
-    id: string
-    workflow_id: string
-    status: string
-    outputs: any
-    error: string
-    elapsed_time: number
-    total_tokens: number
-    total_steps: number
-    created_at: number
-    finished_at: number
-  }
-}
-
-export type NodeStartedResponse = {
-  task_id: string
-  workflow_run_id: string
-  event: string
-  data: {
-    id: string
-    node_id: string
-    node_type: string
-    index: number
-    predecessor_node_id?: string
-    inputs: any
-    created_at: number
-    extras?: any
-  }
-}
-
-export type NodeFinishedResponse = {
-  task_id: string
-  workflow_run_id: string
-  event: string
-  data: {
-    id: string
-    node_id: string
-    node_type: string
-    index: number
-    predecessor_node_id?: string
-    inputs: any
-    process_data: any
-    outputs: any
-    status: string
-    error: string
-    elapsed_time: number
-    execution_metadata: {
-      total_tokens: number
-      total_price: number
-      currency: string
-    }
-    created_at: number
-  }
-}
-
 export type IOnDataMoreInfo = {
   conversationId?: string
   taskId?: string
@@ -109,10 +38,6 @@ export type IOnMessageReplace = (messageReplace: MessageReplace) => void
 export type IOnAnnotationReply = (messageReplace: AnnotationReply) => void
 export type IOnCompleted = (hasError?: boolean) => void
 export type IOnError = (msg: string, code?: string) => void
-export type IOnWorkflowStarted = (workflowStarted: WorkflowStartedResponse) => void
-export type IOnWorkflowFinished = (workflowFinished: WorkflowFinishedResponse) => void
-export type IOnNodeStarted = (nodeStarted: NodeStartedResponse) => void
-export type IOnNodeFinished = (nodeFinished: NodeFinishedResponse) => void
 
 type IOtherOptions = {
   isPublicAPI?: boolean
@@ -127,10 +52,6 @@ type IOtherOptions = {
   onError?: IOnError
   onCompleted?: IOnCompleted // for stream
   getAbortController?: (abortController: AbortController) => void
-  onWorkflowStarted?: IOnWorkflowStarted
-  onWorkflowFinished?: IOnWorkflowFinished
-  onNodeStarted?: IOnNodeStarted
-  onNodeFinished?: IOnNodeFinished
 }
 
 function unicodeToChar(text: string) {
@@ -139,19 +60,7 @@ function unicodeToChar(text: string) {
   })
 }
 
-const handleStream = (
-  response: Response,
-  onData: IOnData,
-  onCompleted?: IOnCompleted,
-  onThought?: IOnThought,
-  onMessageEnd?: IOnMessageEnd,
-  onMessageReplace?: IOnMessageReplace,
-  onFile?: IOnFile,
-  onWorkflowStarted?: IOnWorkflowStarted,
-  onWorkflowFinished?: IOnWorkflowFinished,
-  onNodeStarted?: IOnNodeStarted,
-  onNodeFinished?: IOnNodeFinished,
-) => {
+const handleStream = (response: Response, onData: IOnData, onCompleted?: IOnCompleted, onThought?: IOnThought, onMessageEnd?: IOnMessageEnd, onMessageReplace?: IOnMessageReplace, onFile?: IOnFile) => {
   if (!response.ok)
     throw new Error('Network response was not ok')
 
@@ -160,7 +69,6 @@ const handleStream = (
   let buffer = ''
   let bufferObj: Record<string, any>
   let isFirstMessage = true
-
   function read() {
     let hasError = false
     reader?.read().then((result: any) => {
@@ -175,7 +83,8 @@ const handleStream = (
           if (message.startsWith('data: ')) { // check if it starts with data:
             try {
               bufferObj = JSON.parse(message.substring(6)) as Record<string, any>// remove data: and parse as json
-            } catch (e) {
+            }
+            catch (e) {
               // mute handle message cut off
               onData('', isFirstMessage, {
                 conversationId: bufferObj?.conversation_id,
@@ -202,27 +111,24 @@ const handleStream = (
                 messageId: bufferObj.id,
               })
               isFirstMessage = false
-            } else if (bufferObj.event === 'agent_thought') {
+            }
+            else if (bufferObj.event === 'agent_thought') {
               onThought?.(bufferObj as ThoughtItem)
-            } else if (bufferObj.event === 'message_file') {
+            }
+            else if (bufferObj.event === 'message_file') {
               onFile?.(bufferObj as VisionFile)
-            } else if (bufferObj.event === 'message_end') {
+            }
+            else if (bufferObj.event === 'message_end') {
               onMessageEnd?.(bufferObj as MessageEnd)
-            } else if (bufferObj.event === 'message_replace') {
+            }
+            else if (bufferObj.event === 'message_replace') {
               onMessageReplace?.(bufferObj as MessageReplace)
-            } else if (bufferObj.event === 'workflow_started') {
-              onWorkflowStarted?.(bufferObj as WorkflowStartedResponse)
-            } else if (bufferObj.event === 'workflow_finished') {
-              onWorkflowFinished?.(bufferObj as WorkflowFinishedResponse)
-            } else if (bufferObj.event === 'node_started') {
-              onNodeStarted?.(bufferObj as NodeStartedResponse)
-            } else if (bufferObj.event === 'node_finished') {
-              onNodeFinished?.(bufferObj as NodeFinishedResponse)
             }
           }
         })
         buffer = lines[lines.length - 1]
-      } catch (e) {
+      }
+      catch (e) {
         onData('', false, {
           conversationId: undefined,
           messageId: '',
@@ -236,7 +142,6 @@ const handleStream = (
         read()
     })
   }
-
   read()
 }
 
@@ -266,6 +171,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
   if (body)
     options.body = JSON.stringify(body)
 
+  options.cache = 'no-store';
   // Handle timeout
   return Promise.race([
     new Promise((resolve, reject) => {
@@ -283,19 +189,30 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
               const bodyJson = res.json()
               switch (res.status) {
                 case 401: {
-                  
+                  Toast.notify({ type: 'error', message: 'Invalid token' })
                   return
                 }
                 default:
-                // eslint-disable-next-line no-new
+                  // eslint-disable-next-line no-new
                   new Promise(() => {
                     bodyJson.then((data: any) => {
-                      
+                      Toast.notify({ type: 'error', message: data.message })
                     })
                   })
               }
-            } catch (e) {
-              
+
+              /**
+               * auth error
+               */
+              if (res.status == 406) {
+                if (typeof location !== "undefined") {
+                  location.reload();
+                }
+                return Promise.reject(new Error('Auth Error'));
+              }
+            }
+            catch (e) {
+              Toast.notify({ type: 'error', message: `${e}` })
             }
 
             return Promise.reject(resClone)
@@ -313,7 +230,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
           resolve(needAllResponseContent ? resClone : data)
         })
         .catch((err) => {
-          
+          Toast.notify({ type: 'error', message: err })
           reject(err)
         })
     }),
@@ -352,23 +269,7 @@ export const upload = (fetchOptions: any): Promise<any> => {
   })
 }
 
-export const ssePost = (
-  url: string,
-  fetchOptions: any,
-  {
-    onData,
-    onCompleted,
-    onThought,
-    onFile,
-    onMessageEnd,
-    onMessageReplace,
-    onWorkflowStarted,
-    onWorkflowFinished,
-    onNodeStarted,
-    onNodeFinished,
-    onError,
-  }: IOtherOptions,
-) => {
+export const ssePost = (url: string, fetchOptions: any, { onData, onCompleted, onThought, onFile, onMessageEnd, onMessageReplace, onError }: IOtherOptions) => {
   const options = Object.assign({}, baseOptions, {
     method: 'POST',
   }, fetchOptions)
@@ -377,39 +278,54 @@ export const ssePost = (
   const urlWithPrefix = `${urlPrefix}${url.startsWith('/') ? url : `/${url}`}`
 
   const { body } = options
-
-  if (!body.inputs.userName) {
-    body.inputs.userName = 'DellDi'
-  }
-  if (body) {
+  if (body)
     options.body = JSON.stringify(body)
-  }
-
-  options.headers.Authorization = `Bearer ${API_KEY}`
 
   globalThis.fetch(urlWithPrefix, options)
     .then((res: any) => {
       if (!/^(2|3)\d{2}$/.test(res.status)) {
-      // eslint-disable-next-line no-new
+        // eslint-disable-next-line no-new
         new Promise(() => {
           res.json().then((data: any) => {
-            
+            Toast.notify({ type: 'error', message: data.message || 'Server Error' })
           })
         })
+        /**
+         * auth error
+         */
+        if (res.status == 406) {
+          if (typeof location !== "undefined") {
+            location.reload();
+          }
+          onError?.('Auth Error', '406');
+          return
+        }
+
+
         onError?.('Server Error')
         return
       }
       return handleStream(res, (str: string, isFirstMessage: boolean, moreInfo: IOnDataMoreInfo) => {
         if (moreInfo.errorMessage) {
-          
+          if (/(context_length_exceeded)/i.test(`${moreInfo.errorMessage}`)) {
+            onError?.('context_length_exceeded', '413');
+            Toast.notify({ type: 'info', message: '這個對話已經很長了，請新開對話繼續吧' })
+            return
+          }
+          if (/(rate limit)/i.test(`${moreInfo.errorMessage}`)) {
+            onError?.('context_length_exceeded', '429');
+            Toast.notify({ type: 'info', message: 'AI助手正在忙於答覆中，請稍等' })
+            return
+          }
+          Toast.notify({ type: 'error', message: moreInfo.errorMessage })
           return
         }
         onData?.(str, isFirstMessage, moreInfo)
       }, () => {
         onCompleted?.()
-      }, onThought, onMessageEnd, onMessageReplace, onFile, onWorkflowStarted, onWorkflowFinished, onNodeStarted, onNodeFinished)
+      }, onThought, onMessageEnd, onMessageReplace, onFile)
     }).catch((e) => {
-      
+      Toast.notify({ type: 'error', message: e })
       onError?.(e)
     })
 }
@@ -433,5 +349,3 @@ export const put = (url: string, options = {}, otherOptions?: IOtherOptions) => 
 export const del = (url: string, options = {}, otherOptions?: IOtherOptions) => {
   return request(url, Object.assign({}, options, { method: 'DELETE' }), otherOptions)
 }
-
-

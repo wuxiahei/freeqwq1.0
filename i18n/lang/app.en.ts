@@ -2,7 +2,7 @@ const translation = {
   common: {
     welcome: 'Welcome to use',
     appUnavailable: 'App is unavailable',
-    appUnknownError: 'App is unavailable',
+    appUnkonwError: 'App is unavailable',
   },
   chat: {
     newChat: 'New chat',
@@ -22,14 +22,19 @@ const translation = {
       'privacy policy',
     privacyPolicyRight:
       ' provided by the app developer.',
+    delete: 'Delete',
+    tryToAsk:'Try to ask',
+    confirmDeleteTitle:'Delete conversation',
+    confirmDeleteContent:'Are you sure you want to delete this conversation?',
+    confirmBtn:'Confirm',
+    cancelBtn:'Cancel',
+    deleteSuccess:'Success',
   },
   errorMessage: {
     valueOfVarRequired: 'Variables value can not be empty',
     waitForResponse:
       'Please wait for the response to the previous message to complete.',
-  },
-  variableTable: {
-    optional: 'Optional',
+    deleteFailed:'Failed',
   },
 }
 

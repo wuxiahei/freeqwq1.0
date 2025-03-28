@@ -2,20 +2,14 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import commonEn from './lang/common.en'
-import commonEs from './lang/common.es'
 import commonZh from './lang/common.zh'
-import commonVi from './lang/common.vi'
-import commonJa from './lang/common.ja'
+import commonZhHant from './lang/common.zh-hant'
 import appEn from './lang/app.en'
-import appEs from './lang/app.es'
 import appZh from './lang/app.zh'
-import appVi from './lang/app.vi'
-import appJa from './lang/app.ja'
+import appZhHant from './lang/app.zh-hant'
 import toolsEn from './lang/tools.en'
 import toolsZh from './lang/tools.zh'
-import toolsVi from './lang/tools.vi'
-import toolsJa from './lang/tools.ja'
-
+import toolsZhHant from './lang/tools.zh-hant'
 import type { Locale } from '.'
 
 const resources = {
@@ -27,12 +21,6 @@ const resources = {
       tools: toolsEn,
     },
   },
-  'es': {
-    translation: {
-      common: commonEs,
-      app: appEs,
-    },
-  },
   'zh-Hans': {
     translation: {
       common: commonZh,
@@ -41,20 +29,12 @@ const resources = {
       tools: toolsZh,
     },
   },
-  'vi': {
+  'zh-Hant': {
     translation: {
-      common: commonVi,
-      app: appVi,
+      common: commonZhHant,
+      app: appZhHant,
       // tools
-      tools: toolsVi,
-    },
-  },
-  'ja': {
-    translation: {
-      common: commonJa,
-      app: appJa,
-      // tools
-      tools: toolsJa,
+      tools: toolsZhHant,
     },
   },
 }
