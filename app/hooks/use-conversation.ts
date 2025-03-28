@@ -22,8 +22,20 @@ export default function useConversation() {
         // 原有的导出PDF功能
     }
 
+    const deleteConversation = async (id: string) => {
+        try {
+            await client.deleteConversation(id)
+            setConversations(prev =>
+                prev.filter(item => item.id !== id)
+            )
+        } catch (error) {
+            console.error('Failed to delete conversation:', error)
+        }
+    }
+
     return {
         renameConversation,
-        exportConversationToPDF
+        exportConversationToPDF,
+        deleteConversation
     }
 }
