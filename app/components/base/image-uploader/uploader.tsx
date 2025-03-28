@@ -58,7 +58,7 @@ const Uploader: FC<UploaderProps> = ({
             onUpload({ ...imageFile, fileId: res.id, progress: 100 })
           },
           onErrorCallback: () => {
-            notify({ type: 'error', message: t('common.imageUploader.uploadFromComputerUploadError') })
+            console.error(t('common.imageUploader.uploadFromComputerUploadError'))
             onUpload({ ...imageFile, progress: -1 })
           },
         })
