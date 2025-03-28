@@ -91,12 +91,6 @@ export const generationConversationName = async (id: string) => {
   return post(`conversations/${id}/name`, { body: { auto_generate: true } })
 }
 
-interface Organization {
-  organizationNature: string;
-  organizationId: string;
-  childOrganizations?: Organization[];
-}
-
 const commonFetch = async (url: string, method: string, headers: HeadersInit, body?: any) => {
   const axiosHeaders = new AxiosHeaders()
   if (headers instanceof Headers) {
@@ -132,58 +126,4 @@ const commonFetch = async (url: string, method: string, headers: HeadersInit, bo
     throw error
   }
 }
-export const fetchAllProjectName = async (token: string) => {
-  const urlObj = new URL(API_ORG_URL)
-  const baseURl = `${urlObj.protocol}//${urlObj.hostname}`
-  const url = new URL(`${baseURl}/api/view/organization/get-orgtree-form-standard`)
-  // 获取请求头 - 按照端类型
-  const agentType = returnAgentType()
-  const { appId, appClientType } = headersMap[agentType]
-  const baseHeader = {
-    token,
-    appclienttype: appClientType,
-    appid: appId,
-  }
-  url.searchParams.append('dimon', 'adm')
-  url.searchParams.append('selectAll', 'false')
-  const projectIds: string[] = []
-  try {
-    const organizationVos = await commonFetch(url.toString(), 'GET', baseHeader)
-    const orgTree = organizationVos.organizationVos
-    // 递归查找 orgTree 中的所有项目 id
-    const findProjectIds = (tree: Organization[]) => {
-      if (tree && tree.length === 0)
-        return
-      for (const item of tree) {
-        if (item.organizationNature === 'propertyProject') {
-          projectIds.push(item.organizationId)
-        } else {
-          item?.childOrganizations &&
-            findProjectIds(item.childOrganizations)
-        }
-      }
-    }
-    findProjectIds(orgTree)
-    // getPrecinctInfoByRefOrgIdList \ getPrecinctByOrgIds
-    const url2 = new URL(`${baseURl}/api/owner/owner-rest/getPrecinctByOrgIdsAndPrecinctformat`)
-    const resPriceList = await commonFetch(url2.toString(), 'POST', baseHeader, projectIds) as [{
-      orgId: number;
-      precinctId: number;
-      precinctName: string
-    }]
-    return resPriceList.map(item => item.precinctName)
-  } catch (error) {
-    return ['']
-  }
-}
 
-export const replaceArrText = (arr: string[], precinctNameList: string[]): string[] => {
-  // 替换数组中的每一个文本包含${projectName}字符串,取 precinctNameList 中的随机值
-  return arr.map((item) => {
-    if (item.includes('${projectName}')) {
-      const randomIndex = Math.floor(Math.random() * precinctNameList.length)
-      return item.replace('${projectName}', precinctNameList[randomIndex])
-    }
-    return item
-  })
-}
