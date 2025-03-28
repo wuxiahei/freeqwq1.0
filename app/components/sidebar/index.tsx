@@ -31,7 +31,7 @@ const Sidebar: FC<ISidebarProps> = ({
   list,
 }) => {
   const { t } = useTranslation()
-  const { exportConversationToPDF, renameConversation } = useConversation()
+  const { exportConversationToPDF, renameConversation, deleteConversation } = useConversation()
   return (
     <div
       className="shrink-0 flex flex-col overflow-y-auto bg-white pc:w-[244px] tablet:w-[192px] mobile:w-[240px]  border-r border-gray-200 tablet:h-[calc(100vh_-_3rem)] mobile:h-screen"
@@ -94,6 +94,17 @@ const Sidebar: FC<ISidebarProps> = ({
                     className="ml-2 text-gray-400 hover:text-gray-500"
                   >
                     重命名
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (confirm('确定要删除此对话吗？')) {
+                        deleteConversation(item.id)
+                      }
+                    }}
+                    className="ml-2 text-gray-400 hover:text-gray-500"
+                  >
+                    删除
                   </button>
                 </>
               )}
