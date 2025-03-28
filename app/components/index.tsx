@@ -367,13 +367,17 @@ const Main: FC<IMainProps> = () => {
 
         setInited(true);
       } catch (e: any) {
-        console.log("🚀 ~ file:index.tsx, line:282-----", e);
+        console.error("获取会话列表失败:", e);
+        
+        // 处理404错误
         if (e.status === 404) {
           setAppUnavailable(true);
-        } else {
-          setIsUnknownReason(true);
-          setAppUnavailable(true);
+          return;
         }
+        
+        // 处理其他错误
+        setIsUnknownReason(true);
+        setAppUnavailable(true);
       }
     })();
   }, [APP_ID, API_KEY]);
