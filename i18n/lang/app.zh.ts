@@ -2,13 +2,13 @@ const translation = {
   common: {
     welcome: '欢迎使用',
     appUnavailable: '应用不可用',
-    appUnkonwError: '应用不可用',
+    appUnknownError: '应用不可用',
   },
   chat: {
-    newChat: '新对话',
+    newChat: '新建对话',
     newChatDefaultName: '新的对话',
     openingStatementTitle: '对话开场白',
-    powerBy: 'Powered by',
+    powerBy: '构建于',
     prompt: '提示词',
     privatePromptConfigTitle: '对话设置',
     publicPromptConfigTitle: '对话前提示词',

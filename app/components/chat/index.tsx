@@ -7,8 +7,8 @@ import Textarea from 'rc-textarea'
 import s from './style.module.css'
 import Answer from './answer'
 import Question from './question'
-import type { FeedbackFunc } from './type'
-import type { ChatItem, VisionFile, VisionSettings } from '@/types/app'
+import type { FeedbackFunc, OnSend } from './type'
+import type { ChatItem, VisionSettings } from '@/types/app'
 import { TransferMethod } from '@/types/app'
 import Tooltip from '@/app/components/base/tooltip'
 import Toast from '@/app/components/base/toast'
@@ -28,7 +28,7 @@ export type IChatProps = {
   isHideSendInput?: boolean
   onFeedback?: FeedbackFunc
   checkCanSend?: () => boolean
-  onSend?: (message: string, files: VisionFile[]) => void
+  onSend?: OnSend
   useCurrentUserAvatar?: boolean
   isResponding?: boolean
   controlClearQuery?: number
@@ -41,7 +41,8 @@ const Chat: FC<IChatProps> = ({
   isHideSendInput = false,
   onFeedback,
   checkCanSend,
-  onSend = () => { },
+  onSend = () => {
+  },
   useCurrentUserAvatar,
   isResponding,
   controlClearQuery,
@@ -117,6 +118,12 @@ const Chat: FC<IChatProps> = ({
     }
   }
 
+  // 注释掉-更多问题和建议
+  // const chatFooterRef = useRef<HTMLDivElement>(null)
+  // const chatFooterInnerRef = useRef<HTMLDivElement>(null)
+  // const { suggestedQuestions, suggestedQuestionsAfterAnswer } = modelConfig
+  // const hasTryToAsk = suggestedQuestionsAfterAnswer?.enabled && !!suggestedQuestions?.length && onSend
+
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
@@ -127,6 +134,7 @@ const Chat: FC<IChatProps> = ({
             return <Answer
               key={item.id}
               item={item}
+              onSend={onSend}
               feedbackDisabled={feedbackDisabled}
               onFeedback={onFeedback}
               isResponding={isResponding && isLast}
@@ -143,22 +151,53 @@ const Chat: FC<IChatProps> = ({
           )
         })}
       </div>
+      {/* <div
+        className={`absolute bottom-0 p-2`}
+        ref={chatFooterRef}
+        style={{
+          background: 'linear-gradient(0deg, #F9FAFB 40%, rgba(255, 255, 255, 0.00) 100%)',
+        }}
+      >
+        <div
+          ref={chatFooterInnerRef}
+          className={`mx-auto w-full max-w-[720px]  px-4`}
+        >
+          {
+            !noStopResponding && isResponsing && (
+              <div className='flex justify-center mb-2'>
+                <Button onClick={onStopResponding}>
+                  <StopCircle className='mr-[5px] w-3.5 h-3.5 text-gray-500' />
+                  <span className='text-xs text-gray-500 font-normal'>{t('appDebug.operation.stopResponding')}</span>
+                </Button>
+              </div>
+            )
+          }
+          {
+            hasTryToAsk && (
+              <TryToAsk
+                suggestedQuestions={suggestedQuestions}
+                onSend={onSend}
+              />
+            )
+          }
+        </div>
+      </div> */}
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
-            <div className='p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto'>
+            <div className="p-[5.5px] max-h-[150px] bg-white border-[1.5px] border-gray-200 rounded-xl overflow-y-auto">
               {
                 visionConfig?.enabled && (
                   <>
-                    <div className='absolute bottom-2 left-2 flex items-center'>
+                    <div className="absolute bottom-2 left-2 flex items-center">
                       <ChatImageUploader
                         settings={visionConfig}
                         onUpload={onUpload}
                         disabled={files.length >= visionConfig.number_limits}
                       />
-                      <div className='mx-1 w-[1px] h-4 bg-black/5' />
+                      <div className="mx-1 w-[1px] h-4 bg-black/5"/>
                     </div>
-                    <div className='pl-[52px]'>
+                    <div className="pl-[52px]">
                       <ImageList
                         list={files}
                         onRemove={onRemove}
@@ -184,7 +223,7 @@ const Chat: FC<IChatProps> = ({
               <div className="absolute bottom-2 right-2 flex items-center h-8">
                 <div className={`${s.count} mr-4 h-5 leading-5 text-sm bg-gray-50 text-gray-500`}>{query.trim().length}</div>
                 <Tooltip
-                  selector='send-tip'
+                  selector="send-tip"
                   htmlContent={
                     <div>
                       <div>{t('common.operation.send')} Enter</div>

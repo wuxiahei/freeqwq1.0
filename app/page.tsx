@@ -1,15 +1,24 @@
 import type { FC } from 'react'
 import React from 'react'
-
-import type { IMainProps } from '@/app/components'
 import Main from '@/app/components'
+import GlobeError from '@/app/components/custom/error'
 
-const App: FC<IMainProps> = ({
-  params,
-}: any) => {
-  return (
-    <Main params={params} />
-  )
+interface HomeProps {
+  searchParams: { userName?: string; token?: string }
 }
 
-export default React.memo(App)
+const Home: FC<HomeProps> = ({ searchParams }) => {
+  const { userName, token } = searchParams
+
+  if (!userName || !token) {
+    return (
+      <div className="flex flex-col justify-center align-center h-screen">
+        <GlobeError/>
+      </div>
+    )
+  }
+
+  return <Main userName={userName} token={token}/>
+}
+
+export default Home
