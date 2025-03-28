@@ -1,15 +1,15 @@
 import type { FC } from 'react'
 import React from 'react'
+
+import type { IMainProps } from '@/app/components'
 import Main from '@/app/components'
 
-interface HomeProps {
-  searchParams: { userName?: string; token?: string }
+const App: FC<IMainProps> = ({
+  params,
+}: any) => {
+  return (
+    <Main params={params} />
+  )
 }
 
-const Home: FC<HomeProps> = ({ searchParams }) => {
-  const { userName, token } = searchParams
-
-  return <Main userName={userName} token={token}/>
-}
-
-export default Home
+export default React.memo(App)
