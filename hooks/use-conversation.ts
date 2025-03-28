@@ -1,7 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import produce from 'immer'
 import { useGetState } from 'ahooks'
 import type { ConversationItem } from '@/types/app'
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 const storageConversationIdKey = 'conversationIdInfo'
 
@@ -12,12 +14,34 @@ function useConversation() {
   // when set conversation id, we do not have set appId
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
-    if (isSetToLocalStroge) {
+    if (isSetToLocalStroge && id !== '-1') {
       // conversationIdInfo: {[appId1]: conversationId1, [appId2]: conversationId2}
       const conversationIdInfo = globalThis.localStorage?.getItem(storageConversationIdKey) ? JSON.parse(globalThis.localStorage?.getItem(storageConversationIdKey) || '') : {}
       conversationIdInfo[appId] = id
       globalThis.localStorage?.setItem(storageConversationIdKey, JSON.stringify(conversationIdInfo))
     }
+
+    if (id === '-1') {
+      const timestamp = new Date().getTime().toString();
+      setNewConversationInfo({
+        name: newConversationName || `${t('app.chat.newChatDefaultName')}_${timestamp}`,
+        introduction: ''
+      })
+    }
+  }
+
+  const exportConversationToPDF = async (conversationId: string) => {
+    const element = document.getElementById(`conversation-${conversationId}`)
+    if (!element) return
+
+    const canvas = await html2canvas(element)
+    const pdf = new jsPDF('p', 'mm', 'a4')
+    const imgData = canvas.toDataURL('image/png')
+    const imgWidth = pdf.internal.pageSize.getWidth()
+    const imgHeight = (canvas.height * imgWidth) / canvas.width
+
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+    pdf.save(`conversation-${conversationId}.pdf`)
   }
 
   const getConversationIdFromStorage = (appId: string) => {
@@ -26,10 +50,7 @@ function useConversation() {
     return id
   }
 
-  const isNewConversation = useMemo<boolean>((): boolean => {
-    return currConversationId === '-1'
-  }, [currConversationId])
-
+  const isNewConversation = currConversationId === '-1'
   // input can be updated by user
   const [newConversationInputs, setNewConversationInputs] = useState<Record<string, any> | null>(null)
   const resetNewConversationInputs = () => {
@@ -66,6 +87,7 @@ function useConversation() {
     currConversationInfo,
     setNewConversationInfo,
     setExistConversationInfo,
+    exportConversationToPDF,
   }
 }
 

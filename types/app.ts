@@ -37,6 +37,8 @@ export type UserInputFormItem = {
   'text-input': TextTypeFormItem
 } | {
   'select': SelectTypeFormItem
+} | {
+  'paragraph': TextTypeFormItem
 }
 
 export const MessageRatings = ['like', 'dislike', null] as const
@@ -83,6 +85,12 @@ export type IChatItem = {
   log?: { role: string; text: string }[]
   agent_thoughts?: ThoughtItem[]
   message_files?: VisionFile[]
+}
+
+export type ChatItem = IChatItem & {
+  isError?: boolean
+  workflow_run_id?: string
+  workflowProcess?: WorkflowProcess
 }
 
 export type ResponseHolder = {}
@@ -141,6 +149,74 @@ export type VisionFile = {
   belongs_to?: string
 }
 
-export type SuggestedQuestionsAfterAnswerConfig = {
-  enabled: boolean
+export enum BlockEnum {
+  Start = 'start',
+  End = 'end',
+  Answer = 'answer',
+  LLM = 'llm',
+  KnowledgeRetrieval = 'knowledge-retrieval',
+  QuestionClassifier = 'question-classifier',
+  IfElse = 'if-else',
+  Code = 'code',
+  TemplateTransform = 'template-transform',
+  HttpRequest = 'http-request',
+  VariableAssigner = 'variable-assigner',
+  Tool = 'tool',
+}
+
+export type NodeTracing = {
+  id: string
+  index: number
+  predecessor_node_id: string
+  node_id: string
+  node_type: BlockEnum
+  title: string
+  inputs: any
+  process_data: any
+  outputs?: any
+  status: string
+  error?: string
+  elapsed_time: number
+  execution_metadata: {
+    total_tokens: number
+    total_price: number
+    currency: string
+  }
+  created_at: number
+  created_by: {
+    id: string
+    name: string
+    email: string
+  }
+  finished_at: number
+  extras?: any
+  expand?: boolean // for UI
+}
+
+export enum NodeRunningStatus {
+  NotStart = 'not-start',
+  Waiting = 'waiting',
+  Running = 'running',
+  Succeeded = 'succeeded',
+  Failed = 'failed',
+}
+
+export enum WorkflowRunningStatus {
+  Waiting = 'waiting',
+  Running = 'running',
+  Succeeded = 'succeeded',
+  Failed = 'failed',
+  Stopped = 'stopped',
+}
+
+export type WorkflowProcess = {
+  status: WorkflowRunningStatus
+  tracing: NodeTracing[]
+  expand?: boolean // for UI
+}
+
+export enum CodeLanguage {
+  python3 = 'python3',
+  javascript = 'javascript',
+  json = 'json',
 }

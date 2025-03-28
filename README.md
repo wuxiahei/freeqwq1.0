@@ -1,14 +1,18 @@
-# Conversion Web App Template
+# Conversation Web App Template
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Config App
 Create a file named `.env.local` in the current directory and copy the contents from `.env.example`. Setting the following content:
 ```
-# APP ID
+# APP ID: This is the unique identifier for your app. You can find it in the app's detail page URL. 
+# For example, in the URL `https://cloud.dify.ai/app/xxx/workflow`, the value `xxx` is your APP ID.
 NEXT_PUBLIC_APP_ID=
-# APP API key
+
+# APP API Key: This is the key used to authenticate your app's API requests. 
+# You can generate it on the app's "API Access" page by clicking the "API Key" button in the top-right corner.
 NEXT_PUBLIC_APP_KEY=
-# APP URL
+
+# APP URL: This is the API's base URL. If you're using the Dify cloud service, set it to: https://api.dify.ai/v1.
 NEXT_PUBLIC_API_URL=
 ```
 
@@ -68,7 +72,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-> ⚠️ If you are using [Vercel Hobby](https://vercel.com/pricing), your message will be trucated due to the limitation of vercel.
+> ⚠️ If you are using [Vercel Hobby](https://vercel.com/pricing), your message will be truncated due to the limitation of vercel.
 
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

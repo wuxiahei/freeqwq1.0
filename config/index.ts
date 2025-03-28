@@ -1,18 +1,13 @@
 import type { AppInfo } from '@/types/app'
-export const APP_ID = `${process.env.APP_ID}`
-export const API_KEY = `${process.env.APP_KEY}`
-export const API_URL = `${process.env.API_URL}`
-export const SA_API_URL = `${process.env.SA_API_URL || 'https://speedyagency.demo2.mixmedia.com/api'}`
-export const SA_API_TOKEN = `${process.env.SA_API_TOKEN}`
-export const ENABLE_AUTH = `${process.env.ENABLE_AUTH}` || false;
-export const SECRET_KEY = `${process.env.SECRET_KEY || 'IEboqt3vmYau9ic6zye78sX2l4JfVHFw'}`
-export const SHOW_MOBILE = `${process.env.SHOW_MOBILE}` || false;
+export const APP_ID = `${process.env.NEXT_PUBLIC_APP_ID}`
+export const API_KEY = `${process.env.NEXT_PUBLIC_APP_KEY}`
+export const API_URL = `${process.env.NEXT_PUBLIC_API_URL}`
 export const APP_INFO: AppInfo = {
-  title: 'ZoEasy',
+  title: 'Genrui AI Chat',
   description: '',
   copyright: '',
   privacy_policy: '',
-  default_language: 'zh-Hant',
+  default_language: 'en',
 }
 
 export const isShowPrompt = false

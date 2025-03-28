@@ -22,6 +22,8 @@
 }
 
 .logo {
-  width: 30px;
+  width: 48px;
   height: 20px;
+  background: url(./icons/logo.png) center center no-repeat;
+  background-size: contain;
 }

@@ -18,18 +18,13 @@ const translation = {
     privacyPolicyLeft: '请阅读由该应用开发者提供的',
     privacyPolicyMiddle: '隐私政策',
     privacyPolicyRight: '。',
-    delete: '删除',
-    tryToAsk:'尝试提问',
-    confirmDeleteTitle:'删除会话',
-    confirmDeleteContent:'你确定要删除这个会话吗?',
-    confirmBtn:'确认',
-    cancelBtn:'取消',
-    deleteSuccess:'成功',
   },
   errorMessage: {
     valueOfVarRequired: '变量值必填',
     waitForResponse: '请等待上条信息响应完成',
-    deleteFailed:'失败',
+  },
+  variableTable: {
+    optional: '可选',
   },
 }
 

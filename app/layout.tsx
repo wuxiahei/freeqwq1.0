@@ -1,5 +1,5 @@
 import { getLocaleOnServer } from '@/i18n/server'
- 
+
 import './styles/globals.css'
 import './styles/markdown.scss'
 
@@ -22,8 +22,4 @@ const LocaleLayout = ({
   )
 }
 
-export const metadata = {
-  viewport: 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
-  themeColor: '#3B9FDD',
-}
 export default LocaleLayout
