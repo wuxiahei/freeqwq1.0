@@ -18,8 +18,25 @@ export default function useConversation() {
         }
     }
 
-    const exportConversationToPDF = (id: string) => {
-        // 原有的导出PDF功能
+    const exportConversationToPDF = async (id: string) => {
+        try {
+            // 调用后端API获取对话内容
+            const response = await client.getConversationDetail(id)
+            
+            // 使用第三方库如jsPDF生成PDF
+            const doc = new jsPDF()
+            
+            // 添加对话内容到PDF
+            doc.text(response.name, 10, 10)
+            response.messages.forEach((message, index) => {
+                doc.text(message.content, 10, 20 + index * 10)
+            })
+            
+            // 下载PDF
+            doc.save(`conversation-${id}.pdf`)
+        } catch (error) {
+            console.error('导出PDF失败:', error)
+        }
     }
 
     const deleteConversation = async (id: string) => {
