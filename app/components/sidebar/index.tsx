@@ -77,6 +77,7 @@ const Sidebar: FC<ISidebarProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
+                      console.log('导出PDF', item.id)
                       exportConversationToPDF(item.id)
                     }}
                     className="ml-auto text-gray-400 hover:text-gray-500"
@@ -88,6 +89,7 @@ const Sidebar: FC<ISidebarProps> = ({
                       e.stopPropagation()
                       const newName = prompt('请输入新的对话名称', item.name)
                       if (newName) {
+                        console.log('重命名', item.id, newName)
                         renameConversation(item.id, newName)
                       }
                     }}
@@ -99,6 +101,7 @@ const Sidebar: FC<ISidebarProps> = ({
                     onClick={(e) => {
                       e.stopPropagation()
                       if (confirm('确定要删除此对话吗？')) {
+                        console.log('删除', item.id)
                         deleteConversation(item.id)
                       }
                     }}
