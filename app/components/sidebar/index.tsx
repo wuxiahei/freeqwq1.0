@@ -123,6 +123,7 @@ const Sidebar: FC<ISidebarProps> = ({
 }
 
 export default React.memo(Sidebar)
+/*
 <button
   onClick={(e) => {
     e.stopPropagation()
