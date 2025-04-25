@@ -98,8 +98,9 @@ export type ResponseHolder = {}
 export type ConversationItem = {
   id: string
   name: string
-  inputs: Record<string, any> | null
-  introduction: string
+  inputs?: Record<string, any> | null
+  introduction?: string
+  created_at?: string
 }
 
 export type AppInfo = {

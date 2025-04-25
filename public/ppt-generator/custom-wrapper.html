@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>WAC AI PPT</title>
+    <link rel="icon" type="image/svg+xml" href="/WAC-LOGO.svg" />
+    <script src="static/docmee-ui-sdk-iframe.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #container {
+            width: 80%;
+            height: 70%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+
+    <script>
+        // 从URL获取token
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        if (!token) {
+            document.body.innerHTML = '<div style="padding: 20px; color: red;">错误：缺少token参数</div>';
+        } else {
+            // 初始化DocmeeUI
+            const docmeeUI = new DocmeeUI({
+                token,
+                container: document.querySelector('#container'),
+                page: urlParams.get('page') || 'creator',
+                lang: 'zh',
+                mode: 'light',
+                isMobile: false,
+                background: 'linear-gradient(-157deg,#f57bb0, #867dea)',
+                padding: '40px 20px 0px',
+                onMessage: handleMessage
+            });
+
+            // 处理消息
+            function handleMessage(message) {
+                // 将消息传递给父窗口
+                window.parent.postMessage({
+                    type: 'docmee-message',
+                    data: message
+                }, '*');
+
+                // 处理特定消息
+                if (message.type === 'invalid-token') {
+                    window.parent.postMessage({
+                        type: 'refresh-token-needed'
+                    }, '*');
+                }
+            }
+
+            // 监听来自父窗口的消息
+            window.addEventListener('message', (event) => {
+                if (event.data.type === 'navigate') {
+                    docmeeUI.navigate({ page: event.data.page });
+                } else if (event.data.type === 'update-token') {
+                    docmeeUI.updateToken(event.data.token);
+                }
+            });
+
+            // 注入自定义CSS
+            setTimeout(() => {
+                const customCSS = `
+                    /* 隐藏特定元素 */
+                    .header-logo { display: none !important; }
+                    .footer-container { display: none !important; }
+                    
+                    /* 隐藏"创建新模版"组件 */
+                    .flex.items-center.gap-5.my-5.animate-fade { display: none !important; }
+                    div[class*="animate-fade"] div[class*="border-accent"] { display: none !important; }
+                    
+                    /* 隐藏删除按钮 */
+                    svg.text-error.btn-outline { display: none !important; }
+                    .btn-sm.btn-outline svg[viewBox="0 0 24 24"] { display: none !important; }
+                    svg[stroke-linecap="round"][stroke-linejoin="round"].text-error { display: none !important; }
+                    
+                    /* 只隐藏"更改源文件"按钮 */
+                    div[data-tip="更改源文件"] { display: none !important; }
+                    div[title="更改源文件"] { display: none !important; }
+                    div:has(> svg > path[d^="M19.903 8.586"]) { display: none !important; }
+                    
+                    /* 完全隐藏PPT ID */
+                    span[class*="hdd-typography"][class*="ellipsis"],
+                    span[class*="font-mono"][class*="text-primary"],
+                    span[class*="css-1yvviuk"],
+                    span.flex-1.font-mono {
+                        display: none !important;
+                    }
+                    
+                    /* 直接针对包含数字ID的元素 */
+                    span:not(:empty):not(:has(*)):not([class*="icon"]):not([class*="svg"]):matches(/\\d{19}/),
+                    span:not(:empty):not(:has(*)):not([class*="icon"]):not([class*="svg"]):matches(/1896387324766457856/),
+                    span:not(:empty):not(:has(*)):not([class*="icon"]):not([class*="svg"]):matches(/1896396456668041216/) {
+                        display: none !important;
+                    }
+                `;
+
+                docmeeUI.importCSS(customCSS);
+
+                // 定期重新注入CSS
+                setInterval(() => {
+                    docmeeUI.importCSS(customCSS);
+                }, 5000);
+
+                // 使用JavaScript直接操作DOM
+                const hideMenuItems = () => {
+                    // 获取所有菜单项
+                    const menuItems = document.querySelectorAll('.hdd-menu-item');
+
+                    menuItems.forEach(item => {
+                        const text = item.textContent || '';
+                        // 如果不是"自定义模版"，则隐藏
+                        if (!text.includes('自定义模版')) {
+                            item.style.display = 'none';
+                        } else {
+                            // 如果是"自定义模版"，则点击它
+                            item.click();
+                        }
+                    });
+                };
+
+                // 初始执行
+                setTimeout(hideMenuItems, 500);
+
+                // 定期检查并隐藏
+                setInterval(hideMenuItems, 5000);
+            }, 1000);
+
+
+            // 修改页面缩放比例
+            const zoomPage = () => {
+                // 设置页面缩放比例为150%
+                document.body.style.zoom = "125%";
+
+                // 对于不支持zoom属性的浏览器，使用transform
+                if (!document.body.style.zoom) {
+                    document.body.style.transform = "scale(1.5)";
+                    document.body.style.transformOrigin = "0 0";
+                    document.body.style.width = "66.67%"; // 100/1.5
+                    document.body.style.height = "66.67%"; // 100/1.5
+                }
+
+                // 调整iframe容器
+                const container = document.getElementById('docmee_SdkContainer');
+                if (container) {
+                    container.style.overflow = "auto";
+                    container.style.height = "100vh";
+                }
+            };
+
+            // 执行缩放
+            setTimeout(zoomPage, 1000);
+
+            // 定期检查并应用缩放
+            setInterval(zoomPage, 3000);
+        }
+    </script>
+</body>
+
+</html>

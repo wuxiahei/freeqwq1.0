@@ -1,0 +1,258 @@
+/* 基本容器样式 */
+.square-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+    align-items: center;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    max-width: 900px;
+    width: 100%;
+    padding: 0 20px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* 头部样式 */
+.layout-header {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    padding: 0;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 10;
+}
+
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-center {
+    display: none;
+}
+
+.close-button {
+    cursor: pointer;
+    font-size: 24px;
+    color: #374151;
+}
+
+.close-button:hover {
+    color: #1f2937;
+}
+
+/* 主体区域样式 */
+.square {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+.square-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 24px 0 20px;
+    color: #111827;
+}
+
+/* 导航栏样式 */
+.square-nav {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.square-nav-item {
+    padding: 8px 0;
+    margin-right: 32px;
+    cursor: pointer;
+    color: #6b7280;
+    position: relative;
+    font-size: 14px;
+}
+
+.square-nav-item:hover {
+    color: #374151;
+}
+
+.square-nav-item.active {
+    color: #111827;
+    font-weight: 500;
+}
+
+.square-nav-item.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background-color: #111827;
+}
+
+/* 应用组样式 */
+.square-list {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 24px;
+    width: 100%;
+    position: relative;
+}
+
+.square-group {
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.square-group-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.square-group-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .square-group-list {
+        grid-template-columns: 1fr;
+    }
+
+    .layout-container {
+        padding: 0 16px;
+    }
+}
+
+.square-group-list-item {
+    margin: 0;
+}
+
+/* 卡片样式 */
+.kimi-plus-card {
+    display: flex;
+    align-items: start;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+}
+
+.kimi-plus-card:hover {
+    box-shadow: 0 2px 8px rgba(15, 0, 0, 0.05);
+}
+
+.kimi-plus-card-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 12px;
+    flex-shrink: 0;
+    background-color: #fff;
+}
+
+.kimi-plus-card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.kimi-plus-card-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.kimi-plus-card-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px;
+    color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kimi-plus-card-desc {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.kimi-plus-card-from {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.kimi-plus-card-pin {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    color: #d1d5db;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, color 0.2s ease;
+    background-color: #eff3f8;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.kimi-plus-card:hover .kimi-plus-card-pin,
+.kimi-plus-card-pin.active {
+    opacity: 1;
+}
+
+.kimi-plus-card-pin.active {
+    color: #3b82f6;
+    background-color: #d5e3f8;
+    opacity: 1;
+    border-radius: 50%;
+    padding: 3px;
+}
+
+.kimi-plus-card-pin svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* 图标按钮样式 */
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.icon-button:hover {
+    color: #374151;
+}

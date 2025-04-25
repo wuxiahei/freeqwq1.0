@@ -26,25 +26,38 @@ const getWidthStyle = (imgNum: number) => {
     width: 'calc(33.3333% - 5.3333px)',
   }
 }
+import { API_URL } from '@/config'
 
 const ImageGallery: FC<Props> = ({
   srcs,
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
 
+  // 处理 URL 拼接
+  const getFullUrl = (src: string) => {
+    // 如果是 base64 或者完整的 http URL，直接返回
+    if (src.startsWith('data:') || src.startsWith('http')) {
+      return src
+    }
+    // 移除 API_URL 末尾的 /v1（如果有）
+    const baseUrl = API_URL.replace(/\/v1$/, '')
+    // 确保 src 以 / 开头
+    const path = src.startsWith('/') ? src : `/${src}`
+    return `${baseUrl}${path}`
+  }
+
   const imgNum = srcs.length
   const imgStyle = getWidthStyle(imgNum)
   return (
     <div className={cn(s[`img-${imgNum}`], 'flex flex-wrap')}>
-      {/* TODO: support preview */}
       {srcs.map((src, index) => (
         <img
           key={index}
           className={s.item}
           style={imgStyle}
-          src={src}
+          src={getFullUrl(src)}
           alt=''
-          onClick={() => setImagePreviewUrl(src)}
+          onClick={() => setImagePreviewUrl(getFullUrl(src))}
         />
       ))}
       {
@@ -58,6 +71,37 @@ const ImageGallery: FC<Props> = ({
     </div>
   )
 }
+// const ImageGallery: FC<Props> = ({
+//   srcs,
+// }) => {
+//   const [imagePreviewUrl, setImagePreviewUrl] = useState('')
+
+//   const imgNum = srcs.length
+//   const imgStyle = getWidthStyle(imgNum)
+//   return (
+//     <div className={cn(s[`img-${imgNum}`], 'flex flex-wrap')}>
+//       {/* TODO: support preview */}
+//       {srcs.map((src, index) => (
+//         <img
+//           key={index}
+//           className={s.item}
+//           style={imgStyle}
+//           src={src}
+//           alt=''
+//           onClick={() => setImagePreviewUrl(src)}
+//         />
+//       ))}
+//       {
+//         imagePreviewUrl && (
+//           <ImagePreview
+//             url={imagePreviewUrl}
+//             onCancel={() => setImagePreviewUrl('')}
+//           />
+//         )
+//       }
+//     </div>
+//   )
+// }
 
 export default React.memo(ImageGallery)
 

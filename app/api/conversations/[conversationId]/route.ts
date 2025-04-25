@@ -1,19 +1,12 @@
-import { type NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
-import { client, getInfo, setSession } from '@/app/api/utils/common'
+import { type NextRequest, NextResponse } from 'next/server'
+import { clients, getInfo } from '@/app/api/utils/common'
 
-export async function DELETE(request: NextRequest, { params }: { params: { conversationId: string } }) {
-    const { sessionId, user } = getInfo(request)
-    try {
-        await client.deleteConversation(params.conversationId, user)
-        return NextResponse.json({ success: true }, {
-            headers: setSession(sessionId),
-        })
-    }
-    catch (error: any) {
-        return NextResponse.json({
-            success: false,
-            error: error.message,
-        }, { status: 500 })
-    }
-}
+export async function DELETE(request: NextRequest, { params }: {
+    params: { conversationId: string }
+}) {
+    const { conversationId } = params
+    const { user } = getInfo(request)
+    const { app_id: appId } = await request.json()
+    const { data } = await clients[appId].deleteConversation(conversationId, user)
+    return NextResponse.json(data)
+} 

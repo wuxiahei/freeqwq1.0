@@ -10,23 +10,21 @@ import Toast from '@/app/components/base/toast'
 import Select from '@/app/components/base/select'
 import { DEFAULT_VALUE_MAX_LEN } from '@/config'
 
-// 匹配{{}}的正则表达式，用于高亮显示变量
+// regex to match the {{}} and replace it with a span
 const regex = /\{\{([^}]+)\}\}/g
 
-// 欢迎页面组件属性类型定义
 export type IWelcomeProps = {
-  conversationName: string       // 对话名称
-  hasSetInputs: boolean         // 是否已设置输入
-  isPublicVersion: boolean      // 是否为公开版本
-  siteInfo: AppInfo             // 应用信息
-  promptConfig: PromptConfig    // 提示词配置
-  onStartChat: (inputs: Record<string, any>) => void  // 开始聊天回调
-  canEditInputs: boolean        // 是否可以编辑输入
-  savedInputs: Record<string, any>  // 已保存的输入
-  onInputsChange: (inputs: Record<string, any>) => void  // 输入变化回调
+  conversationName: string
+  hasSetInputs: boolean
+  isPublicVersion: boolean
+  siteInfo: AppInfo
+  promptConfig: PromptConfig
+  onStartChat: (inputs: Record<string, any>) => void
+  canEditInputs: boolean
+  savedInputs: Record<string, any>
+  onInputsChange: (inputs: Record<string, any>) => void
 }
 
-// 欢迎页面组件
 const Welcome: FC<IWelcomeProps> = ({
   conversationName,
   hasSetInputs,
@@ -39,13 +37,12 @@ const Welcome: FC<IWelcomeProps> = ({
   onInputsChange,
 }) => {
   const { t } = useTranslation()
-  const hasVar = promptConfig.prompt_variables.length > 0  // 是否有变量
-  const [isFold, setIsFold] = useState<boolean>(true)      // 是否折叠
+  const hasVar = promptConfig.prompt_variables.length > 0
+  const [isFold, setIsFold] = useState<boolean>(true)
   const [inputs, setInputs] = useState<Record<string, any>>((() => {
     if (hasSetInputs)
       return savedInputs
 
-    // 初始化输入
     const res: Record<string, any> = {}
     if (promptConfig) {
       promptConfig.prompt_variables.forEach((item) => {
@@ -54,8 +51,6 @@ const Welcome: FC<IWelcomeProps> = ({
     }
     return res
   })())
-
-  // 监听savedInputs变化，更新inputs
   useEffect(() => {
     if (!savedInputs) {
       const res: Record<string, any> = {}
@@ -71,7 +66,6 @@ const Welcome: FC<IWelcomeProps> = ({
     }
   }, [savedInputs])
 
-  // 高亮显示提示词模板中的变量
   const highLightPromoptTemplate = (() => {
     if (!promptConfig)
       return ''
@@ -82,12 +76,10 @@ const Welcome: FC<IWelcomeProps> = ({
   })()
 
   const { notify } = Toast
-  // 错误日志记录
   const logError = (message: string) => {
     notify({ type: 'error', message, duration: 3000 })
   }
 
-  // 渲染头部
   const renderHeader = () => {
     return (
       <div className='absolute top-0 left-0 right-0 flex items-center justify-between border-b border-gray-100 mobile:h-12 tablet:h-16 px-8 bg-white'>
@@ -96,7 +88,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染输入项
   const renderInputs = () => {
     return (
       <div className='space-y-3'>
@@ -146,7 +137,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 检查是否可以开始聊天
   const canChat = () => {
     const inputLens = Object.values(inputs).length
     const promptVariablesLens = promptConfig.prompt_variables.length
@@ -158,7 +148,6 @@ const Welcome: FC<IWelcomeProps> = ({
     return true
   }
 
-  // 处理聊天开始事件
   const handleChat = () => {
     if (!canChat())
       return
@@ -166,7 +155,6 @@ const Welcome: FC<IWelcomeProps> = ({
     onStartChat(inputs)
   }
 
-  // 渲染无变量面板
   const renderNoVarPanel = () => {
     if (isPublicVersion) {
       return (
@@ -189,7 +177,7 @@ const Welcome: FC<IWelcomeProps> = ({
         </div>
       )
     }
-    // 私有版本
+    // private version
     return (
       <TemplateVarPanel
         isFold={false}
@@ -202,7 +190,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染变量面板
   const renderVarPanel = () => {
     return (
       <TemplateVarPanel
@@ -220,7 +207,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染变量操作按钮组
   const renderVarOpBtnGroup = () => {
     return (
       <VarOpBtnGroup
@@ -239,7 +225,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染已设置输入的公开版本
   const renderHasSetInputsPublic = () => {
     if (!canEditInputs) {
       return (
@@ -283,7 +268,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染已设置输入的私有版本
   const renderHasSetInputsPrivate = () => {
     if (!canEditInputs || !hasVar)
       return null
@@ -308,7 +292,6 @@ const Welcome: FC<IWelcomeProps> = ({
     )
   }
 
-  // 渲染已设置输入的内容
   const renderHasSetInputs = () => {
     if ((!isPublicVersion && !canEditInputs) || !hasVar)
       return null
@@ -325,7 +308,7 @@ const Welcome: FC<IWelcomeProps> = ({
     <div className='relative mobile:min-h-[48px] tablet:min-h-[64px]'>
       {hasSetInputs && renderHeader()}
       <div className='mx-auto pc:w-[794px] max-w-full mobile:w-full px-3.5'>
-        {/*  未设置输入  */}
+        {/*  Has't set inputs  */}
         {
           !hasSetInputs && (
             <div className='mobile:pt-[72px] tablet:pt-[128px] pc:pt-[200px]'>
@@ -340,10 +323,10 @@ const Welcome: FC<IWelcomeProps> = ({
           )
         }
 
-        {/* 已设置输入 */}
+        {/* Has set inputs */}
         {hasSetInputs && renderHasSetInputs()}
 
-        {/* 页脚 */}
+        {/* foot */}
         {!hasSetInputs && (
           <div className='mt-4 flex justify-between items-center h-8 text-xs text-gray-400'>
 
@@ -357,10 +340,10 @@ const Welcome: FC<IWelcomeProps> = ({
               </div>
               : <div>
               </div>}
-            <a className='flex items-center pr-3 space-x-3' href="https://genrui.577311.xyz/" target="_blank">
+            {/* <div className='flex items-center pr-3 space-x-3 cursor-default'>
               <span className='uppercase'>{t('app.chat.powerBy')}</span>
               <FootLogo />
-            </a>
+            </div> */}
           </div>
         )}
       </div>

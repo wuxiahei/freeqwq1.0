@@ -17,6 +17,7 @@ const translation = {
     like: 'thích',
     dislike: 'không thích',
     ok: 'OK',
+    copy: 'Sao chép',
   },
   imageUploader: {
     uploadFromComputer: 'Tải lên từ máy tính',

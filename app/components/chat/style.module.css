@@ -1,6 +1,7 @@
 .answerIcon {
   position: relative;
-  background: url(./icons/robot.svg);
+  background: url(./icons/WAC-LOGO.svg) center center no-repeat;
+  background-size: contain;
 }
 
 .typeingIcon {
@@ -75,10 +76,16 @@
 
 .sendBtn {
   background: url(./icons/send.svg) center center no-repeat;
+  background-color: #f1f1f1;
 }
 
-.sendBtn:hover {
+.sendBtn.active {
   background-image: url(./icons/send-active.svg);
+  background-color: #EBF5FF;
+}
+
+.stopBtn {
+  background: url(./icons/stop.svg) center center no-repeat;
   background-color: #EBF5FF;
 }
 
