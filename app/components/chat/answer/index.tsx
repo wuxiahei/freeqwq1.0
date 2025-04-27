@@ -14,7 +14,6 @@ import Tooltip from '@/app/components/base/tooltip'
 import WorkflowProcess from '@/app/components/workflow/workflow-process'
 import { Markdown } from '@/app/components/base/markdown'
 import type { Emoji } from '@/types/tools'
-import Toast from '@/app/components/base/toast'
 
 const OperationBtn = ({ innerContent, onClick, className }: { innerContent: React.ReactNode; onClick?: () => void; className?: string }) => (
   <div
@@ -55,13 +54,6 @@ const IconWrapper: FC<{ children: React.ReactNode | string }> = ({ children }) =
   </div>
 }
 
-// 添加复制图标组件
-const CopyIcon: FC<{ className?: string }> = ({ className }) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M2.66667 10.6667H2C1.64638 10.6667 1.30724 10.5262 1.05719 10.2761C0.807138 10.0261 0.666667 9.68696 0.666667 9.33333V2.66667C0.666667 2.31304 0.807138 1.97391 1.05719 1.72386C1.30724 1.47381 1.64638 1.33333 2 1.33333H8.66667C9.02029 1.33333 9.35943 1.47381 9.60948 1.72386C9.85952 1.97391 10 2.31304 10 2.66667V3.33333M7.33333 5.33333H14C14.7364 5.33333 15.3333 5.93029 15.3333 6.66667V13.3333C15.3333 14.0697 14.7364 14.6667 14 14.6667H7.33333C6.59695 14.6667 6 14.0697 6 13.3333V6.66667C6 5.93029 6.59695 5.33333 7.33333 5.33333Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
 type IAnswerProps = {
   item: ChatItem
   feedbackDisabled: boolean
@@ -82,39 +74,6 @@ const Answer: FC<IAnswerProps> = ({
   const isAgentMode = !!agent_thoughts && agent_thoughts.length > 0
 
   const { t } = useTranslation()
-  const { notify } = Toast
-
-  // 添加一个复制文本的辅助函数
-  const copyToClipboard = (text: string) => {
-    // 处理文本，移除引用块内容
-    const processText = (text: string) => {
-      const parts = text.split('> \n\n\n\n')
-      return parts[parts.length - 1] || text
-    }
-
-    const processedText = processText(text)
-
-    if (navigator.clipboard && window.isSecureContext) {
-      // 对于 HTTPS 或 localhost 环境
-      navigator.clipboard.writeText(processedText)
-        .then(() => notify({ type: 'success', message: t('common.operation.copy') }))
-        .catch(() => notify({ type: 'error', message: t('common.operation.copyFailed') }))
-    } else {
-      // 降级方案
-      const textArea = document.createElement('textarea')
-      textArea.value = processedText
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        document.execCommand('copy')
-        notify({ type: 'success', message: t('common.operation.copy') })
-      } catch (err) {
-        notify({ type: 'error', message: t('common.operation.copyFailed') })
-      }
-      document.body.removeChild(textArea)
-    }
-  }
 
   /**
  * Render feedback results (distinguish between users and administrators)
@@ -147,6 +106,31 @@ const Answer: FC<IAnswerProps> = ({
           </div>
         </div>
       </Tooltip>
+    )
+  }
+
+  /**
+   * Different scenarios have different operation items.
+   * @returns comp
+   */
+  const renderItemOperation = () => {
+    const userOperation = () => {
+      return feedback?.rating
+        ? null
+        : <div className='flex gap-1'>
+          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.like') as string}>
+            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={true} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'like' }) })}
+          </Tooltip>
+          <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.dislike') as string}>
+            {OperationBtn({ innerContent: <IconWrapper><RatingIcon isLike={false} /></IconWrapper>, onClick: () => onFeedback?.(id, { rating: 'dislike' }) })}
+          </Tooltip>
+        </div>
+    }
+
+    return (
+      <div className={`${s.itemOperation} flex gap-2`}>
+        {userOperation()}
+      </div>
     )
   }
 
@@ -184,20 +168,22 @@ const Answer: FC<IAnswerProps> = ({
   return (
     <div key={id}>
       <div className='flex items-start'>
-        <div className={`${s.answerIcon} w-10 h-10 shrink-0 rounded-full border border-gray-200`}>
-          {isResponding && (
-            <div className={s.typeingIcon}>
+        <div className={`${s.answerIcon} w-10 h-10 shrink-0`}>
+          {isResponding
+            && <div className={s.typeingIcon}>
               <LoadingAnim type='avatar' />
             </div>
-          )}
+          }
         </div>
-        <div className={`${s.answerWrap} flex flex-col relative group`}>
-          {/* 回答内容 */}
-          <div className={`${s.answer} text-sm text-gray-900`}>
-            <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl`}>
+        <div className={`${s.answerWrap}`}>
+          <div className={`${s.answer} relative text-sm text-gray-900`}>
+            <div className={`ml-2 py-3 px-4 bg-gray-100 rounded-tr-2xl rounded-b-2xl ${workflowProcess && 'min-w-[480px]'}`}>
+              {workflowProcess && (
+                <WorkflowProcess data={workflowProcess} hideInfo />
+              )}
               {(isResponding && (isAgentMode ? (!content && (agent_thoughts || []).filter(item => !!item.thought || !!item.tool).length === 0) : !content))
                 ? (
-                  <div className='flex items-center'>
+                  <div className='flex items-center justify-center w-6 h-5'>
                     <LoadingAnim type='text' />
                   </div>
                 )
@@ -207,41 +193,12 @@ const Answer: FC<IAnswerProps> = ({
                     <Markdown content={content} />
                   ))}
             </div>
-          </div>
-
-          {/* 操作按钮 - 内容外部右下方 */}
-          {!feedbackDisabled && !item.feedbackDisabled && (
-            <div className='absolute -bottom-3 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-2'>
-              <Tooltip selector={`copy-${randomString(16)}`} content={t('common.operation.copy') as string}>
-                {OperationBtn({
-                  innerContent: (
-                    <IconWrapper>
-                      <CopyIcon />
-                    </IconWrapper>
-                  ),
-                  onClick: () => copyToClipboard(content || '')
-                })}
-              </Tooltip>
-              {!feedback?.rating && (
-                <>
-                  <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.like') as string}>
-                    {OperationBtn({
-                      innerContent: <IconWrapper><RatingIcon isLike={true} /></IconWrapper>,
-                      onClick: () => onFeedback?.(id, { rating: 'like' })
-                    })}
-                  </Tooltip>
-                  <Tooltip selector={`user-feedback-${randomString(16)}`} content={t('common.operation.dislike') as string}>
-                    {OperationBtn({
-                      innerContent: <IconWrapper><RatingIcon isLike={false} /></IconWrapper>,
-                      onClick: () => onFeedback?.(id, { rating: 'dislike' })
-                    })}
-                  </Tooltip>
-                </>
-              )}
-              {/* 显示已有的反馈 */}
+            <div className='absolute top-[-14px] right-[-14px] flex flex-row justify-end gap-1'>
+              {!feedbackDisabled && !item.feedbackDisabled && renderItemOperation()}
+              {/* User feedback must be displayed */}
               {!feedbackDisabled && renderFeedbackRating(feedback?.rating)}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

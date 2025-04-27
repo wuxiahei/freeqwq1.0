@@ -13,15 +13,10 @@ const translation = {
     refresh: 'Restart',
     search: 'Search',
     send: 'Send',
-    stop: 'Stop output',
     lineBreak: 'Line break',
     like: 'like',
     dislike: 'dislike',
     ok: 'OK',
-    copy: 'Copy',
-    pleaseEnter: 'Please enter your question',
-    openSidebar: 'Open sidebar',
-    closeSidebar: 'Close sidebar',
   },
   imageUploader: {
     uploadFromComputer: 'Upload from Computer',
@@ -32,6 +27,16 @@ const translation = {
     pasteImageLinkInputPlaceholder: 'Paste image link here',
     pasteImageLinkInvalid: 'Invalid image link',
     imageUpload: 'Image Upload',
+  },
+  fileUploader: {
+    uploadFromComputer: 'Local upload',
+    pasteFileLink: 'Paste file link',
+    pasteFileLinkInputPlaceholder: 'Enter URL...',
+    uploadFromComputerReadError: 'File reading failed, please try again.',
+    uploadFromComputerUploadError: 'File upload failed, please upload again.',
+    uploadFromComputerLimit: 'Upload {{type}} cannot exceed {{size}}',
+    pasteFileLinkInvalid: 'Invalid file link',
+    fileExtensionNotSupport: 'File extension not supported',
   },
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 'use client'
 import type { FC } from 'react'
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import produce, { setAutoFreeze } from 'immer'
 import { useBoolean, useGetState } from 'ahooks'
@@ -10,7 +10,7 @@ import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
 import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
-import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback, deleteConversation, stopChatMessageResponding } from '@/service'
+import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
 import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
@@ -19,72 +19,19 @@ import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
 import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from '@/app/components/app-unavailable'
-import { getAppId, getApiKey, AI_PLUS_CONFIGS, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
+import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 import type { Annotation as AnnotationType } from '@/types/log'
 import { addFileInfos, sortAgentSorts } from '@/utils/tools'
-import Tooltip from '@/app/components/base/tooltip'
-import { useRouter } from 'next/navigation'
 
 export type IMainProps = {
-  params?: any
-  component?: FC
+  params: any
 }
 
-// 添加一个常量用于存储删除的会话 ID
-const DELETED_CONVERSATIONS_KEY = 'deleted_conversations'
-
-// 获取已删除的会话 ID 列表
-const getDeletedConversations = (): string[] => {
-  try {
-    return JSON.parse(localStorage.getItem(DELETED_CONVERSATIONS_KEY) || '[]')
-  } catch {
-    return []
-  }
-}
-
-// 添加 usePushStateListener hook
-const usePushStateListener = (callback: (url: string) => void) => {
-  useEffect(() => {
-    const originalPushState = history.pushState;
-    history.pushState = function (data, title, url) {
-      originalPushState.apply(history, [data, title, url]);
-      if (typeof url === 'string') {
-        callback(url);
-      }
-    };
-    return () => {
-      history.pushState = originalPushState;
-    };
-  }, [callback]);
-};
-
-const Main: FC<IMainProps> = ({
-  params,
-  component: Component,
-}) => {
+const Main: FC<IMainProps> = () => {
   const { t } = useTranslation()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
-  // const currentApp = AI_PLUS_CONFIGS[params?.appId] || AI_PLUS_CONFIGS['43192a18-2b15-451e-9aec-37d55d5673db']
-  // const APP_ID = currentApp?.appId
-  // const API_KEY = currentApp?.apiKey
-  const APP_ID = getAppId()
-  const API_KEY = getApiKey()
   const hasSetAppConfig = APP_ID && API_KEY
-  console.log(APP_ID, API_KEY);
-  const router = useRouter()
-
-  const [isNewChat, setIsNewChat] = useState(false)
-  useEffect(() => {
-    if (params?.conversationId) {
-      // setCurrConversationId(params.conversationId, APP_ID)
-      handleConversationIdChange(params.conversationId)
-    }
-    if (params?.isNewChat !== undefined) {
-      setIsNewChat(params.isNewChat)
-      console.log("isNewChat", params.isNewChat)
-    }
-  }, [params?.conversationId, params?.isNewChat])
 
   /*
   * app info
@@ -94,7 +41,7 @@ const Main: FC<IMainProps> = ({
   const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null)
   const [inited, setInited] = useState<boolean>(false)
   // in mobile, show sidebar by click button
-  const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(true)
+  const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
   const [visionConfig, setVisionConfig] = useState<VisionSettings | undefined>({
     enabled: false,
     number_limits: 2,
@@ -104,7 +51,7 @@ const Main: FC<IMainProps> = ({
 
   useEffect(() => {
     if (APP_INFO?.title)
-      document.title = `${APP_INFO.title}`
+      document.title = `${APP_INFO.title} - Powered by Dify`
   }, [APP_INFO?.title])
 
   // onData change thought (the produce obj). https://github.com/immerjs/immer/issues/576
@@ -142,13 +89,8 @@ const Main: FC<IMainProps> = ({
     setConversationIdChangeBecauseOfNew(true)
     setCurrInputs(inputs)
     setChatStarted()
-
-    // 发送模型选择信息
-    if (inputs.model_name) {
-      setChatList(generateNewChatListWithOpenStatement(`model_name=${inputs.model_name}`, inputs))
-    } else {
-      setChatList(generateNewChatListWithOpenStatement('', inputs))
-    }
+    // parse variables in introduction
+    setChatList(generateNewChatListWithOpenStatement('', inputs))
   }
   const hasSetInputs = (() => {
     if (!isNewConversation)
@@ -189,12 +131,6 @@ const Main: FC<IMainProps> = ({
         const newChatList: ChatItem[] = generateNewChatListWithOpenStatement(notSyncToStateIntroduction, notSyncToStateInputs)
 
         data.forEach((item: any) => {
-          // 过滤掉模型选择消息和联网搜索消息
-          if (item.query.startsWith('model_name=') ||
-            item.query.startsWith('online_search=') ||
-            item.query === 'status:selected model')
-            return
-
           newChatList.push({
             id: `question-${item.id}`,
             content: item.query,
@@ -221,21 +157,16 @@ const Main: FC<IMainProps> = ({
   useEffect(handleConversationSwitch, [currConversationId, inited])
 
   const handleConversationIdChange = (id: string) => {
-    console.log(id)
     if (id === '-1') {
       createNewChat()
       setConversationIdChangeBecauseOfNew(true)
-      setChatStarted()
     }
     else {
       setConversationIdChangeBecauseOfNew(false)
     }
     // trigger handleConversationSwitch
     setCurrConversationId(id, APP_ID)
-    // 只在移动端时隐藏侧边栏
-    if (isMobile) {
-      hideSidebar()
-    }
+    hideSidebar()
   }
 
   /*
@@ -294,17 +225,15 @@ const Main: FC<IMainProps> = ({
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
-
-        // 获取已删除的会话 ID
-        const deletedIds = getDeletedConversations()
-
-        // 过滤掉已删除的会话
-        const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
-        const filteredConversations = conversations.filter(conv => !deletedIds.includes(conv.id))
-
         // handle current conversation id
+        const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
+        if (error) {
+          Toast.notify({ type: 'error', message: error })
+          throw new Error(error)
+          return
+        }
         const _conversationId = getConversationIdFromStorage(APP_ID)
-        const isNotNewConversation = filteredConversations.some(item => item.id === _conversationId)
+        const isNotNewConversation = conversations.some(item => item.id === _conversationId)
 
         // fetch new conversation info
         const { user_input_form, opening_statement: introduction, file_upload, system_parameters }: any = appParams
@@ -319,22 +248,13 @@ const Main: FC<IMainProps> = ({
           prompt_variables,
         } as PromptConfig)
         setVisionConfig({
-          enabled: file_upload?.allowed_file_types.includes('image') && !!file_upload?.enabled,
-          number_limits: 2,
-          detail: Resolution.low,
-          transfer_methods: [TransferMethod.local_file],
+          ...file_upload?.image,
           image_file_size_limit: system_parameters?.system_parameters || 0,
         })
-        setConversationList(filteredConversations)
+        setConversationList(conversations as ConversationItem[])
 
-        // 修改这里的逻辑，优先考虑 params 中的 isNewChat
-        if (params?.isNewChat) {
-          // 如果是新对话，强制设置为 '-1'
-          setCurrConversationId('-1', APP_ID, false)
-        } else if (isNotNewConversation) {
-          // 只有在不是新对话时，才使用存储的会话 ID
+        if (isNotNewConversation)
           setCurrConversationId(_conversationId, APP_ID, false)
-        }
 
         setInited(true)
       }
@@ -345,7 +265,6 @@ const Main: FC<IMainProps> = ({
         else {
           setIsUnknownReason(true)
           setAppUnavailable(true)
-          console.log(e);
         }
       }
     })()
@@ -383,31 +302,6 @@ const Main: FC<IMainProps> = ({
   const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
   const [userQuery, setUserQuery] = useState('')
 
-  // 添加停止响应的处理函数
-  const handleStopResponding = async () => {
-    if (!messageTaskId) return
-
-    try {
-      await stopChatMessageResponding(messageTaskId)
-      setHasStopResponded(true)
-      // 中断当前的响应
-      if (abortController) {
-        abortController.abort()
-        setAbortController(null)
-      }
-      setRespondingFalse()
-
-      // 更新聊天列表，移除占位回答
-      setChatList(produce(getChatList(), (draft) => {
-        const placeholderIndex = draft.findIndex(item => item.id.includes('answer-placeholder'))
-        if (placeholderIndex !== -1)
-          draft.splice(placeholderIndex, 1)
-      }))
-    } catch (err) {
-      notify({ type: 'error', message: 'failed to stop responding' })
-    }
-  }
-
   const updateCurrentQA = ({
     responseItem,
     questionId,
@@ -431,56 +325,37 @@ const Main: FC<IMainProps> = ({
     setChatList(newListWithAnswer)
   }
 
+  const transformToServerFile = (fileItem: any) => {
+    return {
+      type: 'image',
+      transfer_method: fileItem.transferMethod,
+      url: fileItem.url,
+      upload_file_id: fileItem.id,
+    }
+  }
+
   const handleSend = async (message: string, files?: VisionFile[]) => {
     if (isResponding) {
       notify({ type: 'info', message: t('app.errorMessage.waitForResponse') })
       return
     }
+    const toServerInputs: Record<string, any> = {}
+    if (currInputs) {
+      Object.keys(currInputs).forEach((key) => {
+        const value = currInputs[key]
+        if (value.supportFileType)
+          toServerInputs[key] = transformToServerFile(value)
 
-    // 如果是模型选择消息，直接发送但不显示在聊天界面
-    if (message.startsWith('model_name=') || message.startsWith('online_search=')) {
-      const data: Record<string, any> = {
-        inputs: currInputs,
-        query: message,
-        conversation_id: isNewConversation ? null : currConversationId,
-      }
+        else if (value[0]?.supportFileType)
+          toServerInputs[key] = value.map((item: any) => transformToServerFile(item))
 
-      setRespondingTrue()
-      try {
-        await sendChatMessage(data, {
-          getAbortController: (abortController) => {
-            setAbortController(abortController)
-          },
-          onData: (message: string, isFirstMessage: boolean, { conversationId: newConversationId }) => {
-            if (isNewConversation && newConversationId) {
-              setCurrConversationId(newConversationId, APP_ID, true)
-              setConversationIdChangeBecauseOfNew(true)
-            }
-          },
-          onCompleted: () => {
-            setRespondingFalse()
-            setConversationIdChangeBecauseOfNew(true)
-          },
-          onError: (error) => {
-            setRespondingFalse()
-          },
-          onFile: () => { },
-          onThought: () => { },
-          onMessageEnd: () => { },
-          onMessageReplace: () => { },
-          onWorkflowStarted: () => { },
-          onNodeStarted: () => { },
-          onNodeFinished: () => { },
-          onWorkflowFinished: () => { },
-        })
-      } catch (error) {
-        setRespondingFalse()
-      }
-      return
+        else
+          toServerInputs[key] = value
+      })
     }
 
     const data: Record<string, any> = {
-      inputs: currInputs,
+      inputs: toServerInputs,
       query: message,
       conversation_id: isNewConversation ? null : currConversationId,
     }
@@ -532,197 +407,204 @@ const Main: FC<IMainProps> = ({
     let tempNewConversationId = ''
 
     setRespondingTrue()
-    try {
-      sendChatMessage(data, {
-        getAbortController: (abortController) => {
-          setAbortController(abortController)
-        },
-        onData: (message: string, isFirstMessage: boolean, { conversationId: newConversationId, messageId, taskId }: any) => {
-          if (!isAgentMode) {
-            responseItem.content = responseItem.content + message
-          }
-          else {
-            const lastThought = responseItem.agent_thoughts?.[responseItem.agent_thoughts?.length - 1]
-            if (lastThought)
-              lastThought.thought = lastThought.thought + message
-          }
-          if (messageId && !hasSetResponseId) {
-            responseItem.id = messageId
-            hasSetResponseId = true
-          }
-
-          if (isFirstMessage && newConversationId) {
-            tempNewConversationId = newConversationId
-            history.pushState(null, '', `/chat/${tempNewConversationId}`)
-          }
-
-          setMessageTaskId(taskId)
-          if (prevTempNewConversationId !== getCurrConversationId()) {
-            setIsRespondingConCurrCon(false)
-            return
-          }
-          updateCurrentQA({
-            responseItem,
-            questionId,
-            placeholderAnswerId,
-            questionItem,
-          })
-        },
-        onCompleted: async (hasError?: boolean) => {
-          if (hasError)
-            return
-
-          if (getConversationIdChangeBecauseOfNew()) {
-            const { data: allConversations }: any = await fetchConversations()
-            const newConversationId = allConversations[0].id
-            await updateConversationName(newConversationId)
-
-          }
-          setConversationIdChangeBecauseOfNew(false)
-          resetNewConversationInputs()
-          setChatNotStarted()
-          setCurrConversationId(tempNewConversationId, APP_ID, true)
-          setRespondingFalse()
-        },
-        onError: (error) => {
-          setRespondingFalse()
-        },
-        onFile: (file) => {
+    sendChatMessage(data, {
+      getAbortController: (abortController) => {
+        setAbortController(abortController)
+      },
+      onData: (message: string, isFirstMessage: boolean, { conversationId: newConversationId, messageId, taskId }: any) => {
+        if (!isAgentMode) {
+          responseItem.content = responseItem.content + message
+        }
+        else {
           const lastThought = responseItem.agent_thoughts?.[responseItem.agent_thoughts?.length - 1]
           if (lastThought)
-            lastThought.message_files = [...(lastThought as any).message_files, { ...file }]
+            lastThought.thought = lastThought.thought + message // need immer setAutoFreeze
+        }
+        if (messageId && !hasSetResponseId) {
+          responseItem.id = messageId
+          hasSetResponseId = true
+        }
 
-          updateCurrentQA({
-            responseItem,
-            questionId,
-            placeholderAnswerId,
-            questionItem,
+        if (isFirstMessage && newConversationId)
+          tempNewConversationId = newConversationId
+
+        setMessageTaskId(taskId)
+        // has switched to other conversation
+        if (prevTempNewConversationId !== getCurrConversationId()) {
+          setIsRespondingConCurrCon(false)
+          return
+        }
+        updateCurrentQA({
+          responseItem,
+          questionId,
+          placeholderAnswerId,
+          questionItem,
+        })
+      },
+      async onCompleted(hasError?: boolean) {
+        if (hasError)
+          return
+
+        if (getConversationIdChangeBecauseOfNew()) {
+          const { data: allConversations }: any = await fetchConversations()
+          const newItem: any = await generationConversationName(allConversations[0].id)
+
+          const newAllConversations = produce(allConversations, (draft: any) => {
+            draft[0].name = newItem.name
           })
-        },
-        onThought: (thought) => {
-          isAgentMode = true
-          const response = responseItem as any
-          if (thought.message_id && !hasSetResponseId) {
-            response.id = thought.message_id
-            hasSetResponseId = true
-          }
-          if (response.agent_thoughts.length === 0) {
-            response.agent_thoughts.push(thought)
+          setConversationList(newAllConversations as any)
+        }
+        setConversationIdChangeBecauseOfNew(false)
+        resetNewConversationInputs()
+        setChatNotStarted()
+        setCurrConversationId(tempNewConversationId, APP_ID, true)
+        setRespondingFalse()
+      },
+      onFile(file) {
+        const lastThought = responseItem.agent_thoughts?.[responseItem.agent_thoughts?.length - 1]
+        if (lastThought)
+          lastThought.message_files = [...(lastThought as any).message_files, { ...file }]
+
+        updateCurrentQA({
+          responseItem,
+          questionId,
+          placeholderAnswerId,
+          questionItem,
+        })
+      },
+      onThought(thought) {
+        isAgentMode = true
+        const response = responseItem as any
+        if (thought.message_id && !hasSetResponseId) {
+          response.id = thought.message_id
+          hasSetResponseId = true
+        }
+        // responseItem.id = thought.message_id;
+        if (response.agent_thoughts.length === 0) {
+          response.agent_thoughts.push(thought)
+        }
+        else {
+          const lastThought = response.agent_thoughts[response.agent_thoughts.length - 1]
+          // thought changed but still the same thought, so update.
+          if (lastThought.id === thought.id) {
+            thought.thought = lastThought.thought
+            thought.message_files = lastThought.message_files
+            responseItem.agent_thoughts![response.agent_thoughts.length - 1] = thought
           }
           else {
-            const lastThought = response.agent_thoughts[response.agent_thoughts.length - 1]
-            if (lastThought.id === thought.id) {
-              thought.thought = lastThought.thought
-              thought.message_files = lastThought.message_files
-              responseItem.agent_thoughts![response.agent_thoughts.length - 1] = thought
-            }
-            else {
-              responseItem.agent_thoughts!.push(thought)
-            }
+            responseItem.agent_thoughts!.push(thought)
           }
-          if (prevTempNewConversationId !== getCurrConversationId()) {
-            setIsRespondingConCurrCon(false)
-            return false
-          }
+        }
+        // has switched to other conversation
+        if (prevTempNewConversationId !== getCurrConversationId()) {
+          setIsRespondingConCurrCon(false)
+          return false
+        }
 
-          updateCurrentQA({
-            responseItem,
-            questionId,
-            placeholderAnswerId,
-            questionItem,
-          })
-        },
-        onMessageEnd: (messageEnd) => {
-          if (messageEnd.metadata?.annotation_reply) {
-            responseItem.id = messageEnd.id
-            responseItem.annotation = ({
-              id: messageEnd.metadata.annotation_reply.id,
-              authorName: messageEnd.metadata.annotation_reply.account.name,
-            } as AnnotationType)
-            const newListWithAnswer = produce(
-              getChatList().filter(item => item.id !== responseItem.id && item.id !== placeholderAnswerId),
-              (draft) => {
-                if (!draft.find(item => item.id === questionId))
-                  draft.push({ ...questionItem })
-
-                draft.push({
-                  ...responseItem,
-                })
-              })
-            setChatList(newListWithAnswer)
-            return
-          }
+        updateCurrentQA({
+          responseItem,
+          questionId,
+          placeholderAnswerId,
+          questionItem,
+        })
+      },
+      onMessageEnd: (messageEnd) => {
+        if (messageEnd.metadata?.annotation_reply) {
+          responseItem.id = messageEnd.id
+          responseItem.annotation = ({
+            id: messageEnd.metadata.annotation_reply.id,
+            authorName: messageEnd.metadata.annotation_reply.account.name,
+          } as AnnotationType)
           const newListWithAnswer = produce(
             getChatList().filter(item => item.id !== responseItem.id && item.id !== placeholderAnswerId),
             (draft) => {
               if (!draft.find(item => item.id === questionId))
                 draft.push({ ...questionItem })
 
-              draft.push({ ...responseItem })
+              draft.push({
+                ...responseItem,
+              })
             })
           setChatList(newListWithAnswer)
-        },
-        onMessageReplace: (messageReplace) => {
-          setChatList(produce(
-            getChatList(),
-            (draft) => {
-              const current = draft.find(item => item.id === messageReplace.id)
+          return
+        }
+        // not support show citation
+        // responseItem.citation = messageEnd.retriever_resources
+        const newListWithAnswer = produce(
+          getChatList().filter(item => item.id !== responseItem.id && item.id !== placeholderAnswerId),
+          (draft) => {
+            if (!draft.find(item => item.id === questionId))
+              draft.push({ ...questionItem })
 
-              if (current)
-                current.content = messageReplace.answer
-            },
-          ))
-        },
-        onWorkflowStarted: ({ workflow_run_id, task_id }) => {
-          responseItem.workflow_run_id = workflow_run_id
-          responseItem.workflowProcess = {
-            status: WorkflowRunningStatus.Running,
-            tracing: [],
+            draft.push({ ...responseItem })
+          })
+        setChatList(newListWithAnswer)
+      },
+      onMessageReplace: (messageReplace) => {
+        setChatList(produce(
+          getChatList(),
+          (draft) => {
+            const current = draft.find(item => item.id === messageReplace.id)
+
+            if (current)
+              current.content = messageReplace.answer
+          },
+        ))
+      },
+      onError() {
+        setRespondingFalse()
+        // role back placeholder answer
+        setChatList(produce(getChatList(), (draft) => {
+          draft.splice(draft.findIndex(item => item.id === placeholderAnswerId), 1)
+        }))
+      },
+      onWorkflowStarted: ({ workflow_run_id, task_id }) => {
+        // taskIdRef.current = task_id
+        responseItem.workflow_run_id = workflow_run_id
+        responseItem.workflowProcess = {
+          status: WorkflowRunningStatus.Running,
+          tracing: [],
+        }
+        setChatList(produce(getChatList(), (draft) => {
+          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
+          draft[currentIndex] = {
+            ...draft[currentIndex],
+            ...responseItem,
           }
-          setChatList(produce(getChatList(), (draft) => {
-            const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-            draft[currentIndex] = {
-              ...draft[currentIndex],
-              ...responseItem,
-            }
-          }))
-        },
-        onWorkflowFinished: ({ data }) => {
-          responseItem.workflowProcess!.status = data.status as WorkflowRunningStatus
-          setChatList(produce(getChatList(), (draft) => {
-            const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-            draft[currentIndex] = {
-              ...draft[currentIndex],
-              ...responseItem,
-            }
-          }))
-        },
-        onNodeStarted: ({ data }) => {
-          responseItem.workflowProcess!.tracing!.push(data as any)
-          setChatList(produce(getChatList(), (draft) => {
-            const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-            draft[currentIndex] = {
-              ...draft[currentIndex],
-              ...responseItem,
-            }
-          }))
-        },
-        onNodeFinished: ({ data }) => {
-          const currentIndex = responseItem.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
-          responseItem.workflowProcess!.tracing[currentIndex] = data as any
-          setChatList(produce(getChatList(), (draft) => {
-            const currentIndex = draft.findIndex(item => item.id === responseItem.id)
-            draft[currentIndex] = {
-              ...draft[currentIndex],
-              ...responseItem,
-            }
-          }))
-        },
-      })
-    } catch (error) {
-      console.error('Failed to send chat message:', error)
-      setRespondingFalse()
-    }
+        }))
+      },
+      onWorkflowFinished: ({ data }) => {
+        responseItem.workflowProcess!.status = data.status as WorkflowRunningStatus
+        setChatList(produce(getChatList(), (draft) => {
+          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
+          draft[currentIndex] = {
+            ...draft[currentIndex],
+            ...responseItem,
+          }
+        }))
+      },
+      onNodeStarted: ({ data }) => {
+        responseItem.workflowProcess!.tracing!.push(data as any)
+        setChatList(produce(getChatList(), (draft) => {
+          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
+          draft[currentIndex] = {
+            ...draft[currentIndex],
+            ...responseItem,
+          }
+        }))
+      },
+      onNodeFinished: ({ data }) => {
+        const currentIndex = responseItem.workflowProcess!.tracing!.findIndex(item => item.node_id === data.node_id)
+        responseItem.workflowProcess!.tracing[currentIndex] = data as any
+        setChatList(produce(getChatList(), (draft) => {
+          const currentIndex = draft.findIndex(item => item.id === responseItem.id)
+          draft[currentIndex] = {
+            ...draft[currentIndex],
+            ...responseItem,
+          }
+        }))
+      },
+    })
   }
 
   const handleFeedback = async (messageId: string, feedback: Feedbacktype) => {
@@ -749,149 +631,9 @@ const Main: FC<IMainProps> = ({
         onCurrentIdChange={handleConversationIdChange}
         currentId={currConversationId}
         copyRight={APP_INFO.copyright || APP_INFO.title}
-        onPinConversation={handlePinConversation}
-        onRenameConversation={handleRenameConversation}
-        onDeleteConversation={handleDeleteConversation}
-        onHandleConversationIdChange={handleConversationIdChange}
-        onHideSideBar={hideSidebar}
       />
     )
   }
-
-  // 添加状态保存最后选择的模型
-  const [lastSelectedModel, setLastSelectedModel] = useState<string>('deepseek-v3')
-  const [isOnlineSearch, setIsOnlineSearch] = useState(false)
-
-  useEffect(() => {
-    if (!isNewConversation && currConversationId) {
-      console.log("fetchChatList", currConversationId)
-      fetchChatList(currConversationId).then((res: any) => {
-        const { data } = res
-        // 找到最后一条模型选择消息
-        const lastModelMessage = [...data].reverse().find((item: any) =>
-          item.query.startsWith('model_name=')
-        )
-        if (lastModelMessage) {
-          const modelName = lastModelMessage.query.replace('model_name=', '')
-          setLastSelectedModel(modelName)
-        }
-        else {
-          setLastSelectedModel('deepseek-v3')
-        }
-
-        // 找到最后一条联网搜索消息
-        const lastSearchMessage = [...data].reverse().find((item: any) =>
-          item.query.startsWith('online_search=')
-        )
-        if (lastSearchMessage) {
-          const isOnline = lastSearchMessage.query.replace('online_search=', '') === 'true'
-          setIsOnlineSearch(isOnline)
-        }
-        else {
-          setIsOnlineSearch(false)
-        }
-      })
-    }
-    else {
-      setLastSelectedModel('deepseek-v3')
-      setIsOnlineSearch(false)
-    }
-  }, [currConversationId, isNewConversation])
-
-  // 添加更新会话标题的函数
-  const updateConversationName = async (conversationId: string) => {
-    try {
-      const { data: messages }: any = await fetchChatList(conversationId)
-
-      // 找到第一条正常的用户消息，排除模型选择和在线搜索消息
-      const firstUserMessage = messages
-        .find((msg: any) => !msg.query.startsWith('model_name=') && !msg.query.startsWith('online_search='))
-
-      if (firstUserMessage) {
-        const title = firstUserMessage.query.slice(0, 12) + (firstUserMessage.query.length >= 12 ? '...' : '')
-
-        // 直接使用 generationConversationName
-        await generationConversationName(conversationId, title)
-
-        // 更新本地状态
-        const { data: allConversations }: any = await fetchConversations()
-
-        // 获取已删除的会话 ID
-        const deletedIds = getDeletedConversations()
-
-        // 过滤掉已删除的会话
-        const filteredConversations = allConversations.filter((conv: any) => !deletedIds.includes(conv.id))
-
-        setConversationList(filteredConversations)
-      }
-    } catch (err) {
-      console.error('Failed to update conversation name:', err)
-    }
-  }
-
-  const handlePinConversation = async (id: string) => {
-    try {
-      // 在前端实现置顶逻辑
-      const newConversationList = produce(conversationList, (draft) => {
-        const index = draft.findIndex(item => item.id === id)
-        if (index > 0) {
-          const [item] = draft.splice(index, 1)
-          draft.unshift(item)
-        }
-      })
-      setConversationList(newConversationList)
-      notify({ type: 'success', message: '置顶成功' })
-    } catch (err) {
-      notify({ type: 'error', message: '置顶失败' })
-    }
-  }
-
-  const handleRenameConversation = async (id: string, name: string) => {
-    try {
-      await generationConversationName(id, name)
-      const { data: allConversations }: any = await fetchConversations()
-      setConversationList(allConversations)
-      notify({ type: 'success', message: '重命名成功' })
-    } catch (err) {
-      notify({ type: 'error', message: '重命名失败' })
-    }
-  }
-
-  const handleDeleteConversation = async (id: string) => {
-    try {
-      // 如果删除的是当前会话，先重置状态
-      if (id === currConversationId) {
-        handleConversationIdChange('-1')
-        setChatNotStarted()
-        resetNewConversationInputs()
-      }
-
-      // 更新前端的会话列表
-      const newConversationList = conversationList.filter(item => item.id !== id)
-      setConversationList(newConversationList)
-
-      // 保存删除的会话 ID 到 localStorage
-      const deletedIds = getDeletedConversations()
-      deletedIds.push(id)
-      localStorage.setItem(DELETED_CONVERSATIONS_KEY, JSON.stringify(deletedIds))
-
-      // 如果还有其他会话，切换到第一个会话
-      if (newConversationList.length > 0 && id === currConversationId)
-        handleConversationIdChange(newConversationList[0].id)
-
-      notify({ type: 'success', message: '删除成功' })
-    } catch (err) {
-      notify({ type: 'error', message: '删除失败' })
-    }
-  }
-
-  // 添加 URL 更新处理函数
-  const handleUrlChange = useCallback((url: string) => {
-    console.log('URL changed to:', url);
-  }, []);
-
-  // 使用 usePushStateListener
-  usePushStateListener(handleUrlChange);
 
   if (appUnavailable)
     return <AppUnavailable isUnknownReason={isUnknownReason} errMessage={!hasSetAppConfig ? 'Please set APP_ID and API_KEY in config/index.tsx' : ''} />
@@ -900,67 +642,55 @@ const Main: FC<IMainProps> = ({
     return <Loading type='app' />
 
   return (
-    <div className='fixed inset-0 bg-gray-100'>
-      <div className="absolute inset-0 flex">
+    <div className='bg-gray-100'>
+      <Header
+        title={APP_INFO.title}
+        isMobile={isMobile}
+        onShowSideBar={showSidebar}
+        onCreateNewChat={() => handleConversationIdChange('-1')}
+      />
+      <div className="flex rounded-t-2xl bg-white overflow-hidden">
         {/* sidebar */}
-        {!isMobile && (
-          <div className={`fixed top-0 bottom-0 left-0 z-50 transition-transform duration-300 ${isShowSidebar ? 'translate-x-0' : '-translate-x-full'}`}>
-            {renderSidebar()}
+        {!isMobile && renderSidebar()}
+        {isMobile && isShowSidebar && (
+          <div className='fixed inset-0 z-50'
+            style={{ backgroundColor: 'rgba(35, 56, 118, 0.2)' }}
+            onClick={hideSidebar}
+          >
+            <div className='inline-block' onClick={e => e.stopPropagation()}>
+              {renderSidebar()}
+            </div>
           </div>
         )}
         {/* main */}
-        <div className={`relative flex-1 flex flex-col min-w-0 pt-[7px] transition-all duration-300 ${!isMobile && isShowSidebar ? 'ml-[240px]' : 'ml-0'}`}>
-          <div className={`relative flex-1 flex flex-col min-w-0 bg-white mb-[7px] mr-[7px] rounded-lg ${isShowSidebar ? '' : 'ml-[7px]'}`}>
-            {/* {!hasSetInputs && (
-              <ConfigSence
-                conversationName={conversationName}
-                hasSetInputs={hasSetInputs}
-                isPublicVersion={isShowPrompt}
-                siteInfo={APP_INFO}
-                promptConfig={promptConfig}
-                onStartChat={handleStartChat}
-                canEditInputs={canEditInputs}
-                savedInputs={currInputs as Record<string, any>}
-                onInputsChange={setCurrInputs}
-              ></ConfigSence>
-            )} */}
-            {!isShowSidebar && !isMobile && (
-              <Tooltip selector='sidebar-open'
-                position='right'
-                htmlContent={
-                  <div>
-                    <div>{t('common.operation.openSidebar')}</div>
-                  </div>
-                }
-              >
-                <button className="absolute left-2 top-2 p-1 w-8 h-8 hover:bg-gray-200 rounded-lg flex items-center justify-center z-50"
-                  onClick={showSidebar}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="20" height="20" viewBox="0 0 1024 1024" className="iconify text-gray-500"><path d="M861.866667 162.133333c-17.066667-17.066667-42.666667-29.866667-68.266667-29.866666H226.133333c-25.6 0-51.2 8.533333-68.266666 29.866666S128 204.8 128 230.4v567.466667c0 25.6 8.533333 51.2 29.866667 68.266666 17.066667 17.066667 42.666667 29.866667 68.266666 29.866667h567.466667c25.6 0 51.2-8.533333 68.266667-29.866667 17.066667-17.066667 29.866667-42.666667 29.866666-68.266666V226.133333c0-25.6-8.533333-46.933333-29.866666-64zM366.933333 814.933333H226.133333c-4.266667 0-8.533333 0-12.8-4.266666-4.266667-4.266667-4.266666-8.533333-4.266666-12.8V226.133333c0-4.266667 0-8.533333 4.266666-12.8 4.266667-4.266667 8.533333-4.266667 12.8-4.266666h140.8v605.866666z m448-17.066666c0 4.266667 0 8.533333-4.266666 12.8-4.266667 4.266667-8.533333 4.266667-12.8 4.266666h-354.133334V209.066667h354.133334c4.266667 0 8.533333 0 12.8 4.266666 4.266667 4.266667 4.266667 8.533333 4.266666 12.8v571.733334z" fill="currentColor" /></svg>
-                </button>
-              </Tooltip>
-            )}
-            {
-              hasSetInputs && (
-                <div className='relative grow h-[200px] w-full max-w-full mx-auto overflow-hidden'>
-                  {Component ? <Component /> : (
-                    <Chat
-                      chatList={chatList}
-                      onSend={handleSend}
-                      onFeedback={handleFeedback}
-                      isResponding={isResponding}
-                      checkCanSend={checkCanSend}
-                      visionConfig={visionConfig}
-                      currConversationId={currConversationId}
-                      isOnlineSearch={isOnlineSearch}
-                      lastSelectedModel={lastSelectedModel}
-                      onStopResponding={handleStopResponding}
-                      isNewChat={isNewChat}
-                    />
-                  )}
+        <div className='flex-grow flex flex-col h-[calc(100vh_-_3rem)] overflow-y-auto'>
+          <ConfigSence
+            conversationName={conversationName}
+            hasSetInputs={hasSetInputs}
+            isPublicVersion={isShowPrompt}
+            siteInfo={APP_INFO}
+            promptConfig={promptConfig}
+            onStartChat={handleStartChat}
+            canEditInputs={canEditInputs}
+            savedInputs={currInputs as Record<string, any>}
+            onInputsChange={setCurrInputs}
+          ></ConfigSence>
+
+          {
+            hasSetInputs && (
+              <div className='relative grow h-[200px] pc:w-[794px] max-w-full mobile:w-full pb-[66px] mx-auto mb-3.5 overflow-hidden'>
+                <div className='h-full overflow-y-auto' ref={chatListDomRef}>
+                  <Chat
+                    chatList={chatList}
+                    onSend={handleSend}
+                    onFeedback={handleFeedback}
+                    isResponding={isResponding}
+                    checkCanSend={checkCanSend}
+                    visionConfig={visionConfig}
+                  />
                 </div>
-              )}
-          </div>
+              </div>)
+          }
         </div>
       </div>
     </div>

@@ -1,14 +1,7 @@
 import { getLocaleOnServer } from '@/i18n/server'
-import { Metadata } from 'next'
 
 import './styles/globals.css'
 import './styles/markdown.scss'
-
-export const metadata: Metadata = {
-  icons: {
-    icon: '/WAC-LOGO.svg',  // 将 SVG 文件放在 public 目录下
-  },
-}
 
 const LocaleLayout = ({
   children,

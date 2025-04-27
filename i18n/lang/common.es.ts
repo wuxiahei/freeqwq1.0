@@ -17,7 +17,6 @@ const translation = {
     like: 'Me gusta',
     dislike: 'No me gusta',
     ok: 'OK',
-    copy: 'Copiar',
   },
   imageUploader: {
     uploadFromComputer: 'Subir desde el ordenador',
@@ -28,6 +27,16 @@ const translation = {
     pasteImageLinkInputPlaceholder: 'Pegar enlace de imagen aquí',
     pasteImageLinkInvalid: 'Enlace de imagen no válido',
     imageUpload: 'Subir imagen',
+  },
+  fileUploader: {
+    uploadFromComputer: 'Carga local',
+    pasteFileLink: 'Pegar enlace de archivo',
+    uploadFromComputerReadError: 'Error en la lectura del archivo, inténtelo de nuevo.',
+    uploadFromComputerUploadError: 'Error en la carga del archivo, vuelva a cargarlo.',
+    pasteFileLinkInvalid: 'Enlace de archivo no válido',
+    fileExtensionNotSupport: 'Extensión de archivo no compatible',
+    pasteFileLinkInputPlaceholder: 'Introduzca la URL...',
+    uploadFromComputerLimit: 'El archivo de carga no puede exceder {{size}}',
   },
 }
 
