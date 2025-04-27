@@ -1,31 +1,45 @@
 .appIcon {
-  @apply flex items-center justify-center relative w-9 h-9 text-lg bg-teal-100 rounded-lg grow-0 shrink-0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background-color: #F9FAFB;
 }
 
-.appIcon.large {
-  @apply w-10 h-10;
+.xs {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
 }
 
-.appIcon.small {
-  @apply w-8 h-8;
+.tiny {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
 }
 
-.appIcon.xs {
-  @apply w-3 h-3 text-base;
+.small {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
 }
 
-.appIcon.tiny {
-  @apply w-6 h-6 text-base;
+.large {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
 }
 
-.appIcon.rounded {
-  @apply rounded-full;
+.rounded {
+  border-radius: 50%;
 }
 
 .iconImage {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  max-width: 100%;
-  max-height: 100%;
 }
 
 .appIcon.large {
