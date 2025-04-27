@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Button from '@/app/components/base/button'
 import Input from '@/app/components/base/input'
 import Textarea from '@/app/components/base/textarea'
-import { useChatContext } from '@/app/components/base/chat/chat/context'
+import { useChatContext } from '@/app/components/chat/context'
 
 enum DATA_FORMAT {
   TEXT = 'text',
