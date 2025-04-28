@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@react-router-dom':
+      specifier: ^6.22.3
+      version: 6.22.3
     '@ant-design/icons':
       specifier: ^5.6.1
       version: 5.6.1
@@ -641,6 +644,9 @@ importers:
         version: 12.0.1
 
 packages:
+   '@react-router-dom@6.22.3':
+    resolution: {integrity: sha512-Y5gRyZi+Dmj5587v4VyXQf/TJhLBgRNaYVlX/ZtHyU3qqXvxqwAqYnpYXVv19JcaKQGMGN9kV2JnwTJYc8lXw==}
+    engines: {node: '>=14.0.0'}
 
   '@adobe/css-tools@4.4.2':
     resolution: {integrity: sha512-baYZExFpsdkBNuvGKTKWCwKH57HRZLVtycZS05WTQNVOiXVSeAki3nU35zlRbToeMW8aHlJfyS+1C4BOv27q0A==}
