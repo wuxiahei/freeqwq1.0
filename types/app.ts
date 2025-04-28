@@ -223,3 +223,19 @@ export enum CodeLanguage {
   javascript = 'javascript',
   json = 'json',
 }
+
+export type ParametersRes = {
+  opening_statement: string
+  suggested_questions: string[]
+  suggested_questions_after_answer: AnnotationReply
+  speech_to_text: AnnotationReply
+  text_to_speech: TextToSpeech
+  retriever_resource: AnnotationReply
+  annotation_reply: AnnotationReply
+  more_like_this: AnnotationReply
+  user_input_form: UserInputForm[]
+  sensitive_word_avoidance: AnnotationReply
+  file_upload: FileUpload
+  system_parameters: SystemParameters
+}
+
