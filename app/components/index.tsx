@@ -10,7 +10,7 @@ import Toast from '@/app/components/base/toast'
 import Sidebar from '@/app/components/sidebar'
 import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
-import { fetchAppParams, fetchChatList, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
+import { fetchAppParams, fetchChatList, replaceArrText, fetchConversations, generationConversationName, sendChatMessage, updateFeedback } from '@/service'
 import type { ChatItem, ConversationItem, Feedbacktype, PromptConfig, VisionFile, VisionSettings } from '@/types/app'
 import { Resolution, TransferMethod, WorkflowRunningStatus } from '@/types/app'
 import Chat from '@/app/components/chat'
@@ -195,7 +195,8 @@ const Main: FC<IMainProps> = () => {
       })
     }))
   }
-
+  const [hasSuggested, setSuggested, getSuggested] = useGetState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
   // sometime introduction is not applied to state
   const generateNewChatListWithOpenStatement = (introduction?: string, inputs?: Record<string, any> | null) => {
     let calculatedIntroduction = introduction || conversationIntroduction || ''
@@ -224,7 +225,25 @@ const Main: FC<IMainProps> = () => {
     }
     (async () => {
       try {
-        const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
+        if (
+          !fetchedDataRef.current.conversationData ||
+          !fetchedDataRef.current.appParams ||
+          !fetchedDataRef.current.precinctNames
+        ) {
+          const [conversationData, appParams, precinctNames] =
+            await Promise.all([
+              fetchConversations(),
+              fetchAppParams(),
+              fetchAllProjectName(token || ""),
+            ]);
+          fetchedDataRef.current = {
+            conversationData,
+            appParams,
+            precinctNames,
+          };
+        }
+        const { conversationData, appParams, precinctNames } =
+          fetchedDataRef.current;
         // handle current conversation id
         const { data: conversations, error } = conversationData as { data: ConversationItem[]; error: string }
         if (error) {
@@ -248,7 +267,7 @@ const Main: FC<IMainProps> = () => {
         const repSuggested_questions = replaceArrText(
           suggested_questions,
           precinctNames
-        );
+        )
         setSuggestedQuestions(repSuggested_questions);
 
         setSuggested(suggested_questions_after_answer.enabled);
@@ -257,7 +276,7 @@ const Main: FC<IMainProps> = () => {
         setNewConversationInfo({
           name: t('app.chat.newChatDefaultName'),
           introduction,
-        });
+        })
         const prompt_variables = userInputsFormToPromptVariables(user_input_form)
         setPromptConfig({
           prompt_template: promptTemplate,
