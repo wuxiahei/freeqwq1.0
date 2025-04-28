@@ -24,9 +24,12 @@
       }
     ],
     "paths": {
+      "@/components": [
+        "./components/"
+      ],
       "@/*": [
         "./*"
-      ]
+      ],
     }
   },
   "include": [
@@ -35,7 +38,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/components/develop/Prose.jsx"
+    "components/develop/Prose.jsx"
   ],
   "exclude": [
     "node_modules"
