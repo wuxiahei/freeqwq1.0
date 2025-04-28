@@ -223,3 +223,6 @@ export enum CodeLanguage {
   javascript = 'javascript',
   json = 'json',
 }
+
+
+export type Theme = 'light' | 'dark' | 'system';
