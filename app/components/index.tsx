@@ -297,6 +297,16 @@ const Main: FC<IMainProps> = () => {
 
   const [controlFocus, setControlFocus] = useState(0)
   const [openingSuggestedQuestions, setOpeningSuggestedQuestions] = useState<string[]>([])
+
+  // 在 fetchAppParams 后添加
+  useEffect(() => {
+    if (suggested_questions && Array.isArray(suggested_questions)) {
+      setOpeningSuggestedQuestions(suggested_questions)
+    }
+  }, [suggested_questions])
+
+    // 在 Chat 组件中添加属性
+    < Chat
   const [messageTaskId, setMessageTaskId] = useState('')
   const [hasStopResponded, setHasStopResponded, getHasStopResponded] = useGetState(false)
   const [isRespondingConIsCurrCon, setIsRespondingConCurrCon, getIsRespondingConIsCurrCon] = useGetState(true)
