@@ -1,51 +1,16 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# Local
 .DS_Store
-.vscode
-*.pem
+*.local
+*.log*
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# Dist
+node_modules
+dist/
 
-# local env files
-.env*.local
-.env
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
 
-# vercel
-.vercel
-
-# typescript
+# 子包 ts 构建的临时文件
 *.tsbuildinfo
-next-env.d.ts
-
-# npm
-package-lock.json
-
-# yarn
-.pnp.cjs
-.pnp.loader.mjs
-.yarn/
-yarn.lock
-.yarnrc.yml
-
-# pmpm
-pnpm-lock.yaml

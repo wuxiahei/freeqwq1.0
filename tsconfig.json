@@ -1,46 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es2015",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/components": [
-        "./components/"
-      ],
-      "@/*": [
-        "./*"
-      ],
-    }
-  },
-  "include": [
-    "next-env.d.ts",
-    "global.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "components/develop/Prose.jsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+	"extends": ["./tsconfig.prod.json"],
+	"compilerOptions": {
+		"paths": {
+			"@/*": ["src/*"],
+			"@dify-chat/api": ["packages/api/src/index.ts"],
+			"@dify-chat/components": ["packages/components/src/index.tsx"],
+			"@dify-chat/core": ["packages/core/src/index.ts"],
+			"@dify-chat/helpers": ["packages/helpers/src/index.ts"]
+		}
+	}
 }
