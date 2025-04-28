@@ -9,7 +9,8 @@
 		"format": "prettier --write .",
 		"lint": "eslint .",
 		"preview": "rsbuild preview",
-		"prepare": "husky"
+		"prepare": "husky",
+		"vercel-build": "pnpm build"
 	},
 	"packageManager": "pnpm@10.8.1",
 	"dependencies": {

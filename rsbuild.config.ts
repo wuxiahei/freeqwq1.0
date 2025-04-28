@@ -7,6 +7,9 @@ import tailwindcss from 'tailwindcss'
 const tsconfigDevPath = path.resolve(__dirname, './tsconfig.json')
 const tsconfigProdPath = path.resolve(__dirname, './tsconfig.prod.json')
 
+// 判断是否在 Vercel 环境中
+const isVercel = process.env.VERCEL === '1'
+
 export default defineConfig({
 	source: {
 		tsconfigPath: process.env.NODE_ENV === 'development' ? tsconfigDevPath : tsconfigProdPath,
@@ -27,7 +30,7 @@ export default defineConfig({
 	],
 	server: {
 		compress: false, // 解决代理后流式输出失效的问题
-		base: '/dify-chat',
+		base: isVercel ? '/' : '/dify-chat',
 		port: 5200,
 		proxy: [
 			{
@@ -44,5 +47,12 @@ export default defineConfig({
 				plugins: [tailwindcss()],
 			},
 		},
+	},
+	output: {
+		distPath: {
+			root: 'dist',
+		},
+		// 在 Vercel 环境中修改公共路径
+		publicPath: isVercel ? '/' : '/dify-chat/',
 	},
 })

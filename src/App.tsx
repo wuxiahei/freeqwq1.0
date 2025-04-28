@@ -8,11 +8,13 @@ import { useState } from 'react'
 import LayoutIndex from './layout'
 import AppListPage from './pages/app-list'
 import ChatPage from './pages/chat'
-import DifyAppService from './services/app/localstorage'
 import { USER } from './config'
 
 // 初始化响应式配置
 initResponsiveConfig()
+
+// 判断是否在 Vercel 环境中
+const isVercel = process.env.VERCEL === '1'
 
 const routes: IRoute[] = [
 	{ path: '/chat', component: () => <ChatPage /> },
@@ -38,7 +40,7 @@ export default function App() {
 
 	return (
 		<BrowserRouter
-			basename="/dify-chat"
+			basename={isVercel ? '/' : '/dify-chat'}
 			routes={routes}
 		>
 			<DifyChatProvider
