@@ -2,7 +2,7 @@ import { DifyChatProvider } from '@dify-chat/core'
 import { initResponsiveConfig } from '@dify-chat/helpers'
 import FingerPrintJS from '@fingerprintjs/fingerprintjs'
 import { useMount } from 'ahooks'
-import { BrowserRouter, type IRoute } from 'pure-react-router'
+import { Routes, Route, BrowserRouter as Router } from 'react-router-dom'
 import { useState } from 'react'
 
 import LayoutIndex from './layout'
@@ -15,12 +15,6 @@ initResponsiveConfig()
 
 // 判断是否在 Vercel 环境中
 const isVercel = process.env.VERCEL === '1'
-
-const routes: IRoute[] = [
-	{ path: '/chat', component: () => <ChatPage /> },
-	{ path: '/app/:appId', component: () => <ChatPage /> },
-	{ path: '/apps', component: () => <AppListPage /> },
-]
 
 /**
  * Dify Chat 的最小应用实例
@@ -39,10 +33,7 @@ export default function App() {
 	})
 
 	return (
-		<BrowserRouter
-			basename={isVercel ? '/' : '/dify-chat'}
-			routes={routes}
-		>
+		<Router basename={isVercel ? '/' : '/dify-chat'}>
 			<DifyChatProvider
 				value={{
 					mode: 'singleApp',
@@ -54,10 +45,15 @@ export default function App() {
 							apiKey: `${process.env.NEXT_PUBLIC_APP_KEY}`,
 						},
 					}
-				}
-					>
-					<LayoutIndex />
+				}}
+			>
+				<LayoutIndex />
+				<Routes>
+					<Route path="/chat" element={<ChatPage />} />
+					<Route path="/app/:appId" element={<ChatPage />} />
+					<Route path="/apps" element={<AppListPage />} />
+				</Routes>
 			</DifyChatProvider>
-		</BrowserRouter >
+		</Router>
 	)
 }
