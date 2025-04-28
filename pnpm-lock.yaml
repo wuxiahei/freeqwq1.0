@@ -10,8 +10,8 @@ catalogs:
       specifier: ^5.6.1
       version: 5.6.1
     '@ant-design/x':
-      specifier: ^1.1.1
-      version: 1.1.1
+      specifier: ^1.2.0
+      version: 1.2.0
     '@biomejs/biome':
       specifier: ^1.9.4
       version: 1.9.4
@@ -256,7 +256,7 @@ importers:
         version: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@ant-design/x':
         specifier: 'catalog:'
-        version: 1.1.1(antd@5.24.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 1.2.0(antd@5.24.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dify-chat/api':
         specifier: workspace:^
         version: link:packages/api
@@ -687,8 +687,8 @@ packages:
     peerDependencies:
       react: '>=16.9.0'
 
-  '@ant-design/x@1.1.1':
-    resolution: {integrity: sha512-DFzNQfCTdYBhTJxorGI1ylhH/ZODcU5yn64xt/8/11slT0ALMuHC5Afx717KNQiao4RleXjypiEWuP0K1f+Szg==}
+  '@ant-design/x@1.2.0':
+    resolution: {integrity: sha512-sV+C6ER+xn6XQF3gYN3Ma9MnK8Bcfj+5C4cRvtKNvzExHwC6laBD1g6TWHH7vFPDOQUhYlJT4tw+NdcvZJx/ZA==}
     peerDependencies:
       antd: ^5.20.3
       react: '>=18.0.0'
@@ -4308,6 +4308,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-fetch@2.6.7:
     resolution: {integrity: sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==}
@@ -6116,7 +6117,7 @@ snapshots:
       resize-observer-polyfill: 1.5.1
       throttle-debounce: 5.0.2
 
-  '@ant-design/x@1.1.1(antd@5.24.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@ant-design/x@1.2.0(antd@5.24.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@ant-design/colors': 7.2.0
       '@ant-design/cssinjs': 1.23.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
