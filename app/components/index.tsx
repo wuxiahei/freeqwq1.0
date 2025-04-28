@@ -256,7 +256,7 @@ const Main: FC<IMainProps> = () => {
         setLocaleOnClient(APP_INFO.default_language, true)
         setNewConversationInfo({
           name: t('app.chat.newChatDefaultName'),
-          introduction, suggested_questions,
+          introduction,
         })
         const prompt_variables = userInputsFormToPromptVariables(user_input_form)
         setPromptConfig({
