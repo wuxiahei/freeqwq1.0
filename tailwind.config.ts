@@ -1,28 +1,20 @@
-import type { Config } from 'tailwindcss'
-
-import { colors } from './src/theme/config'
-
-const minWidth = {
-	/**
-	 * 聊天卡片最小宽度
-	 */
-	'chat-card': '28rem',
-}
-
-const content = ['./src/**/*.{html,js,ts,jsx,tsx}']
-
-// 则添加 packages/components 目录
-content.push('./packages/components/src/**/*.{html,js,ts,jsx,tsx}')
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-	content,
-	theme: {
-		extend: {
-			colors,
-			minWidth,
-		},
-	},
-	plugins: [],
-}
-
-export default config
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;

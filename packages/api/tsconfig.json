@@ -1,8 +1,0 @@
-{
-	"extends": "./tsconfig.prod.json",
-	"compilerOptions": {
-		"paths": {
-			"@dify-chat/helpers": ["../helpers/src/index.ts"]
-		}
-	}
-}
