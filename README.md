@@ -1,75 +1,80 @@
-![simple-chat-webui-for-dify](public/readme/sample.png)
-This project is a very simple web UI made with Next.js for Dify.
-It is responsive and supports smartphones.
+# Conversation Web App Template
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-I am currently learning programming, so please don't expect too much :P
+## Config App
+Create a file named `.env.local` in the current directory and copy the contents from `.env.example`. Setting the following content:
+```
+# APP ID: This is the unique identifier for your app. You can find it in the app's detail page URL. 
+# For example, in the URL `https://cloud.dify.ai/app/xxx/workflow`, the value `xxx` is your APP ID.
+NEXT_PUBLIC_APP_ID=
+
+# APP API Key: This is the key used to authenticate your app's API requests. 
+# You can generate it on the app's "API Access" page by clicking the "API Key" button in the top-right corner.
+NEXT_PUBLIC_APP_KEY=
+
+# APP URL: This is the API's base URL. If you're using the Dify cloud service, set it to: https://api.dify.ai/v1.
+NEXT_PUBLIC_API_URL=
+```
+
+Config more in `config/index.ts` file:   
+```js
+export const APP_INFO: AppInfo = {
+  title: 'Chat APP',
+  description: '',
+  copyright: '',
+  privacy_policy: '',
+  default_language: 'zh-Hans'
+}
+
+export const isShowPrompt = true
+export const promptTemplate = ''
+```
 
 ## Getting Started
-
-### Setting up the .env file
-Please configure at least the following two items, referring to the screenshot:
-
-```
-DIFY_APP_API_BASE_URL=https://xxxxx.xxxx.xxx/v1
-DIFY_APP_API_KEY=app-XXXXXXXXXXXXXX
-```
-![api_screen_shot](public/readme/api.png)
-
-### Running locally
-You can start it in two steps:
-```
+First, install dependencies:
+```bash
 npm install
+# or
+yarn
+# or
+pnpm install
+```
+
+Then, run the development server:
+
+```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Using Docker
+
+```
+docker build . -t <DOCKER_HUB_REPO>/webapp-conversation:latest
+# now you can access it in port 3000
+docker run -p 3000:3000 <DOCKER_HUB_REPO>/webapp-conversation:latest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to check.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Customization
-You can customize it with the .env file.
-![customize](public/readme/customize.png)
+## Learn More
 
-## BASIC Authentication
-```
-AUTH_MODE="BASIC"
-BASIC_AUTH_USER="basic_user"
-BASIC_AUTH_PASSWORD="basic_pass"
-```
-By setting `AUTH_MODE` to `BASIC`, you can enable BASIC authentication.
-If authentication is not needed, leave it empty.
+To learn more about Next.js, take a look at the following resources:
 
-## Change log
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### v0.0.4
-![0.0.4](public/readme/0.0.4-1.png)
-Maintenance functionality has been implemented.  
-If there is no connection to the Didify server, it will automatically switch to the maintenance screen.  
-The text to be displayed is  
-.env `NEXT_PUBLIC_MAINTENANCE_TITLE` `NEXT_PUBLIC_MAINTENANCE_BODY`.
-
-
-### v0.0.3
-Google Tag Mnagager is now supported.
-Specify the ID of Google tag manager for GTMID.
-If not used, specify empty.
-
-Example: `GTM-KZR8CDNR`
-
-.env
-```
-###### GoogleTagManager
-GTMID=
-```
-
-
-### v0.0.2
-The OPENING QUESTIONS function is now supported.
-
-![customize](public/readme/OPENING_QUESTIONS.png)
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
 ## Deploy on Vercel
-Since Server-Sent Events are used, it also works on Vercel.
-However, in the free plan, the chat may be interrupted due to time limitations.
 
-## Heartfelt Thanks to the Dify Development Team
-Thank you very much for developing such a wonderful application.
-I sincerely appreciate it.
+> ⚠️ If you are using [Vercel Hobby](https://vercel.com/pricing), your message will be truncated due to the limitation of vercel.
+
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
