@@ -55,6 +55,9 @@ const Main: FC<IMainProps> = () => {
   const media = useBreakpoints();
   const isMobile = media === MediaType.mobile;
   const hasSetAppConfig = APP_ID && API_KEY;
+  /*
+* app info
+*/
   const [appUnavailable, setAppUnavailable] = useState<boolean>(false);
   const [isUnknownReason, setIsUnknownReason] = useState<boolean>(false);
   const [promptConfig, setPromptConfig] = useState<PromptConfig | null>(null);
@@ -307,12 +310,9 @@ const Main: FC<IMainProps> = () => {
           opening_statement: introduction,
           file_upload,
           system_parameters,
-          suggested_questions,
+          suggested_questions: opensuggested,
           suggested_questions_after_answer,
         } = appParams;
-
-
-        setSuggestedQuestions(suggested_questions);
 
         setSuggested(suggested_questions_after_answer.enabled);
 
@@ -320,7 +320,7 @@ const Main: FC<IMainProps> = () => {
 
         setNewConversationInfo({
           name: t("app.chat.newChatDefaultName"),
-          introduction,
+          introduction, opensuggested,
         });
         const prompt_variables =
           userInputsFormToPromptVariables(user_input_form);
