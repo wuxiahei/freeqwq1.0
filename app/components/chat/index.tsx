@@ -116,7 +116,11 @@ const Chat: FC<IChatProps> = ({
       e.preventDefault()
     }
   }
-
+  // -更多问题和建议
+  const chatFooterRef = useRef<HTMLDivElement>(null)
+  const chatFooterInnerRef = useRef<HTMLDivElement>(null)
+  const { suggestedQuestions, suggestedQuestionsAfterAnswer } = modelConfig
+  const hasTryToAsk = suggestedQuestionsAfterAnswer?.enabled && !!suggestedQuestions?.length && onSend
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>
       {/* Chat List */}
@@ -143,6 +147,41 @@ const Chat: FC<IChatProps> = ({
           )
         })}
       </div>
+
+// 开场问题组件
+      {<div
+        className={`absolute bottom-0 p-2`}
+        ref={chatFooterRef}
+        style={{
+          background: 'linear-gradient(0deg, #F9FAFB 40%, rgba(255, 255, 255, 0.00) 100%)',
+        }}
+      >
+        <div
+          ref={chatFooterInnerRef}
+          className={`mx-auto w-full max-w-[720px]  px-4`}
+        >
+          {
+            !noStopResponding && isResponsing && (
+              <div className='flex justify-center mb-2'>
+                <Button onClick={onStopResponding}>
+                  <StopCircle className='mr-[5px] w-3.5 h-3.5 text-gray-500' />
+                  <span className='text-xs text-gray-500 font-normal'>{t('appDebug.operation.stopResponding')}</span>
+                </Button>
+              </div>
+            )
+          }
+          {
+            hasTryToAsk && (
+              <TryToAsk
+                suggestedQuestions={suggestedQuestions}
+                onSend={onSend}
+              />
+            )
+          }
+        </div>
+      </div>}
+
+      // 发送组件
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
