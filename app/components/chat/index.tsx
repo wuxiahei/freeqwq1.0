@@ -119,6 +119,8 @@ const Chat: FC<IChatProps> = ({
       e.preventDefault()
     }
   }
+
+
   // -更多问题和建议
 
   const chatFooterRef = useRef<HTMLDivElement>(null)
@@ -132,30 +134,14 @@ const Chat: FC<IChatProps> = ({
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
-            return (
-              <React.Fragment key={item.id}>
-                <Answer
-                  item={item}
-                  feedbackDisabled={feedbackDisabled}
-                  onFeedback={onFeedback}
-                  isResponding={isResponding && isLast}
-                />
-                {/* 渲染开场白建议问题 */}
-                {item.isOpeningStatement && suggestedQuestions && suggestedQuestions.length > 0 && (
-                  <div className="my-4 flex flex-wrap gap-2">
-                    {suggestedQuestions.map((q, idx) => (
-                      <button
-                        key={idx}
-                        className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700"
-                        onClick={() => onSuggestedQuestionClick?.(q)}
-                      >
-                        {q}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </React.Fragment>
-            )
+            return <Answer
+              key={item.id}
+              item={item}
+              onSend={onSend}
+              feedbackDisabled={feedbackDisabled}
+              onFeedback={onFeedback}
+              isResponding={isResponding && isLast}
+            />
           }
           return (
             <Question
@@ -169,9 +155,8 @@ const Chat: FC<IChatProps> = ({
         })}
       </div>
 
-
-// Opening questions component
-      {/* {<div
+      {/* Chat Footer */}
+      <div
         className={`absolute bottom-0 p-2`}
         ref={chatFooterRef}
         style={{
@@ -201,9 +186,9 @@ const Chat: FC<IChatProps> = ({
             )
           }
         </div>
-      </div>} */}
+      </div>
 
-      // 发送组件
+      {/* - Send Input */}
       {
         !isHideSendInput && (
           <div className={cn(!feedbackDisabled && '!left-3.5 !right-3.5', 'absolute z-10 bottom-0 left-0 right-0')}>
