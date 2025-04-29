@@ -49,6 +49,8 @@ const Chat: FC<IChatProps> = ({
   isResponding,
   controlClearQuery,
   visionConfig,
+  suggestedQuestions = [],
+  onSuggestedQuestionClick,
 }) => {
   const { t } = useTranslation()
   const { notify } = Toast
@@ -134,14 +136,31 @@ const Chat: FC<IChatProps> = ({
         {chatList.map((item) => {
           if (item.isAnswer) {
             const isLast = item.id === chatList[chatList.length - 1].id
-            return <Answer
-              key={item.id}
-              item={item}
-              onSend={onSend}
-              feedbackDisabled={feedbackDisabled}
-              onFeedback={onFeedback}
-              isResponding={isResponding && isLast}
-            />
+            return (
+              <React.Fragment key={item.id}>
+                <Answer
+                  item={item}
+                  onSend={onSend}
+                  feedbackDisabled={feedbackDisabled}
+                  onFeedback={onFeedback}
+                  isResponding={isResponding && isLast}
+                />
+                {/* 渲染开场白建议问题 */}
+                {item.isOpeningStatement && suggestedQuestions && suggestedQuestions.length > 0 && (
+                  <div className="my-4 flex flex-wrap gap-2">
+                    {suggestedQuestions.map((q, idx) => (
+                      <button
+                        key={idx}
+                        className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700"
+                        onClick={() => onSuggestedQuestionClick?.(q)}
+                      >
+                        {q}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
+            )
           }
           return (
             <Question
