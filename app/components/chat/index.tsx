@@ -169,8 +169,9 @@ const Chat: FC<IChatProps> = ({
         })}
       </div>
 
-// 开场问题组件
-      {<div
+
+// Opening questions component
+      {/* {<div
         className={`absolute bottom-0 p-2`}
         ref={chatFooterRef}
         style={{
@@ -200,7 +201,7 @@ const Chat: FC<IChatProps> = ({
             )
           }
         </div>
-      </div>}
+      </div>} */}
 
       // 发送组件
       {
