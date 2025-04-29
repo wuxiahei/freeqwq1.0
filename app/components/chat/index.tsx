@@ -175,7 +175,7 @@ const Chat: FC<IChatProps> = ({
       </div>
 
       {/* Chat Footer */}
-      <div
+      {/*  <div
         className={`absolute bottom-0 p-2`}
         ref={chatFooterRef}
         style={{
@@ -187,7 +187,7 @@ const Chat: FC<IChatProps> = ({
           className={`mx-auto w-full max-w-[720px]  px-4`}
         >
           {
-            isResponsing && (
+            isResponding && (
               <div className='flex justify-center mb-2'>
                 <Button onClick={onStopResponding}>
                   <StopCircle className='mr-[5px] w-3.5 h-3.5 text-gray-500' />
@@ -205,7 +205,7 @@ const Chat: FC<IChatProps> = ({
             )
           }
         </div>
-      </div>
+      </div>  */}
 
       {/* - Send Input */}
       {
