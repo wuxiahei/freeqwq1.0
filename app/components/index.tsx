@@ -240,13 +240,13 @@ const Main: FC<IMainProps> = () => {
 
         // fetch new conversation info
         const { user_input_form, opening_statement: introduction, suggested_questions, suggested_questions_after_answer, file_upload, system_parameters }: any = appParams
+        setSuggestedQuestions(suggested_questions)
+        setSuggested(suggested_questions_after_answer.enabled)     
         setLocaleOnClient(APP_INFO.default_language, true)
         setNewConversationInfo({
           name: t('app.chat.newChatDefaultName'),
           introduction,
         })
-        setSuggestedQuestions(suggested_questions)
-        setSuggested(suggested_questions_after_answer.enabled)
         const prompt_variables = userInputsFormToPromptVariables(user_input_form)
         setPromptConfig({
           prompt_template: promptTemplate,
@@ -692,7 +692,9 @@ const Main: FC<IMainProps> = () => {
                     isResponding={isResponding}
                     checkCanSend={checkCanSend}
                     visionConfig={visionConfig}
-                  />
+                    suggestedQuestions={suggestedQuestions}
+                    onSuggestedQuestionClick={handleSend}
+                    />
                 </div>
               </div>)
           }
