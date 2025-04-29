@@ -182,7 +182,7 @@ const Chat: FC<IChatProps> = ({
           className={`mx-auto w-full max-w-[720px]  px-4`}
         >
           {
-            !noStopResponding && isResponsing && (
+            isResponsing && (
               <div className='flex justify-center mb-2'>
                 <Button onClick={onStopResponding}>
                   <StopCircle className='mr-[5px] w-3.5 h-3.5 text-gray-500' />
