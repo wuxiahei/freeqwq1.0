@@ -15,7 +15,6 @@ import {
   fetchChatList,
   fetchConversations,
   generationConversationName,
-  replaceArrText,
   sendChatMessage,
   updateFeedback,
 } from "@/service";
@@ -312,11 +311,8 @@ const Main: FC<IMainProps> = () => {
           suggested_questions_after_answer,
         } = appParams;
 
-        const repSuggested_questions = replaceArrText(
-          suggested_questions,
-          precinctNames
-        );
-        setSuggestedQuestions(repSuggested_questions);
+
+        setSuggestedQuestions(suggested_questions);
 
         setSuggested(suggested_questions_after_answer.enabled);
 
