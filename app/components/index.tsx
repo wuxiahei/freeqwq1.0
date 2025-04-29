@@ -245,7 +245,7 @@ const Main: FC<IMainProps> = () => {
           name: t('app.chat.newChatDefaultName'),
           introduction,
         })
-        setSuggestedQuestions(suggested_questions || [])
+        setSuggestedQuestions(suggested_questions)
         setSuggested(suggested_questions_after_answer.enabled)
         const prompt_variables = userInputsFormToPromptVariables(user_input_form)
         setPromptConfig({
