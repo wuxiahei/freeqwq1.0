@@ -320,7 +320,8 @@ const Main: FC<IMainProps> = () => {
 
         setNewConversationInfo({
           name: t("app.chat.newChatDefaultName"),
-          introduction, suggested_questions,
+          introduction,
+          'suggested_questions': suggested_questions,
         });
         const prompt_variables =
           userInputsFormToPromptVariables(user_input_form);
