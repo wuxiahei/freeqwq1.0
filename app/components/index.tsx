@@ -310,7 +310,7 @@ const Main: FC<IMainProps> = () => {
           opening_statement: introduction,
           file_upload,
           system_parameters,
-          suggested_questions: opensuggested,
+          suggested_questions,
           suggested_questions_after_answer,
         } = appParams;
 
@@ -320,7 +320,7 @@ const Main: FC<IMainProps> = () => {
 
         setNewConversationInfo({
           name: t("app.chat.newChatDefaultName"),
-          introduction, opensuggested,
+          introduction, suggested_questions,
         });
         const prompt_variables =
           userInputsFormToPromptVariables(user_input_form);
