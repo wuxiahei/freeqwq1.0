@@ -32,7 +32,9 @@ const Main: FC<IMainProps> = () => {
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
   const hasSetAppConfig = APP_ID && API_KEY
-
+  const handleSuggestedQuestionClick = (question: string) => {
+    handleSend(question)
+  }
   /*
   * app info
   */
@@ -241,7 +243,7 @@ const Main: FC<IMainProps> = () => {
         // fetch new conversation info
         const { user_input_form, opening_statement: introduction, suggested_questions, suggested_questions_after_answer, file_upload, system_parameters }: any = appParams
         setSuggestedQuestions(suggested_questions)
-        setSuggested(suggested_questions_after_answer.enabled)     
+        setSuggested(suggested_questions_after_answer.enabled)
         setLocaleOnClient(APP_INFO.default_language, true)
         setNewConversationInfo({
           name: t('app.chat.newChatDefaultName'),
@@ -693,8 +695,8 @@ const Main: FC<IMainProps> = () => {
                     checkCanSend={checkCanSend}
                     visionConfig={visionConfig}
                     suggestedQuestions={suggestedQuestions}
-                    onSuggestedQuestionClick={handleSend}
-                    />
+                    onSuggestedQuestionClick={handleSuggestedQuestionClick}
+                  />
                 </div>
               </div>)
           }
