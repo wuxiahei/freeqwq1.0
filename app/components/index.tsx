@@ -46,7 +46,6 @@ import {
 } from "@/config";
 import type { Annotation as AnnotationType } from "@/types/log";
 import { addFileInfos, sortAgentSorts } from "@/utils/tools";
-import { getCustomUrlParams } from "@/utils/string";
 
 export type IMainProps = {
   params: any;
@@ -244,7 +243,6 @@ const Main: FC<IMainProps> = () => {
     );
   };
 
-  const { token, userName } = getCustomUrlParams();
   // 新增建议功能
   const [hasSuggested, setSuggested, getSuggested] = useGetState(false);
   const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>([]);
@@ -288,25 +286,7 @@ const Main: FC<IMainProps> = () => {
     }
     (async () => {
       try {
-        if (
-          !fetchedDataRef.current.conversationData ||
-          !fetchedDataRef.current.appParams ||
-          !fetchedDataRef.current.precinctNames
-        ) {
-          const [conversationData, appParams, precinctNames] =
-            await Promise.all([
-              fetchConversations(),
-              fetchAppParams(),
-              fetchAllProjectName(token || ""),
-            ]);
-          fetchedDataRef.current = {
-            conversationData,
-            appParams,
-            precinctNames,
-          };
-        }
-        const { conversationData, appParams, precinctNames } =
-          fetchedDataRef.current;
+        const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()]);
         // handle current conversation id
         const { data: conversations, error } = conversationData as {
           data: ConversationItem[];
