@@ -123,7 +123,7 @@ const Chat: FC<IChatProps> = ({
 
   const chatFooterRef = useRef<HTMLDivElement>(null)
   const chatFooterInnerRef = useRef<HTMLDivElement>(null)
-  const { suggestedQuestions, suggestedQuestionsAfterAnswer } = modelConfig
+  const { suggestedQuestions = [], suggestedQuestionsAfterAnswer = { enabled: false } } = modelConfig || {}
   const hasTryToAsk = suggestedQuestionsAfterAnswer?.enabled && !!suggestedQuestions?.length && onSend
   return (
     <div className={cn(!feedbackDisabled && 'px-3.5', 'h-full')}>

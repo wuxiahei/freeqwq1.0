@@ -124,10 +124,10 @@ export enum TransferMethod {
   remote_url = 'remote_url',
 }
 
-export type modelConfig = {
-  suggestedQuestions: string[] | null
+export const modelConfig = {
+  suggestedQuestions: [],
   suggestedQuestionsAfterAnswer: {
-    enabled: boolean
+    enabled: false
   }
 }
 
