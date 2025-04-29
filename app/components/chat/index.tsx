@@ -9,7 +9,7 @@ import Answer from './answer'
 import Question from './question'
 import type { FeedbackFunc } from './type'
 import type { ChatItem, VisionFile, VisionSettings } from '@/types/app'
-import { TransferMethod } from '@/types/app'
+import { TransferMethod, modelConfig } from '@/types/app'
 import Tooltip from '@/app/components/base/tooltip'
 import Toast from '@/app/components/base/toast'
 import ChatImageUploader from '@/app/components/base/image-uploader/chat-image-uploader'
@@ -44,8 +44,6 @@ const Chat: FC<IChatProps> = ({
   isHideSendInput = false,
   onFeedback,
   checkCanSend,
-  suggestedQuestions = [],
-  onSuggestedQuestionClick,
   onSend = () => { },
   useCurrentUserAvatar,
   isResponding,
@@ -122,6 +120,7 @@ const Chat: FC<IChatProps> = ({
     }
   }
   // -更多问题和建议
+
   const chatFooterRef = useRef<HTMLDivElement>(null)
   const chatFooterInnerRef = useRef<HTMLDivElement>(null)
   const { suggestedQuestions, suggestedQuestionsAfterAnswer } = modelConfig
