@@ -1,61 +1,53 @@
-import type { VisionFile } from '@/types/app'
+import type { TypeWithI18N } from '@/types/base'
+import type { Annotation, MessageRating } from '@/models/log'
+import type { FileEntity } from '@/app/components/base/file-uploader/types'
+import type { InputVarType } from '@/app/components/workflow/types'
+import type { FileResponse } from '@/types/workflow'
 
-export type LogAnnotation = {
-  content: string
-  account: {
-    id: string
-    name: string
-    email: string
-  }
-  created_at: number
-}
-
-export type Annotation = {
-  id: string
-  authorName: string
-  logAnnotation?: LogAnnotation
-  created_at?: number
-}
-
-export const MessageRatings = ['like', 'dislike', null] as const
-export type MessageRating = typeof MessageRatings[number]
-
-export type MessageMore = {
+export interface MessageMore {
   time: string
   tokens: number
   latency: number | string
 }
 
-export type Feedbacktype = {
+export interface FeedbackType {
   rating: MessageRating
   content?: string | null
 }
 
-export type FeedbackFunc = (messageId: string, feedback: Feedbacktype) => Promise<any>
-export type SubmitAnnotationFunc = (messageId: string, content: string) => Promise<any>
+export type FeedbackFunc = (
+  messageId: string,
+  feedback: FeedbackType
+) => Promise<any>
+export type SubmitAnnotationFunc = (
+  messageId: string,
+  content: string
+) => Promise<any>
 
 export type DisplayScene = 'web' | 'console'
 
-export type ToolInfoInThought = {
+export interface ToolInfoInThought {
   name: string
+  label: string
   input: string
   output: string
   isFinished: boolean
 }
 
-export type ThoughtItem = {
+export interface ThoughtItem {
   id: string
   tool: string // plugin or dataset. May has multi.
   thought: string
   tool_input: string
+  tool_labels?: { [key: string]: TypeWithI18N }
   message_id: string
   observation: string
   position: number
   files?: string[]
-  message_files?: VisionFile[]
+  message_files?: FileEntity[]
 }
 
-export type CitationItem = {
+export interface CitationItem {
   content: string
   data_source_type: string
   dataset_name: string
@@ -70,7 +62,7 @@ export type CitationItem = {
   word_count: number
 }
 
-export type IChatItem = {
+export interface IChatItem {
   id: string
   content: string
   citation?: CitationItem[]
@@ -81,11 +73,11 @@ export type IChatItem = {
   /**
    * The user feedback result of this message
    */
-  feedback?: Feedbacktype
+  feedback?: FeedbackType
   /**
    * The admin feedback result of this message
    */
-  adminFeedback?: Feedbacktype
+  adminFeedback?: FeedbackType
   /**
    * Whether to hide the feedback area
    */
@@ -98,37 +90,57 @@ export type IChatItem = {
   useCurrentUserAvatar?: boolean
   isOpeningStatement?: boolean
   suggestedQuestions?: string[]
-  log?: { role: string; text: string }[]
+  log?: { role: string; text: string; files?: FileEntity[] }[]
   agent_thoughts?: ThoughtItem[]
-  message_files?: VisionFile[]
+  message_files?: FileEntity[]
+  workflow_run_id?: string
+  // for agent log
+  conversationId?: string
+  input?: any
+  parentMessageId?: string | null
+  siblingCount?: number
+  siblingIndex?: number
+  prevSibling?: string
+  nextSibling?: string
 }
 
-export type MessageEnd = {
-  id: string
-  metadata: {
-    retriever_resources?: CitationItem[]
-    annotation_reply: {
+export interface Metadata {
+  retriever_resources?: CitationItem[]
+  annotation_reply: {
+    id: string
+    account: {
       id: string
-      account: {
-        id: string
-        name: string
-      }
+      name: string
     }
   }
 }
 
-export type MessageReplace = {
+export interface MessageEnd {
+  id: string
+  metadata: Metadata
+  files?: FileResponse[]
+}
+
+export interface MessageReplace {
   id: string
   task_id: string
   answer: string
   conversation_id: string
 }
 
-export type AnnotationReply = {
+export interface AnnotationReply {
   id: string
   task_id: string
   answer: string
   conversation_id: string
   annotation_id: string
   annotation_author_name: string
+}
+
+export interface InputForm {
+  type: InputVarType
+  label: string
+  variable: any
+  required: boolean
+  [key: string]: any
 }

@@ -1,5 +1,5 @@
 'use client'
-import type { FC } from 'react'
+import type { FC, JSX } from 'react'
 import Editor, { loader } from '@monaco-editor/react'
 import React, { useRef } from 'react'
 import Base from '../editor/base'

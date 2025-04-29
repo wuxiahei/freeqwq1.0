@@ -1,43 +1,63 @@
-'use client'
-import type { FC } from 'react'
-import React from 'react'
-import type { IChatItem } from '../type'
-import s from '../style.module.css'
-
+import type {
+  FC,
+  ReactNode,
+} from 'react'
+import {
+  memo,
+} from 'react'
+import type { ChatItem } from '../../types'
+import type { Theme } from '../embedded-chatbot/theme/theme-context'
+import { CssTransform } from '../embedded-chatbot/theme/utils'
+import { User } from '@/app/components/base/icons/src/public/avatar'
 import { Markdown } from '@/app/components/base/markdown'
-import ImageGallery from '@/app/components/base/image-gallery'
+import { FileList } from '@/app/components/base/file-uploader'
 
-type IQuestionProps = Pick<IChatItem, 'id' | 'content' | 'useCurrentUserAvatar'> & {
-  imgSrcs?: string[]
+interface QuestionProps {
+  item: ChatItem
+  questionIcon?: ReactNode
+  theme: Theme | null | undefined
 }
+const Question: FC<QuestionProps> = ({
+  item,
+  questionIcon,
+  theme,
+}) => {
+  const {
+    content,
+    message_files,
+  } = item
 
-const Question: FC<IQuestionProps> = ({ id, content, useCurrentUserAvatar, imgSrcs }) => {
-  const userName = ''
   return (
-    <div className='flex items-start justify-end' key={id}>
-      <div>
-        <div className={`${s.question} relative text-sm text-gray-900`}>
-          <div
-            className={'mr-2 py-3 px-4 bg-blue-500 rounded-tl-2xl rounded-b-2xl'}
-          >
-            {imgSrcs && imgSrcs.length > 0 && (
-              <ImageGallery srcs={imgSrcs} />
-            )}
-            <Markdown content={content} />
-          </div>
+    <div className='flex justify-end mb-2 last:mb-0 pl-14'>
+      <div className='group relative mr-4 max-w-full'>
+        <div
+          className='px-4 py-3 bg-[#D1E9FF]/50 rounded-2xl text-sm text-gray-900'
+          style={theme?.chatBubbleColorStyle ? CssTransform(theme.chatBubbleColorStyle) : {}}
+        >
+          {
+            !!message_files?.length && (
+              <FileList
+                files={message_files}
+                showDeleteAction={false}
+                showDownloadAction={true}
+              />
+            )
+          }
+          <Markdown content={content} />
         </div>
+        <div className='mt-1 h-[18px]' />
       </div>
-      {useCurrentUserAvatar
-        ? (
-          <div className='w-10 h-10 shrink-0 leading-10 text-center mr-2 rounded-full bg-primary-600 text-white'>
-            {userName?.[0].toLocaleUpperCase()}
-          </div>
-        )
-        : (
-          <div className={`${s.questionIcon} w-10 h-10 shrink-0 `}></div>
-        )}
+      <div className='shrink-0 w-10 h-10'>
+        {
+          questionIcon || (
+            <div className='w-full h-full rounded-full border-[0.5px] border-black/5'>
+              <User className='w-full h-full' />
+            </div>
+          )
+        }
+      </div>
     </div>
   )
 }
 
-export default React.memo(Question)
+export default memo(Question)

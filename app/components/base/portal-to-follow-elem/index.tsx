@@ -16,8 +16,8 @@ import {
 } from '@floating-ui/react'
 
 import type { OffsetOptions, Placement } from '@floating-ui/react'
-
-type PortalToFollowElemOptions = {
+import cn from '@/utils/classnames'
+export type PortalToFollowElemOptions = {
   /*
   * top, bottom, left, right
   * start, end. Default is middle
@@ -106,8 +106,8 @@ export function PortalToFollowElem({
 }
 
 export const PortalToFollowElemTrigger = React.forwardRef<
-HTMLElement,
-React.HTMLProps<HTMLElement> & { asChild?: boolean }
+  HTMLElement,
+  React.HTMLProps<HTMLElement> & { asChild?: boolean }
 >(({ children, asChild = false, ...props }, propRef) => {
   const context = usePortalToFollowElemContext()
   const childrenRef = (children as any).ref
@@ -129,7 +129,7 @@ React.HTMLProps<HTMLElement> & { asChild?: boolean }
   return (
     <div
       ref={ref}
-      className='inline-block'
+      className={cn('inline-block', props.className)}
       // The user can style the trigger based on the state
       data-state={context.open ? 'open' : 'closed'}
       {...context.getReferenceProps(props)}
@@ -141,8 +141,8 @@ React.HTMLProps<HTMLElement> & { asChild?: boolean }
 PortalToFollowElemTrigger.displayName = 'PortalToFollowElemTrigger'
 
 export const PortalToFollowElemContent = React.forwardRef<
-HTMLDivElement,
-React.HTMLProps<HTMLDivElement>
+  HTMLDivElement,
+  React.HTMLProps<HTMLDivElement>
 >(({ style, ...props }, propRef) => {
   const context = usePortalToFollowElemContext()
   const ref = useMergeRefs([context.refs.setFloating, propRef])
@@ -150,8 +150,10 @@ React.HTMLProps<HTMLDivElement>
   if (!context.open)
     return null
 
+  const body = document.body
+
   return (
-    <FloatingPortal>
+    <FloatingPortal root={body}>
       <div
         ref={ref}
         style={{

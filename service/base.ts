@@ -1,6 +1,6 @@
 import { API_PREFIX } from '@/config'
 import Toast from '@/app/components/base/toast'
-import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type'
+import type { AnnotationReply, MessageEnd, MessageReplace, ThoughtItem } from '@/app/components/chat/type-mars'
 import type { VisionFile } from '@/types/app'
 
 const TIME_OUT = 100000
@@ -329,9 +329,9 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
   ])
 }
 
-export const upload = (fetchOptions: any): Promise<any> => {
+export const upload = (fetchOptions: any, url?: string): Promise<any> => {
   const urlPrefix = API_PREFIX
-  const urlWithPrefix = `${urlPrefix}/file-upload`
+  const urlWithPrefix = url ? `${urlPrefix}/${url}` : `${urlPrefix}/file-upload`
   const defaultOptions = {
     method: 'POST',
     url: `${urlWithPrefix}`,
@@ -346,12 +346,11 @@ export const upload = (fetchOptions: any): Promise<any> => {
     xhr.open(options.method, options.url)
     for (const key in options.headers)
       xhr.setRequestHeader(key, options.headers[key])
-
     xhr.withCredentials = true
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status === 200)
-          resolve({ id: xhr.response })
+          resolve(JSON.parse(xhr.response))
         else
           reject(xhr)
       }

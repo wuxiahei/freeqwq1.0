@@ -1,5 +1,3 @@
-'use client'
-
 import { upload } from '@/service/base'
 
 type ImageUploadParams = {
@@ -8,13 +6,13 @@ type ImageUploadParams = {
   onSuccessCallback: (res: { id: string }) => void
   onErrorCallback: () => void
 }
-type ImageUpload = (v: ImageUploadParams) => void
+type ImageUpload = (v: ImageUploadParams, isPublic?: boolean, url?: string) => void
 export const imageUpload: ImageUpload = ({
   file,
   onProgressCallback,
   onSuccessCallback,
   onErrorCallback,
-}) => {
+}, isPublic, url) => {
   const formData = new FormData()
   formData.append('file', file)
   const onProgress = (e: ProgressEvent) => {
@@ -23,7 +21,7 @@ export const imageUpload: ImageUpload = ({
       onProgressCallback(percent)
     }
   }
-
+  // TODO mars
   upload({
     xhr: new XMLHttpRequest(),
     data: formData,

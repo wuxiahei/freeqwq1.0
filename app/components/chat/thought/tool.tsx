@@ -3,14 +3,16 @@ import type { FC } from 'react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import cn from 'classnames'
+import {
+  RiArrowDownSLine,
+  RiLoader2Line,
+} from '@remixicon/react'
 import type { ToolInfoInThought } from '../type'
 import Panel from './panel'
-import Loading02 from '@/app/components/base/icons/line/loading-02'
-import ChevronDown from '@/app/components/base/icons/line/arrows/chevron-down'
-import CheckCircle from '@/app/components/base/icons/solid/general/check-circle'
-import DataSetIcon from '@/app/components/base/icons/public/data-set'
-import type { Emoji } from '@/types/tools'
+import cn from '@/utils/classnames'
+import { CheckCircle } from '@/app/components/base/icons/src/vender/solid/general'
+import { DataSet as DataSetIcon } from '@/app/components/base/icons/src/public/thought'
+import type { Emoji } from '@/app/components/tools/types'
 import AppIcon from '@/app/components/base/app-icon'
 
 type Props = {
@@ -19,7 +21,7 @@ type Props = {
 }
 
 const getIcon = (toolName: string, allToolIcons: Record<string, string | Emoji>) => {
-  if (toolName.startsWith('dataset-'))
+  if (toolName.startsWith('dataset_'))
     return <DataSetIcon className='shrink-0'></DataSetIcon>
   const icon = allToolIcons[toolName]
   if (!icon)
@@ -49,10 +51,11 @@ const Tool: FC<Props> = ({
   allToolIcons = {},
 }) => {
   const { t } = useTranslation()
-  const { name, input, isFinished, output } = payload
-  const toolName = name.startsWith('dataset-') ? t('dataset.knowledge') : name
+  const { name, label, input, isFinished, output } = payload
+  const toolName = name.startsWith('dataset_') ? t('dataset.knowledge') : name
+  const toolLabel = name.startsWith('dataset_') ? t('dataset.knowledge') : label
   const [isShowDetail, setIsShowDetail] = useState(false)
-  const icon = getIcon(toolName, allToolIcons) as any
+  const icon = getIcon(name, allToolIcons) as any
   return (
     <div>
       <div className={cn(!isShowDetail && 'shadow-sm', !isShowDetail && 'inline-block', 'max-w-full overflow-x-auto bg-white rounded-md')}>
@@ -61,7 +64,7 @@ const Tool: FC<Props> = ({
           onClick={() => setIsShowDetail(!isShowDetail)}
         >
           {!isFinished && (
-            <Loading02 className='w-3 h-3 text-gray-500 animate-spin shrink-0' />
+            <RiLoader2Line className='w-3 h-3 text-gray-500 animate-spin shrink-0' />
           )}
           {isFinished && !isShowDetail && (
             <CheckCircle className='w-3 h-3 text-[#12B76A] shrink-0' />
@@ -74,11 +77,11 @@ const Tool: FC<Props> = ({
           </span>
           <span
             className='text-xs font-medium text-gray-700 truncate'
-            title={toolName}
+            title={toolLabel}
           >
-            {toolName}
+            {toolLabel}
           </span>
-          <ChevronDown
+          <RiArrowDownSLine
             className={cn(isShowDetail && 'rotate-180', 'ml-1 w-3 h-3 text-gray-500 select-none cursor-pointer shrink-0')}
           />
         </div>

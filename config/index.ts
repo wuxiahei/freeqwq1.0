@@ -7,10 +7,10 @@ export const APP_INFO: AppInfo = {
   description: '',
   copyright: '',
   privacy_policy: '',
-  default_language: 'en',
+  default_language: 'zh-Hans',
 }
 
-export const isShowPrompt = true
+export const isShowPrompt = false
 export const promptTemplate = 'I want you to act as a javascript console.'
 
 export const API_PREFIX = '/api'
@@ -18,3 +18,5 @@ export const API_PREFIX = '/api'
 export const LOCALE_COOKIE_NAME = 'locale'
 
 export const DEFAULT_VALUE_MAX_LEN = 48
+export const appDefaultIconBackground = '#D5F5F6'
+export const IS_CE_EDITION = 'SELF_HOSTED'

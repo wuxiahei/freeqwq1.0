@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import produce from 'immer'
+import { produce } from 'immer'
 import { useGetState } from 'ahooks'
 import type { ConversationItem } from '@/types/app'
 
