@@ -10,7 +10,7 @@ export async function POST(request: NextRequest, { params }: {
     auto_generate,
     name,
   } = body
-  const { conversationId } = await params
+  const { conversationId } = params
   const { user } = getInfo(request)
 
   // auto generate name
