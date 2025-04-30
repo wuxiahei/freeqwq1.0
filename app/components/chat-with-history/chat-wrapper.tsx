@@ -81,7 +81,7 @@ const ChatWrapper = () => {
       'chat-messages',
       data,
       {
-        // onGetSuggestedQuestions: responseItemId => fetchSuggestedQuestions(responseItemId),  // client  流式请求完成后基础请求异常
+        onGetSuggestedQuestions: responseItemId => fetchSuggestedQuestions(responseItemId),  // client  流式请求完成后基础请求异常
         onConversationComplete: currentConversationId ? undefined : handleNewConversationCompleted,
         isPublicAPI: !isInstalledApp,
       },
@@ -102,6 +102,13 @@ const ChatWrapper = () => {
     const parentAnswer = chatList.find(item => item.id === question.parentMessageId)
     doSend(question.content, question.message_files, true, isValidGeneratedAnswer(parentAnswer) ? parentAnswer : null)
   }, [chatList, doSend])
+  const messageList = useMemo(() => {
+    if (currentConversationId)
+      return chatList
+    return chatList.filter(item => !item.isOpeningStatement)
+  }, [chatList, currentConversationId])
+
+  const [collapsed, setCollapsed] = useState(!!currentConversationId)
 
   const chatNode = useMemo(() => {
     if (inputsForms.length) {
