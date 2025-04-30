@@ -9,13 +9,13 @@ export async function GET(request: NextRequest) {
     // 接口未返回 建议从配置文件或者环境变量获取
     data.app_id = 'app_id'
     data.site = {
-      "title": "应用名称",
+      "title": "Genrui AI Agent",
       "chat_color_theme": null,
       "chat_color_theme_inverted": false,
       "icon_type": "image",
       "icon": "48159ee8",
       "icon_background": "#E4FBCC",
-      "icon_url": "/files/aaa.png",
+      "icon_url": "/files/logo.png",
       "description": "-marsTest",
       "copyright": null,
       "privacy_policy": null,
