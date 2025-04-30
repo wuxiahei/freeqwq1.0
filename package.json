@@ -103,4 +103,11 @@
     "uuid": "^11.0.5",
     "zustand": "^5.0.3"
   }
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "9"
+      }
+    }
+  }
 }
