@@ -102,14 +102,7 @@ const ChatWrapper = () => {
     const parentAnswer = chatList.find(item => item.id === question.parentMessageId)
     doSend(question.content, question.message_files, true, isValidGeneratedAnswer(parentAnswer) ? parentAnswer : null)
   }, [chatList, doSend])
-  const messageList = useMemo(() => {
-    if (currentConversationId)
-      return chatList
-    return chatList.filter(item => !item.isOpeningStatement)
-  }, [chatList, currentConversationId])
-
-  const [collapsed, setCollapsed] = useState(!!currentConversationId)
-
+  
   const chatNode = useMemo(() => {
     if (inputsForms.length) {
       return (
