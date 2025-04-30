@@ -39,7 +39,7 @@ const AnswerIcon: FC<AnswerIconProps> = ({
   >
     {isValidImageIcon
       ? <img src={imageUrl} className="w-full h-full rounded-full" alt="answer icon" />
-      : (icon && icon !== '') ? <em-emoji id={icon} /> : <em-emoji id='🤖' />
+      : (icon && icon !== '') ? <em-emoji id={icon} /> : <em-emoji id='👩‍🔬' />
     }
   </div>
 }
