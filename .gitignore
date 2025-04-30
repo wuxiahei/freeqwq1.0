@@ -38,7 +38,8 @@ yarn-error.log*
 next-env.d.ts
 
 # npm
-# package-lock.json
+package-lock.json
+npm install --legacy-peer-deps
 
 # yarn
 .pnp.cjs
