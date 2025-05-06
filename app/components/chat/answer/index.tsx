@@ -94,11 +94,17 @@ const Answer: FC<AnswerProps> = ({
     
     // 添加防抖函数
     let resizeTimer: NodeJS.Timeout | null = null
+    let lastWidth = 0
+    
     const debouncedResize = () => {
       if (resizeTimer) clearTimeout(resizeTimer)
       resizeTimer = setTimeout(() => {
-        getContentWidth()
-      }, 200) // 200ms 防抖
+        // 只有当宽度真正变化时才更新
+        if (containerRef.current && containerRef.current.clientWidth !== lastWidth) {
+          lastWidth = containerRef.current.clientWidth
+          getContentWidth()
+        }
+      }, 300) // 增加防抖时间到300ms
     }
     
     const resizeObserver = new ResizeObserver(() => {
