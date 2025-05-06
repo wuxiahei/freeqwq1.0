@@ -144,8 +144,3 @@ export interface InputForm {
   required: boolean
   [key: string]: any
 }
-
-export interface ChatConfig {
-  autoRefreshMessages?: boolean // 控制是否自动刷新消息
-  autoGetSuggestedQuestions?: boolean // 控制是否自动获取推荐问题
-}

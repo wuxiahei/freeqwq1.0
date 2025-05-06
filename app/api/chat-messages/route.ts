@@ -11,36 +11,6 @@ export async function POST(request: NextRequest) {
     response_mode: responseMode,
   } = body
   const { user } = getInfo(request)
-  
-  try {
-    // 设置超时时间为60秒
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
-    
-    const res = await client.createChatMessage(
-      inputs, 
-      query, 
-      user, 
-      responseMode, 
-      conversationId, 
-      files,
-      { signal: controller.signal }
-    );
-    
-    clearTimeout(timeoutId);
-    return new Response(res.data as any);
-  } catch (error) {
-    console.error('Error in chat message creation:', error);
-    // 返回友好的错误信息
-    return new Response(
-      JSON.stringify({ 
-        error: '聊天消息处理过程中断，请重试', 
-        code: 'STREAM_INTERRUPTED' 
-      }),
-      { 
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
-  }
+  const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
+  return new Response(res.data as any)
 }

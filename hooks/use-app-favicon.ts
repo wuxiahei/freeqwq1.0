@@ -32,7 +32,7 @@ export function useAppFavicon(options: UseAppFaviconOptions) {
       ? icon_url
       : 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>'
       + `<rect width=%22100%25%22 height=%22100%25%22 fill=%22${encodeURIComponent(icon_background || appDefaultIconBackground)}%22 rx=%2230%22 ry=%2230%22 />`
-      + `<text x=%2212.5%22 y=%221em%22 font-size=%2275%22>${icon ? await searchEmoji(icon) : '👩‍🔬'
+      + `<text x=%2212.5%22 y=%221em%22 font-size=%2275%22>${icon ? await searchEmoji(icon) : '🤖'
       }</text>`
       + '</svg>'
 

@@ -91,23 +91,11 @@ const Answer: FC<AnswerProps> = ({
   useEffect(() => {
     if (!containerRef.current)
       return
-    
-    // 添加防抖函数
-    let resizeTimer: NodeJS.Timeout | null = null
-    const debouncedResize = () => {
-      if (resizeTimer) clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(() => {
-        getContentWidth()
-      }, 200) // 200ms 防抖
-    }
-    
     const resizeObserver = new ResizeObserver(() => {
-      debouncedResize()
+      getContentWidth()
     })
-    
     resizeObserver.observe(containerRef.current)
     return () => {
-      if (resizeTimer) clearTimeout(resizeTimer)
       resizeObserver.disconnect()
     }
   }, [])

@@ -5,8 +5,8 @@ import { client, getInfo } from '@/app/api/utils/common'
 export async function DELETE(request: NextRequest, { params }: {
   params: { conversationId: string }
 }) {
-  const { conversationId } = params
-  const { user } = getInfo(request)
+  const { conversationId } = await params
+  const { user } = await getInfo(request)
 
   const { data } = await client.deleteConversation(conversationId, user)
   return NextResponse.json(data)
