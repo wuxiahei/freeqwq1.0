@@ -663,3 +663,39 @@ export const useChat = (
     handleAnnotationRemoved,
   }
 }
+
+// 添加节流控制，避免短时间内重复请求
+let lastFetchTime = 0;
+const fetchThrottleTime = 5000; // 5秒内不重复请求
+
+const fetchMessages = async (conversationId, lastId) => {
+  const now = Date.now();
+  if (now - lastFetchTime < fetchThrottleTime) {
+    console.log('请求被节流控制，跳过');
+    return;
+  }
+  
+  lastFetchTime = now;
+  
+  // 原有的获取消息逻辑
+  // ...
+}
+
+// 将轮询间隔从原来的短间隔改为更长间隔
+const POLLING_INTERVAL = 10000; // 改为10秒或更长
+
+// 或者改为条件轮询，只在特定情况下才轮询
+const shouldPoll = () => {
+  // 只有在对话活跃且未完成时才轮询
+  return isConversationActive && !isConversationCompleted;
+}
+
+useEffect(() => {
+  if (!shouldPoll()) return;
+  
+  const timer = setInterval(() => {
+    fetchMessages(conversationId, lastId);
+  }, POLLING_INTERVAL);
+  
+  return () => clearInterval(timer);
+}, [conversationId, lastId, isConversationActive, isConversationCompleted]);
