@@ -474,13 +474,31 @@ export const useChat = (
           responseItem.content = messageReplace.answer
         },
         onError() {
-          handleResponding(false)
-          updateCurrentQAOnTree({
-            placeholderQuestionId,
-            questionItem,
-            responseItem,
-            parentId: data.parent_message_id,
-          })
+          console.error('Chat stream error:', error);
+          
+          // 尝试重新连接，最多重试3次
+          if (this.retryCount < 3) {
+            this.retryCount++;
+            console.log(`Attempting to reconnect (${this.retryCount}/3)...`);
+            
+            // 延迟1秒后重试
+            setTimeout(() => {
+              // 重新发起请求的逻辑
+              // ...
+            }, 1000);
+          } else {
+            // 达到最大重试次数，通知用户
+            handleResponding(false)
+            updateCurrentQAOnTree({
+              placeholderQuestionId,
+              questionItem,
+              responseItem: {
+                ...responseItem,
+                content: responseItem.content + '\n\n[连接中断，请重试]'
+              },
+              parentId: data.parent_message_id,
+            })
+          }
         },
         onWorkflowStarted: ({ workflow_run_id, task_id }) => {
           taskIdRef.current = task_id
@@ -663,3 +681,200 @@ export const useChat = (
     handleAnnotationRemoved,
   }
 }
+
+// 导入存储工具
+import { saveChatState, loadChatState, clearChatState } from '@/app/utils/storage';
+
+// 添加断点续传相关状态
+const [lastReceivedChunkId, setLastReceivedChunkId] = useState<string | null>(null);
+const [receivedChunks, setReceivedChunks] = useState<Map<string, string>>(new Map());
+const maxRetryAttempts = 3;
+const [retryCount, setRetryCount] = useState(0);
+
+// 在组件初始化时加载保存的状态
+useEffect(() => {
+  if (conversationId.current) {
+    const { chunks, lastChunkId } = loadChatState(conversationId.current);
+    
+    if (chunks.size > 0 && lastChunkId) {
+      setReceivedChunks(chunks);
+      setLastReceivedChunkId(lastChunkId);
+      
+      // 更新UI显示已接收的内容
+      updateCurrentQAOnTree({
+        placeholderQuestionId,
+        questionItem,
+        responseItem: {
+          ...responseItem,
+          content: Array.from(chunks.values()).join('')
+        },
+        parentId: data.parent_message_id,
+      });
+      
+      // 尝试恢复流
+      resumeChatStream({
+        conversationId: conversationId.current,
+        lastChunkId,
+        onMessage,
+        onError,
+        onCompleted,
+      }).catch(error => {
+        console.error('Failed to resume chat on init:', error);
+      });
+    }
+  }
+}, [conversationId.current]);
+
+// 修改 onMessage 处理函数
+const onMessage = (message: string) => {
+  try {
+    // 解析消息，假设消息格式为 {id: string, seq: number, content: string, isLast: boolean}
+    const parsedMessage = JSON.parse(message);
+    const { id, seq, content, isLast } = parsedMessage;
+    
+    // 更新最后接收的块ID
+    setLastReceivedChunkId(id);
+    
+    // 存储接收到的块
+    const newChunks = new Map(receivedChunks);
+    newChunks.set(`${id}-${seq}`, content);
+    setReceivedChunks(newChunks);
+    
+    // 保存到本地存储
+    saveChatState(conversationId.current, newChunks, id);
+    
+    // 更新UI显示
+    updateCurrentQAOnTree({
+      placeholderQuestionId,
+      questionItem,
+      responseItem: {
+        ...responseItem,
+        content: Array.from(newChunks.values()).join('')
+      },
+      parentId: data.parent_message_id,
+    });
+    
+    // 如果是最后一块，标记完成
+    if (isLast) {
+      handleResponding(false);
+      // 清理缓存
+      clearChatState(conversationId.current);
+      setReceivedChunks(new Map());
+      setLastReceivedChunkId(null);
+      setRetryCount(0);
+    }
+  } catch (error) {
+    console.error('Error processing message:', error);
+  }
+};
+
+// 修改错误处理函数
+const onError = async (error: any) => {
+  console.error('Chat stream error:', error);
+  
+  // 如果有最后接收的块ID且未超过最大重试次数
+  if (lastReceivedChunkId && retryCount < maxRetryAttempts) {
+    const newRetryCount = retryCount + 1;
+    setRetryCount(newRetryCount);
+    
+    console.log(`连接中断，尝试恢复 (${newRetryCount}/${maxRetryAttempts})...`);
+    
+    try {
+      // 调用恢复API，从最后接收的块继续
+      await resumeChatStream({
+        conversationId: conversationId.current,
+        lastChunkId: lastReceivedChunkId,
+        onMessage,
+        onError,
+        onCompleted,
+      });
+    } catch (resumeError) {
+      console.error('Failed to resume chat stream:', resumeError);
+      
+      // 如果恢复失败，通知用户
+      if (newRetryCount >= maxRetryAttempts) {
+        handleResponding(false);
+        updateCurrentQAOnTree({
+          placeholderQuestionId,
+          questionItem,
+          responseItem: {
+            ...responseItem,
+            content: Array.from(receivedChunks.values()).join('') + '\n\n[连接中断，请刷新页面重试]'
+          },
+          parentId: data.parent_message_id,
+        });
+      }
+    }
+  } else {
+    // 超过最大重试次数或没有最后接收的块ID
+    handleResponding(false);
+    updateCurrentQAOnTree({
+      placeholderQuestionId,
+      questionItem,
+      responseItem: {
+        ...responseItem,
+        content: Array.from(receivedChunks.values()).join('') + '\n\n[连接中断，请刷新页面重试]'
+      },
+      parentId: data.parent_message_id,
+    });
+  }
+};
+
+// 添加恢复聊天流的函数
+const resumeChatStream = async ({
+  conversationId,
+  lastChunkId,
+  onMessage,
+  onError,
+  onCompleted,
+}: {
+  conversationId: string;
+  lastChunkId: string;
+  onMessage: (message: string) => void;
+  onError: (error: any) => void;
+  onCompleted: () => void;
+}) => {
+  // 创建恢复请求
+  const response = await fetch('/api/chat-resume', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      conversation_id: conversationId,
+      last_chunk_id: lastChunkId,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`恢复聊天失败: ${response.status}`);
+  }
+  
+  // 处理流式响应
+  const reader = response.body?.getReader();
+  if (!reader) {
+    throw new Error('无法获取响应流');
+  }
+  
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        onCompleted();
+        break;
+      }
+      
+      // 处理接收到的数据块
+      const chunk = new TextDecoder().decode(value);
+      const messages = chunk.split('\n').filter(Boolean);
+      
+      for (const message of messages) {
+        onMessage(message);
+      }
+    }
+  } catch (error) {
+    onError(error);
+  } finally {
+    reader.releaseLock();
+  }
+};

@@ -4,38 +4,33 @@ import { client, getInfo } from '@/app/api/utils/common'
 export async function POST(request: NextRequest) {
   const body = await request.json()
   const {
-    inputs,
-    query,
-    files,
     conversation_id: conversationId,
-    response_mode: responseMode,
+    last_chunk_id: lastChunkId,
   } = body
   const { user } = getInfo(request)
   
   try {
-    // 设置超时时间为60秒
+    // 设置较长的超时时间
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2分钟超时
     
-    const res = await client.createChatMessage(
-      inputs, 
-      query, 
-      user, 
-      responseMode, 
-      conversationId, 
-      files,
+    // 调用恢复聊天的API
+    const res = await client.resumeChatStream(
+      conversationId,
+      lastChunkId,
+      user,
       { signal: controller.signal }
     );
     
     clearTimeout(timeoutId);
     return new Response(res.data as any);
   } catch (error) {
-    console.error('Error in chat message creation:', error);
-    // 返回友好的错误信息
+    console.error('Error resuming chat stream:', error);
+    
     return new Response(
       JSON.stringify({ 
-        error: '聊天消息处理过程中断，请重试', 
-        code: 'STREAM_INTERRUPTED' 
+        error: '恢复聊天失败，请重试', 
+        code: 'RESUME_FAILED' 
       }),
       { 
         status: 500,
