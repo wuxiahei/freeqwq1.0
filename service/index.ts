@@ -45,7 +45,7 @@ export const fetchConversations = async (limit = 100, first_id: '', user = 'abc-
 }
 
 // 获取特定会话的聊天记录
-export const fetchChatList = async ( conversationId: string, limit = 20, last_id: '') => {
+export const fetchChatList = async (conversationId: string, limit = 20, last_id = '') => {
   return get('messages', {
     params: { conversation_id: conversationId, limit, last_id }
   })
