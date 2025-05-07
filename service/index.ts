@@ -40,23 +40,17 @@ export const sendChatMessage = async (
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
 // 获取会话列表
-//export const fetchConversations = async (limit = 100, last_id = null) => {
-//  return get('conversations', { params: { limit, last_id } })
-//}
-export const fetchConversations = async (limit = 20, last_id = '', user?: string) => {
-  return get('conversations', { params: { limit, last_id, user } })
+export const fetchConversations = async (limit = 100, last_id = null) => {
+  return get('conversations', { params: { limit, last_id } })
 }
+
 // 获取特定会话的聊天记录
-//export const fetchChatList = async (conversationId: string, limit = 20, last_id = null) => {
-//  return get('messages', {
-//    params: { conversation_id: conversationId, limit, last_id }
-//  })
-//}
-export const fetchChatList = async (conversationId: string, limit = 20, last_id = '', user?: string) => {
+export const fetchChatList = async (conversationId: string, limit = 20, last_id = null) => {
   return get('messages', {
-    params: { conversation_id: conversationId, limit, last_id, user }
+    params: { conversation_id: conversationId, limit, last_id }
   })
 }
+
 
 // init value. wait for server update
 export const fetchAppParams = async () => {
