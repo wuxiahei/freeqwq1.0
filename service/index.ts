@@ -62,7 +62,7 @@ export const updateFeedback = async ({ url, body }: { url: string; body: Feedbac
 }
 
 export const generationConversationName = async (id: string) => {
-  return post(`conversations/${id}/name`, { body: { auto_generate: false } })
+  return post(`conversations/${id}/name`, { body: { auto_generate: true } })
 }
 
 export const uploadRemoteFileInfo = (url: string) => {
