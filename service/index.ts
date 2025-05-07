@@ -1,7 +1,7 @@
 import type { IOnCompleted, IOnData, IOnError, IOnFile, IOnMessageEnd, IOnMessageReplace, IOnNodeFinished, IOnNodeStarted, IOnThought, IOnWorkflowFinished, IOnWorkflowStarted } from './base'
 import { get, post, ssePost, del, upload } from './base'
 import type { FeedbackType } from '@/app/components/chat/type'
-
+//(sendChatMessage
 export const sendChatMessage = async (
   body: Record<string, any>,
   {
@@ -39,14 +39,22 @@ export const sendChatMessage = async (
     },
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
-
-export const fetchConversations = async (limit = 100, last_id = null) => {
-  return get('conversations', { params: { limit, last_id } })
+// 获取会话列表
+//export const fetchConversations = async (limit = 100, last_id = null) => {
+//  return get('conversations', { params: { limit, last_id } })
+//}
+export const fetchConversations = async (limit = 20, last_id = '', user?: string) => {
+  return get('conversations', { params: { limit, last_id, user } })
 }
-
-export const fetchChatList = async (conversationId: string, limit = 20, last_id = null) => {
+// 获取特定会话的聊天记录
+//export const fetchChatList = async (conversationId: string, limit = 20, last_id = null) => {
+//  return get('messages', {
+//    params: { conversation_id: conversationId, limit, last_id }
+//  })
+//}
+export const fetchChatList = async (conversationId: string, limit = 20, last_id = '', user?: string) => {
   return get('messages', {
-    params: { conversation_id: conversationId, limit, last_id }
+    params: { conversation_id: conversationId, limit, last_id, user }
   })
 }
 
