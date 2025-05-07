@@ -11,7 +11,7 @@ const LogoSite: FC<LogoSiteProps> = ({
 }) => {
   return (
     <img
-      src={'/logo/logo.png'}
+      src={'http://127.0.0.1:8078/logo.png'}
       className={classNames('block w-[22.651px] h-[24.5px]', className)}
       alt='logo'
     />
