@@ -209,7 +209,24 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
     handleNewConversationInputsChange(conversationInputs)
   }, [handleNewConversationInputsChange, inputsForms])
 
-  const { data: newConversation } = useSWR(newConversationId ? [isInstalledApp, appId, newConversationId] : null, () => generationConversationName(newConversationId))
+  // 删除原有的 useSWR 方式
+  // const { data: newConversation } = useSWR(newConversationId ? [isInstalledApp, appId, newConversationId] : null, () => generationConversationName(newConversationId))
+  
+  useEffect(() => {
+  // 仅在 newConversationId 存在时调用一次
+  if (newConversationId) {
+  generationConversationName(newConversationId).then((newConversation) => {
+  setOriginConversationList(produce((draft) => {
+  const index = draft.findIndex(item => item.id === newConversation.id)
+  if (index > -1)
+  draft[index] = newConversation
+  else
+  draft.unshift(newConversation)
+  }))
+  setNewConversationId('') // 调用后立即清空，避免重复
+  })
+  }
+  }, [newConversationId])
   const [originConversationList, setOriginConversationList] = useState<ConversationItem[]>([])
   useEffect(() => {
     if (appConversationData?.data && !appConversationDataLoading)

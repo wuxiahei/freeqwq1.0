@@ -21,7 +21,7 @@ import type { IChatItem } from '@/app/components/chat/type'
 
 export type AgentLogDetailProps = {
   activeTab?: 'DETAIL' | 'TRACING'
-  conversationID: string
+  : string
   log: IChatItem
   messageID: string
 }
