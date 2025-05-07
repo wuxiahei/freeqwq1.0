@@ -13,7 +13,7 @@ function useConversation() {
   const setCurrConversationId = (id: string, appId: string, isSetToLocalStroge = true, newConversationName = '') => {
     doSetCurrConversationId(id)
     if (isSetToLocalStroge && id !== '-1') {
-      // Info: {[appId1]: conversationId1, [appId2]: conversationId2}
+      // conversationIdInfo: {[appId1]: conversationId1, [appId2]: conversationId2}
       const conversationIdInfo = globalThis.localStorage?.getItem(storageConversationIdKey) ? JSON.parse(globalThis.localStorage?.getItem(storageConversationIdKey) || '') : {}
       conversationIdInfo[appId] = id
       globalThis.localStorage?.setItem(storageConversationIdKey, JSON.stringify(conversationIdInfo))
