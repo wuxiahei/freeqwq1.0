@@ -136,8 +136,8 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
   }, [currentConversationId, newConversationId])
   const { data: appParams } = useSWR(['appParams', isInstalledApp, appId], () => fetchAppParams())
   const { data: appMeta } = useSWR(['appMeta', isInstalledApp, appId], () => fetchAppMeta())
-  const { data: appPinnedConversationData, mutate: mutateAppPinnedConversationData } = useSWR(['appConversationData', isInstalledApp, appId, true], () => fetchConversations())
-  const { data: appConversationData, isLoading: appConversationDataLoading, mutate: mutateAppConversationData } = useSWR(['appConversationData', isInstalledApp, appId, false], () => fetchConversations())
+  const { data: appPinnedConversationData, mutate: mutateAppPinnedConversationData } = useSWR(['appConversationData', isInstalledApp, appId, true], () => fetchConversations(20, true, undefined))
+  const { data: appConversationData, isLoading: appConversationDataLoading, mutate: mutateAppConversationData } = useSWR(['appConversationData', isInstalledApp, appId, false], () => fetchConversations(20, false, undefined))
   const { data: appChatListData, isLoading: appChatListDataLoading } = useSWR(chatShouldReloadKey ? ['appChatList', chatShouldReloadKey, isInstalledApp, appId] : null, () => fetchChatList(chatShouldReloadKey))
 
   const appPrevChatTree = useMemo(
