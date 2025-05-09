@@ -16,14 +16,14 @@ export async function GET(request: NextRequest) {
       "icon": "48159ee8",
       "icon_background": "#E4FBCC",
       "icon_url": "http://127.0.0.1:8078/logo.png",
-      "description": "-marsTest",
+      "description": "",
       "copyright": null,
       "privacy_policy": null,
       "custom_disclaimer": "",
       "default_language": "zh-Hans",
       "prompt_public": false,
       "show_workflow_steps": true,
-      "use_icon_as_answer_icon": false
+      "use_icon_as_answer_icon": true
     }
     return NextResponse.json(data as object, {
       headers: setSession(sessionId),
