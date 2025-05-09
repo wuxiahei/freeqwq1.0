@@ -45,7 +45,7 @@ export const fetchConversations = async (limit = 100, laster_id = 'null', user =
 }
 
 // 获取特定会话的聊天记录
-export const fetchChatList = async (conversationId: string, limit = 20, first_id = 'null') => {
+export const fetchChatList = async (conversationId: string, limit = 20, first_id = '') => {
   return get('messages', {
     params: { conversation_id: conversationId, limit, first_id }
   })
@@ -100,3 +100,1432 @@ export const unpinConversation = async (conversationId: string) => {
 export const getUrl = async (conversationId: string) => {
   return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
 }
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export const audioToText = (formData: any): Promise<{ text: string }> => {
+  return upload({
+    xhr: new XMLHttpRequest(),
+    data: formData,
+  }, '/audio-to-text')
+}
+
+export const pinConversation = async (conversationId: string) => {
+  return get('messages1', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const unpinConversation = async (conversationId: string) => {
+  return get('messages3', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const getUrl = async (conversationId: string) => {
+  return get('messages5', { params: { conversation_id: conversationId, limit: 20, last_id: '' } })
+}
+export const fetchAppInfo = async () => { return get('info') }
+export const fetchAppMeta = async () => { return get('meta') }
+
+export
