@@ -40,14 +40,14 @@ export const sendChatMessage = async (
   }, { onData, onCompleted, onThought, onFile, onError, getAbortController, onMessageEnd, onMessageReplace, onNodeStarted, onWorkflowStarted, onWorkflowFinished, onNodeFinished })
 }
 // 获取会话列表
-export const fetchConversations = async (limit = 100, laster_id = 'null', user = 'abc-123') => {
+export const fetchConversations = async (limit = 20, laster_id = 'null', user = 'abc-123') => {
   return get('conversations', { params: { limit, laster_id, user } })
 }
 
 // 获取特定会话的聊天记录
-export const fetchChatList = async (conversationId: string, limit = 20, first_id = '') => {
+export const fetchChatList = async (conversationId: string, limit = 100, last_id = '') => {
   return get('messages', {
-    params: { conversation_id: conversationId, limit, first_id }
+    params: { conversation_id: conversationId, limit, last_id }
   })
 }
 
