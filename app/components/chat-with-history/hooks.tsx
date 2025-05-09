@@ -227,6 +227,8 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
       })
     }
   }, [newConversationId])
+
+  
   const [originConversationList, setOriginConversationList] = useState<ConversationItem[]>([])
   useEffect(() => {
     if (appConversationData?.data && !appConversationDataLoading)
@@ -246,18 +248,19 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
     return data
   }, [originConversationList, showNewConversationItemInList, t])
 
-  useEffect(() => {
-    if (newConversation) {
-      setOriginConversationList(produce((draft) => {
-        const index = draft.findIndex(item => item.id === newConversation.id)
-
-        if (index > -1)
-          draft[index] = newConversation
-        else
-          draft.unshift(newConversation)
-      }))
-    }
-  }, [newConversation])
+  // REMOVE this block:
+  // useEffect(() => {
+  //   if (newConversation) {
+  //     setOriginConversationList(produce((draft) => {
+  //       const index = draft.findIndex(item => item.id === newConversation.id)
+  
+  //       if (index > -1)
+  //         draft[index] = newConversation
+  //       else
+  //         draft.unshift(newConversation)
+  //     }))
+  //   }
+  // }, [newConversation])
 
   const currentConversationItem = useMemo(() => {
     let conversationItem = conversationList.find(item => item.id === currentConversationId)
