@@ -9,9 +9,10 @@ const userPrefix = `user_${APP_ID}:`
 let lastUserName: string | undefined
 
 export const getInfo = (request: NextRequest, userName?: string) => {
-  // 如果提供了用户名，则更新最后使用的用户名
-  if (userName) {
+  // 只有当lastUserName为空时，才更新它
+  if (userName && !lastUserName) {
     lastUserName = userName
+    console.log('设置用户名:', userName)
   }
   
   const sessionId = request.cookies.get('session_id')?.value || v4()
