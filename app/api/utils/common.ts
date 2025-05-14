@@ -3,29 +3,30 @@ import { ChatClient } from 'dify-client-plus'
 import { v4 } from 'uuid'
 import { API_KEY, API_URL, APP_ID } from '@/config'
 
-const userPrefix = `user_${APP_ID}:`
+//const userPrefix = `user_${APP_ID}:`
 
 // 添加一个全局变量来存储最后使用的用户名
-let lastUserName: string | undefined
+//let lastUserName: string | undefined
 
 export const getInfo = (request: NextRequest, userName?: string) => {
   // 如果提供了用户名，则更新最后使用的用户名
-  if (userName) {
+ /* if (userName) {
     lastUserName = userName
-  }
+  }*/
   
   const sessionId = request.cookies.get('session_id')?.value || v4()
   // 优先使用传入的用户名，其次使用最后使用的用户名，最后使用会话ID
-  const user = sessionId + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
+  const sessionId1 = seesionId + ":" + userName
+  const user = sessionId1
  // const user = "name" + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
   return {
-    sessionId,
+    sessionId1,
     user,
   }
 }
 
 export const setSession = (sessionId: string) => {
-  return { 'Set-Cookie': `session_id=${sessionId}` }
+  return { 'Set-Cookie': `session_id=${sessionId1}` }
 }
 
 export const client = new ChatClient(API_KEY, API_URL || undefined)
