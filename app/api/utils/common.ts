@@ -16,17 +16,17 @@ export const getInfo = (request: NextRequest, userName?: string) => {
   
   const sessionId = request.cookies.get('session_id')?.value || v4()
   // 优先使用传入的用户名，其次使用最后使用的用户名，最后使用会话ID
-  const sessionId1 = sessionId + ":" + userName
-  const user = sessionId1
+  const sessionId = sessionId + ":" + userName
+  const user = sessionId
  // const user = "name" + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
   return {
-    sessionId1,
+    sessionId,
     user,
   }
 }
 
-export const setSession = (sessionId1: string) => {
-  return { 'Set-Cookie': `session_id=${sessionId1}` }
+export const setSession = (sessionId: string) => {
+  return { 'Set-Cookie': `session_id=${sessionId}` }
 }
 
 export const client = new ChatClient(API_KEY, API_URL || undefined)
