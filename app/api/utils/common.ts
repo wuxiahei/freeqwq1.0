@@ -5,9 +5,10 @@ import { API_KEY, API_URL, APP_ID } from '@/config'
 
 const userPrefix = `user_${APP_ID}:`
 
-export const getInfo = (request: NextRequest) => {
+export const getInfo = (request: NextRequest, userName?: string) => {
   const sessionId = request.cookies.get('session_id')?.value || v4()
-  const user = userPrefix + sessionId
+  // 如果提供了用户名，则使用用户名；否则使用会话ID
+  const user = userName ? userPrefix + userName : userPrefix + sessionId
   return {
     sessionId,
     user,
