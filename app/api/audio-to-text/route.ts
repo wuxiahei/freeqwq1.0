@@ -6,7 +6,10 @@ import { client, getInfo } from '@/app/api/utils/common'
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-    const { user } = getInfo(request)
+      // 从 inputs 中获取 name 参数
+      const userName = inputs?.name?.toString()  
+      // 获取用户信息，如果 getInfo 支持传入用户名，则传入
+          const { user } = getInfo(request, userName)
     formData.append('user', user)
     const { data } = await client.aduioToText(formData)
     return NextResponse.json(data)

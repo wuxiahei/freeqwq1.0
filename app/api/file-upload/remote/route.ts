@@ -6,7 +6,10 @@ import { client, getInfo } from '@/app/api/utils/common'
 
 export async function POST(request: NextRequest) {
   try {
-    const { user } = getInfo(request)
+      // 从 inputs 中获取 name 参数
+      const userName = inputs?.name?.toString()  
+      // 获取用户信息，如果 getInfo 支持传入用户名，则传入
+          const { user } = getInfo(request, userName)
     const { url } = await request.json()
     const filename = url.split('/').pop() || '';
     const response = await axios.get(url, { responseType: 'arraybuffer' });
