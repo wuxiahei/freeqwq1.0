@@ -16,7 +16,8 @@ export const getInfo = (request: NextRequest, userName?: string) => {
   
   const sessionId = request.cookies.get('session_id')?.value || v4()
   // 优先使用传入的用户名，其次使用最后使用的用户名，最后使用会话ID
-  const user = userPrefix + sessionId + (userName || lastUserName ? "_" + (userName || lastUserName) : "")
+ // const user = userPrefix + sessionId + (userName || lastUserName ? "_" + (userName || lastUserName) : "")
+  const user = "name" + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
   return {
     sessionId,
     user,
