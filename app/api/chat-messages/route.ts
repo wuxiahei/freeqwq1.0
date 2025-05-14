@@ -19,10 +19,10 @@ export async function POST(request: NextRequest) {
     const userName = inputs?.name?.toString()
     
     // 获取用户信息，如果 getInfo 支持传入用户名，则传入
-    const { user } = getInfo(request)
+    const { user } = getInfo(request, userName)
     
     // 如果有用户名，则使用用户名构建用户标识符
-    const finalUser = userName ? `user_${APP_ID}:${userName}` : user
+   // const finalUser = userName ? `user_${APP_ID}:${userName}` : user
     
     const res = await client.createChatMessage(inputs, query, finalUser, responseMode, conversationId, files)
     return new Response(res.data as any)
