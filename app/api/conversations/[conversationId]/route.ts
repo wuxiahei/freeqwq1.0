@@ -6,7 +6,11 @@ export async function DELETE(request: NextRequest, { params }: {
   params: { conversationId: string }
 }) {
   const { conversationId } = await params
-  const { user } = await getInfo(request)
+ // 从 inputs 中获取 name 参数
+ const userName = inputs?.name?.toString()
+    
+ // 获取用户信息，如果 getInfo 支持传入用户名，则传入
+ const { user } = getInfo(request, userName)
 
   const { data } = await client.deleteConversation(conversationId, user)
   return NextResponse.json(data)
