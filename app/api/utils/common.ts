@@ -2,27 +2,22 @@ import { type NextRequest } from 'next/server'
 import { ChatClient } from 'dify-client-plus'
 import { v4 } from 'uuid'
 import { API_KEY, API_URL, APP_ID } from '@/config'
-import { kv } from '@vercel/kv'
 
 const userPrefix = `user_${APP_ID}:`
-const USER_NAME_PREFIX = 'user_name:'
 
-export const getInfo = async (request: NextRequest, userName?: string) => {
-  const sessionId = request.cookies.get('session_id')?.value || v4()
-  
-  // 从 KV 存储获取用户名
-  const key = `${USER_NAME_PREFIX}${sessionId}`
-  let storedUserName = await kv.get(key)
-  
-  // 如果提供了新的用户名且没有存储的用户名，则存储新的用户名
-  if (userName && !storedUserName) {
-    await kv.set(key, userName)
-    storedUserName = userName
+// 添加一个全局变量来存储最后使用的用户名
+let lastUserName: string | undefined
+
+export const getInfo = (request: NextRequest, userName?: string) => {
+  // 如果提供了用户名，则更新最后使用的用户名
+  if (userName) {
+    lastUserName = userName
   }
   
-  // 构建用户标识符
-  const user = "name" + (storedUserName || userName ? ":" + (storedUserName || userName) : "")
-  
+  const sessionId = request.cookies.get('session_id')?.value || v4()
+  // 优先使用传入的用户名，其次使用最后使用的用户名，最后使用会话ID
+  const user = userPrefix + sessionId + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
+ // const user = "name" + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
   return {
     sessionId,
     user,
