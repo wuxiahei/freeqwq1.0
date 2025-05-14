@@ -2,31 +2,35 @@ import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { client, getInfo } from '@/app/api/utils/common'
 
+// export const runtime = 'edge'
 export async function POST(request: NextRequest) {
   try {
-    // 解析请求体为 JSON
-    const requestData = await request.json()
+    const body = await request.json()
+    const {
+      inputs,
+      query,
+      files,
+      conversation_id: conversationId,
+      response_mode: responseMode,
+    } = body
     
     // 从 inputs 中获取 name 参数
-    const userName = requestData.inputs?.name?.toString()
+    const userName = inputs?.name?.toString()
     
-    // 获取用户信息，传入用户名
-    const { user } = getInfo(request, userName)
+    // 获取用户信息，如果 getInfo 支持传入用户名，则传入
+    const { user } = getInfo(request)
     
-    // 将用户信息添加到请求数据中
-    requestData.user = user
+    // 如果有用户名，则使用用户名构建用户标识符
+    const finalUser = userName ? `user_${APP_ID}:${userName}` : user
     
-    // 调用 API 客户端
-    const { data } = await client.chatMessages(requestData)
-    
-    return NextResponse.json(data)
-  }
-  catch (e: any) {
+    const res = await client.createChatMessage(inputs, query, finalUser, responseMode, conversationId, files)
+    return new Response(res.data as any)
+  } catch (e: any) {
     return NextResponse.json({ error: e.message })
   }
 }
 // export const runtime = 'edge'
-export async function POST(request: NextRequest) {
+/*export async function POST(request: NextRequest) {
   const body = await request.json()
   const {
     inputs,
@@ -38,4 +42,4 @@ export async function POST(request: NextRequest) {
   const { user } = getInfo(request)
   const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
   return new Response(res.data as any)
-}
+}*/
