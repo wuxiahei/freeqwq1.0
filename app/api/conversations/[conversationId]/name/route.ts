@@ -11,11 +11,7 @@ export async function POST(request: NextRequest, { params }: {
     name,
   } = body
   const { conversationId } =  params
- // 从 inputs 中获取 name 参数
- const userName = inputs?.name?.toString()
-    
- // 获取用户信息，如果 getInfo 支持传入用户名，则传入
- const { user } = getInfo(request, userName)
+  const { user } = getInfo(request)
 
   // auto generate name
   const { data } = await client.renameConversation(conversationId, name, user, auto_generate )

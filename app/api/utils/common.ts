@@ -5,10 +5,18 @@ import { API_KEY, API_URL, APP_ID } from '@/config'
 
 const userPrefix = `user_${APP_ID}:`
 
+// 添加一个全局变量来存储最后使用的用户名
+let lastUserName: string | undefined
+
 export const getInfo = (request: NextRequest, userName?: string) => {
+  // 如果提供了用户名，则更新最后使用的用户名
+  if (userName) {
+    lastUserName = userName
+  }
+  
   const sessionId = request.cookies.get('session_id')?.value || v4()
-  // 如果提供了用户名，则使用用户名；否则使用会话ID
-  const user = userName ? userPrefix + userName : userPrefix + sessionId
+  // 优先使用传入的用户名，其次使用最后使用的用户名，最后使用会话ID
+  const user = (userName || lastUserName) ? userPrefix + (userName || lastUserName) : userPrefix + sessionId
   return {
     sessionId,
     user,
