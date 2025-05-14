@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     // 如果有用户名，则使用用户名构建用户标识符
    // const finalUser = userName ? `user_${APP_ID}:${userName}` : user
     
-    const res = await client.createChatMessage(inputs, query, finalUser, responseMode, conversationId, files)
+    const res = await client.createChatMessage(inputs, query, user, responseMode, conversationId, files)
     return new Response(res.data as any)
   } catch (e: any) {
     return NextResponse.json({ error: e.message })
