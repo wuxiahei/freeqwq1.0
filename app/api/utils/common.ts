@@ -20,7 +20,7 @@ export const getInfo = (request: NextRequest, userName?: string) => {
   const user = sessionId
  // const user = "name" + (userName || lastUserName ? ":" + (userName || lastUserName) : "")
   return {
-    sessionId0,
+    sessionId,
     user,
   }
 }
