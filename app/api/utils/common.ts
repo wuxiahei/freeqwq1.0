@@ -25,7 +25,7 @@ export const getInfo = (request: NextRequest, userName?: string) => {
   }
 }
 
-export const setSession = (sessionId: string) => {
+export const setSession = (sessionId1: string) => {
   return { 'Set-Cookie': `session_id=${sessionId1}` }
 }
 
