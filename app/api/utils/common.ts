@@ -32,8 +32,8 @@ export const getInfo = (request: NextRequest, userName?: string) => {
   // 如果提供了新的用户名且没有存储的用户名，则使用新的用户名
   const finalUserName = storedUserName || userName || lastUserName
   
-  // 构建用户标识符
-  const user = userPrefix + sessionId + (finalUserName ? ":" + finalUserName : "")
+  // 构建用户标识符 - 修复：不要在用户标识符中包含会话ID
+  const user = userPrefix + (finalUserName ? finalUserName : sessionId)
   
   // 准备响应头
   const headers: Record<string, string> = {}
@@ -49,7 +49,12 @@ export const getInfo = (request: NextRequest, userName?: string) => {
 }
 
 export const setSession = (sessionId: string) => {
-  return { 'Set-Cookie': `session_id=${sessionId}` }
+  // 修复：添加适当的cookie属性
+  if (!sessionId) {
+    console.error('Warning: Attempting to set undefined session_id');
+    sessionId = v4(); // Generate a new one if undefined
+  }
+  return { 'Set-Cookie': `session_id=${sessionId}; Path=/; SameSite=Strict; HttpOnly` }
 }
 
 // 添加重置用户名的函数
