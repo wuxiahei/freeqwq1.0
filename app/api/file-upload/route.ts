@@ -6,10 +6,14 @@ import { client, getInfo } from '@/app/api/utils/common'
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-    const { user } = getInfo(request)
+    const { user, headers } = getInfo(request, userName)
     formData.append('user', user)
     const { data } = await client.fileUpload(formData)
-    return NextResponse.json(data)
+    return NextResponse.json(data, { 
+      headers: { 
+        ...headers, 
+      } 
+    })
   }
   catch (e: any) {
     return NextResponse.json(e.message)

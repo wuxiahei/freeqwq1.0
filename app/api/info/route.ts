@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { client, getInfo, setSession } from '@/app/api/utils/common'
 
 export async function GET(request: NextRequest) {
-  const { sessionId, user } = getInfo(request)
+  const { user, sessionId, headers } = getInfo(request, userName)
   try {
     const { data } = await client.getInfo(user)
     // 接口未返回 建议从配置文件或者环境变量获取
@@ -26,7 +26,10 @@ export async function GET(request: NextRequest) {
       "use_icon_as_answer_icon": true
     }
     return NextResponse.json(data as object, {
-      headers: setSession(sessionId),
+      headers: { 
+        ...headers, 
+        ...setSession(sessionId) 
+      } 
     })
   }
   catch (error) {

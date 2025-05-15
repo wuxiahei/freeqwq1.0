@@ -6,7 +6,11 @@ export async function POST(request: NextRequest, { params }: {
   params: { taskId: string }
 }) {
   const { taskId } = await params
-  const { user } = getInfo(request)
+  const { user, headers } = getInfo(request, userName)
   const { data } = await client.stopChat(taskId, user)
-  return NextResponse.json(data)
+  return NextResponse.json(data, { 
+    headers: { 
+      ...headers, 
+    } 
+  })
 }

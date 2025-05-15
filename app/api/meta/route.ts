@@ -3,11 +3,14 @@ import { NextResponse } from 'next/server'
 import { client, getInfo, setSession } from '@/app/api/utils/common'
 
 export async function GET(request: NextRequest) {
-  const { sessionId } = getInfo(request)
+  const { sessionId, headers } = getInfo(request, userName)
   try {
     const { data } = await client.getMeta()
     return NextResponse.json(data as object, {
-      headers: setSession(sessionId),
+      headers: { 
+        ...headers, 
+        ...setSession(sessionId) 
+      } 
     })
   }
   catch (error) {
