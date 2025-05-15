@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { client, getInfo } from '@/app/api/utils/common'
+import { client, getInfo, setUserName } from '@/app/api/utils/common'
 import { APP_ID } from '@/config' 
 
 // export const runtime = 'edge'

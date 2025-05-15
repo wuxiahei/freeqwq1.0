@@ -1,9 +1,9 @@
 import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
-import { client, getInfo, setSession } from '@/app/api/utils/common'
+import { client, getInfo, setSession,  getUserName } from '@/app/api/utils/common'
 
 export async function GET(request: NextRequest) {
-  const { user, sessionId, headers } = getInfo(request, userName)
+  const { user, sessionId, headers } = getInfo(request, getUserName())
   try {
     const { data } = await client.getInfo(user)
     // 接口未返回 建议从配置文件或者环境变量获取

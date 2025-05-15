@@ -2,11 +2,11 @@ import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import axios from 'axios';
 import FormData from 'form-data'
-import { client, getInfo } from '@/app/api/utils/common'
+import { client, getInfo, getUserName } from '@/app/api/utils/common'
 
 export async function POST(request: NextRequest) {
   try {
-    const { user } = getInfo(request)
+    const { user, headers } = getInfo(request, getUserName())
     const { url } = await request.json()
     const filename = url.split('/').pop() || '';
     const response = await axios.get(url, { responseType: 'arraybuffer' });
@@ -19,7 +19,11 @@ export async function POST(request: NextRequest) {
     formData.append('user', user)
     const { data } = await client.fileUpload(formData)
     // 返回缺少 url 字段
-    return NextResponse.json(data)
+    return NextResponse.json(data, { 
+      headers: { 
+        ...headers, 
+      } 
+    })
   }
   catch (e: any) {
     return NextResponse.json(e.message)
