@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       "icon_type": "image",
       "icon": "48159ee8",
       "icon_background": "#E4FBCC",
-      "icon_url": "http://127.0.0.1:8078/logo1.png",
+      "icon_url": "https://data.fasxp.eu.org/logo1.png",
       "description": "",
       "copyright": null,
       "privacy_policy": null,
