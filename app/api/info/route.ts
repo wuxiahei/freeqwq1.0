@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       "chat_color_theme_inverted": false,
       "icon_type": "image",
       "icon": "48159ee8",
-      "icon_background": "#E4FBCC",
+      "icon_background": "#FFFAFA",
       "icon_url": "https://data.fasxp.eu.org/logo1.png",
       "description": "",
       "copyright": null,
