@@ -19,9 +19,11 @@
 
 
 .questionIcon {
-  background: url(./icons/default-avatar.jpg);
+  background: url(/logo2.png);
   background-size: contain;
   border-radius: 50%;
+  width: 40px;   /* 添加宽度 */
+  height: 40px;  /* 添加高度 */
 }
 
 .answer::before,

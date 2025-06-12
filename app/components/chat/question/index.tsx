@@ -50,9 +50,7 @@ const Question: FC<QuestionProps> = ({
       <div className='shrink-0 w-10 h-10'>
         {
           questionIcon || (
-            <div className='w-full h-full rounded-full border-[0.5px] border-black/5'>
-              <User className='w-full h-full' />
-            </div>
+            <div className={styles.questionIcon}></div>
           )
         }
       </div>
